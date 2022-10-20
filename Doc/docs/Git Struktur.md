@@ -20,4 +20,5 @@ ist auf dem develop Branch aufgebaut. Auf Feature Branch werden wir kleine Featu
 
 
 # links:
-<a href="https://www.youtube.com/watch?v=Uszj_k0DGsg" target="_blank">Git for proffesionals</a>
+
+* <a href="https://www.youtube.com/watch?v=Uszj_k0DGsg" target="_blank">Git for proffesionals</a>
