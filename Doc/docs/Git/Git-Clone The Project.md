@@ -1,7 +1,7 @@
 
 
 ### Cloning the project:
-<hr>
+<hr/>
 
 #### Fork the repository:
 1. visit <a href="https://github.com/Shaco74/SWE-MehrMarkt" target="_blank"> the repository</a>.
@@ -40,7 +40,7 @@ right click on upstream develop branch -> new Branch from upstream/develop
 ### Pull request
 
 
-<hr>
+<hr/>
 This is just an example of the future work
 
 1. add a file hello.txt (make sure you're on Feature_Hello_World Branch)
