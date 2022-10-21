@@ -52,5 +52,4 @@ _adding hello.txt_ is the commit message, it's so important for organizing commi
 Then **_Commit and Push_**
 3. Now when you open your GitHub repository, you'll find this:
 <img src="../../static/img/Git Clone Tutorial/compare and pull request.png"/>
-
 This is the pull request, if you click on it, the request will be currently sent to us for checking and approval. 
