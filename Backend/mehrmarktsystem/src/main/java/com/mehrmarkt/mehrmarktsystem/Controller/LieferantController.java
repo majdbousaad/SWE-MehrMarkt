@@ -4,11 +4,11 @@ package com.mehrmarkt.mehrmarktsystem.Controller;
 import com.mehrmarkt.mehrmarktsystem.Service.LieferantService;
 import com.mehrmarkt.mehrmarktsystem.model.Lieferant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/Lieferant")
+import java.util.List;
+@RestController
+@RequestMapping("/Lieferant")
 public class LieferantController {
 
     @Autowired
@@ -19,5 +19,10 @@ public class LieferantController {
         lieferantService.saveLieferant(lieferant);
 
         return "New Lieferant is added";
+    }
+
+    @GetMapping("/all")
+    public List<Lieferant> getAllLieferanten(){
+        return lieferantService.getAllLieferanten();
     }
 }

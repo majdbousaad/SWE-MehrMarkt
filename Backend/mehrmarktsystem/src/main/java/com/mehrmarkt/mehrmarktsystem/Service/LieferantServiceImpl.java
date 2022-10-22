@@ -6,6 +6,8 @@ import com.mehrmarkt.mehrmarktsystem.model.Lieferant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LieferantServiceImpl implements LieferantService {
 
@@ -14,6 +16,13 @@ public class LieferantServiceImpl implements LieferantService {
 
     @Override
     public Lieferant saveLieferant(Lieferant lieferant) {
-        return null;
+        return lieferantRepository.save(lieferant);
     }
+
+    @Override
+    public List<Lieferant> getAllLieferanten() {
+        return lieferantRepository.findAll();
+    }
+
+
 }
