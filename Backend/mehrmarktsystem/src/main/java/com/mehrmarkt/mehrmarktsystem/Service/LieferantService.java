@@ -8,4 +8,6 @@ public interface LieferantService {
 
     public Lieferant saveLieferant(Lieferant lieferant);
     public List<Lieferant> getAllLieferanten();
+
+    public Lieferant getById(int lieferant_id);
 }

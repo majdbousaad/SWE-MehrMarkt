@@ -24,5 +24,10 @@ public class LieferantServiceImpl implements LieferantService {
         return lieferantRepository.findAll();
     }
 
+    @Override
+    public Lieferant getById(int lieferant_id) {
+        return lieferantRepository.findById(lieferant_id).get();
+    }
+
 
 }
