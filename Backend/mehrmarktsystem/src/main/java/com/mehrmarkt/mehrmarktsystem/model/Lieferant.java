@@ -1,9 +1,13 @@
 package com.mehrmarkt.mehrmarktsystem.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import java.time.Duration;
 import java.util.List;
 
+enum Status {aktiv, inaktiv}
 @Entity
 public class Lieferant {
 
@@ -12,8 +16,22 @@ public class Lieferant {
     private int id;
     private String name;
 
-    @ManyToMany
+    private String adresse;
+
+    private Duration lieferzeit;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name="lieferant_id")
+    @JsonIgnoreProperties(value= {"lieferant"})
     private List<Product> products;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = "lieferant")
+    @JsonIgnoreProperties(value = {"lieferant"})
+    private List<Bestellung> bestellungen;
 
     public Lieferant(){
 
@@ -41,5 +59,37 @@ public class Lieferant {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAdresse() {
+        return adresse;
+    }
+
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    public Duration getLieferzeit() {
+        return lieferzeit;
+    }
+
+    public void setLieferzeit(Duration lieferzeit) {
+        this.lieferzeit = lieferzeit;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public List<Bestellung> getBestellungen() {
+        return bestellungen;
+    }
+
+    public void setBestellungen(List<Bestellung> bestellungen) {
+        this.bestellungen = bestellungen;
     }
 }
