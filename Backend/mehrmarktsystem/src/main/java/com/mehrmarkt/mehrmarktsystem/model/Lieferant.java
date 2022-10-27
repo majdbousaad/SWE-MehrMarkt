@@ -20,17 +20,16 @@ public class Lieferant {
 
     private Duration lieferzeit;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="lieferant_id")
-    @JsonIgnoreProperties(value= {"lieferant"})
+    @JsonIgnoreProperties(value = {"lieferant", "waren" })
     private List<Product> products;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "lieferant")
-    @JsonIgnoreProperties(value = {"lieferant"})
+    @OneToMany(mappedBy = "lieferant")
+    @JsonIgnoreProperties(value = {"waren", "lieferant"})
     private List<Bestellung> bestellungen;
 
     public Lieferant(){
