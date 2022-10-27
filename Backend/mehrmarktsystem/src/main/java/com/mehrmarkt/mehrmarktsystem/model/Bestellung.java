@@ -10,6 +10,7 @@ import java.util.List;
 
 enum BestellungsStatus {spaet, puenktlich, nochNichtErhalten}
 @Entity
+
 public class Bestellung {
 
     @Id
@@ -18,7 +19,7 @@ public class Bestellung {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="bestellung_id")
-    @JsonIgnoreProperties(value= {"bestellung"})
+    @JsonIgnoreProperties(value = {"bestellung"})
     private List<Ware> waren;
 
     public BestellungsStatus getBestellungsStatus() {
@@ -33,6 +34,7 @@ public class Bestellung {
 
     @ManyToOne
     @JoinColumn(name = "lieferant_id", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"bestellungen", "products"})
     private Lieferant lieferant;
 
     @CreationTimestamp
@@ -54,7 +56,7 @@ public class Bestellung {
         double summe = 0;
         for (Ware ware:
              waren) {
-            summe += ware.getPreis() * ware.getMenge();
+            summe += ware.getProduct().getPreis() * ware.getMenge();
         }
 
         return summe;
@@ -114,6 +116,9 @@ public class Bestellung {
 
     public void setBestellungsdatum(LocalDateTime bestellungsdatum) {
         this.bestellungsdatum = bestellungsdatum;
+    }
+
+    public Bestellung() {
     }
 
 
