@@ -18,6 +18,8 @@ public class Lieferant {
 
     private String adresse;
 
+    // private boolean zuverlaessig = true;
+
     private Duration lieferzeit;
 
     @OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -91,4 +93,18 @@ public class Lieferant {
     public void setBestellungen(List<Bestellung> bestellungen) {
         this.bestellungen = bestellungen;
     }
+
+    /*
+    public boolean isZuverlaessig() {
+        int countVerspaeteteLieferungen = 0;
+        for (Bestellung bestellung : bestellungen) {
+            if (bestellung.getBestellungsStatus() == BestellungsStatus.spaet) {
+                countVerspaeteteLieferungen++;
+            }
+        }
+        this.zuverlaessig = (countVerspaeteteLieferungen / bestellungen.size() > 3 / 10) ? false : true;
+        return this.zuverlaessig;
+    }
+    */
+
 }
