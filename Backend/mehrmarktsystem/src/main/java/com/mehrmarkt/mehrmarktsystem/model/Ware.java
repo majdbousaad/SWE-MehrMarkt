@@ -5,13 +5,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 
 @Entity
-public class Ware extends Product{
+public class Ware{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id")
+    @JsonIgnoreProperties(value = {"waren", "lieferant"})
+    private Product product;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bestellung_id", referencedColumnName = "id")
-    @JsonIgnoreProperties(value= {"waren"})
+    @JsonIgnoreProperties(value = {"waren"})
     private Bestellung bestellung;
     private int menge;
 
@@ -31,5 +37,14 @@ public class Ware extends Product{
         this.bestellung = bestellung;
     }
 
+    public Product getProduct() {
+        return product;
+    }
 
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public Ware() {
+    }
 }
