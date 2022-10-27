@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+enum BestellungsStatus {spaet, puenktlich, nochNichtErhalten}
 @Entity
 public class Bestellung {
 
@@ -19,7 +21,17 @@ public class Bestellung {
     @JsonIgnoreProperties(value= {"bestellung"})
     private List<Ware> waren;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    public BestellungsStatus getBestellungsStatus() {
+        if(tats_lieferdatum == null){
+            return BestellungsStatus.nochNichtErhalten;
+        } else if (tats_lieferdatum.isBefore(vors_lieferdatum)) {
+            return BestellungsStatus.puenktlich;
+        } else {
+            return BestellungsStatus.spaet;
+        }
+    }
+
+    @ManyToOne
     @JoinColumn(name = "lieferant_id", referencedColumnName = "id")
     private Lieferant lieferant;
 
