@@ -1,24 +1,30 @@
 package com.mehrmarkt.mehrmarktsystem.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
 
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+    @JsonIgnore
+    private List<Ware> waren;
     private int preis;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "lieferant_id", referencedColumnName = "id")
-    @JsonIgnoreProperties(value= {"products"})
+    @JsonIgnoreProperties(value = {"products", "bestellungen"})
     private Lieferant lieferant;
 
     public Product(){
