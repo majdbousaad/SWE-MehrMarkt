@@ -21,7 +21,7 @@ public class Product {
     private List<Ware> waren;
     private int preis;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lieferant_id", referencedColumnName = "id")
     @JsonIgnoreProperties(value = {"products", "bestellungen"})
     private Lieferant lieferant;
