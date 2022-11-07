@@ -33,6 +33,16 @@ public class Lieferant {
     @JsonIgnoreProperties(value = {"waren", "lieferant"})
     private List<Bestellung> bestellungen;
 
+    boolean zuverlaessig = true;
+
+    public boolean isZuverlaessig() {
+        return zuverlaessig;
+    }
+
+    public void setZuverlaessig(boolean zuverlaessig) {
+        this.zuverlaessig = zuverlaessig;
+    }
+
     public Lieferant(){
 
     }
