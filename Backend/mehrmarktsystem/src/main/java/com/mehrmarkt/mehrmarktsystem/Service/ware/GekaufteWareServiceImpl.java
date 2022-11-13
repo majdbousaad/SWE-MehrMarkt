@@ -1,19 +1,19 @@
 package com.mehrmarkt.mehrmarktsystem.Service.ware;
 
-import com.mehrmarkt.mehrmarktsystem.Repository.WareRepository;
+import com.mehrmarkt.mehrmarktsystem.Repository.GekaufteWareRepository;
 import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WareServiceImpl implements WareService{
+public class GekaufteWareServiceImpl implements GekaufteWareService {
 
     @Autowired
-    private WareRepository wareRepository;
+    private GekaufteWareRepository gekaufteWareRepository;
 
 
     @Override
     public GekaufteWare addWare(GekaufteWare gekaufteWare) {
-        return wareRepository.save(gekaufteWare);
+        return gekaufteWareRepository.save(gekaufteWare);
     }
 }
