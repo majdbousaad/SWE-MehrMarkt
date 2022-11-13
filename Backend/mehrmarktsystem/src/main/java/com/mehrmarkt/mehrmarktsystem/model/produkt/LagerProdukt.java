@@ -2,8 +2,10 @@ package com.mehrmarkt.mehrmarktsystem.model.produkt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
+import com.mehrmarkt.mehrmarktsystem.model.ware.VerkaufteWare;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class LagerProdukt{
@@ -22,6 +24,11 @@ public class LagerProdukt{
     @JoinColumn(name = "lager_id", referencedColumnName = "id")
     @JsonIgnore
     private Lager lager;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lagerProdukt")
+    @JsonIgnore
+    private List<VerkaufteWare> verkaufteWaren;
+
     private int menge;
     private String lagerOrt;
 
@@ -69,6 +76,7 @@ public class LagerProdukt{
         setLagerOrt("Not specified");
         setMenge(menge);
         setPreis(lieferantProduct.getPreis());
+        setName(lieferantProduct.getName());
         setProduct(lieferantProduct);
     }
 

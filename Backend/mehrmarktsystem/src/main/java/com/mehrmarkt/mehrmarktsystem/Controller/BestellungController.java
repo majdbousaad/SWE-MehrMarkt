@@ -9,7 +9,7 @@ import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungsStatus;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
-import com.mehrmarkt.mehrmarktsystem.model.ware.Ware;
+import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,9 +53,9 @@ public class BestellungController {
         if(lager.getSize() + gesamteMenge > lager.getMax()){
             return "Lager ist ausgelastet";
         }
-        for (Ware ware : bestellung.getWaren()){
-            Product product = productService.getByEAN(ware.getProduct().getEAN());
-            ware.setProduct(product);
+        for (GekaufteWare gekaufteWare : bestellung.getWaren()){
+            Product product = productService.getByEAN(gekaufteWare.getProduct().getEAN());
+            gekaufteWare.setProduct(product);
         }
 
 
@@ -90,8 +90,8 @@ public class BestellungController {
                  lager = lagerService.createLager();
             }
 
-            for (Ware ware : bestellung.getWaren()){
-                lager.addNewLagerProdukt(ware.getProduct(), ware.getMenge());
+            for (GekaufteWare gekaufteWare : bestellung.getWaren()){
+                lager.addNewLagerProdukt(gekaufteWare.getProduct(), gekaufteWare.getMenge());
             }
             lagerService.updateLager(lager);
             return "Bestellung erhalten. Lager ist aktualisiert";

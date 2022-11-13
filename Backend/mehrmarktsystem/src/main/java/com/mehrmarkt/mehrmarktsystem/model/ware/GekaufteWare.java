@@ -7,7 +7,7 @@ import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
 import javax.persistence.*;
 
 @Entity
-public class Ware{
+public class GekaufteWare {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +47,6 @@ public class Ware{
         this.product = product;
     }
 
-    public Ware() {
+    public GekaufteWare() {
     }
 }

@@ -2,7 +2,7 @@ package com.mehrmarkt.mehrmarktsystem.model.bestellung;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
-import com.mehrmarkt.mehrmarktsystem.model.ware.Ware;
+import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -21,7 +21,7 @@ public class Bestellung {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="bestellung_id")
     @JsonIgnoreProperties(value = {"bestellung"})
-    private List<Ware> waren;
+    private List<GekaufteWare> waren;
 
     public BestellungsStatus getBestellungsStatus() {
         if(tatsLieferdatum == null){
@@ -55,9 +55,9 @@ public class Bestellung {
     }
     public double calculateGesamtPreis() {
         double summe = 0;
-        for (Ware ware:
+        for (GekaufteWare gekaufteWare :
              waren) {
-            summe += ware.getProduct().getPreis() * ware.getMenge();
+            summe += gekaufteWare.getProduct().getPreis() * gekaufteWare.getMenge();
         }
 
         return summe;
@@ -71,11 +71,11 @@ public class Bestellung {
         this.id = id;
     }
 
-    public List<Ware> getWaren() {
+    public List<GekaufteWare> getWaren() {
         return waren;
     }
 
-    public void setWaren(List<Ware> waren) {
+    public void setWaren(List<GekaufteWare> waren) {
         this.waren = waren;
     }
 
@@ -124,8 +124,8 @@ public class Bestellung {
 
     public int getGesamteMenge(){
         int sum = 0;
-        for (Ware ware : waren){
-            sum += ware.getMenge();
+        for (GekaufteWare gekaufteWare : waren){
+            sum += gekaufteWare.getMenge();
         }
         return sum;
     }
