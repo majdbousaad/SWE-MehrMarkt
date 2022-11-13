@@ -12,7 +12,7 @@ public class Ware{
     private int id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "EAN", referencedColumnName = "EAN")
     @JsonIgnoreProperties(value = {"waren", "lieferant"})
     private Product product;
     @ManyToOne(fetch = FetchType.LAZY)
