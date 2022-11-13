@@ -21,7 +21,7 @@ const navigation = (): VerticalNavItemsType => {
     {
       title: 'Lieferanten',
       icon: AccountGroupOutline,
-      path: '/'
+      path: '/Lieferanten'
     },
     {
       title: 'Lager',
