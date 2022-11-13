@@ -8,6 +8,6 @@ public interface ProductService {
 
     public Product saveProduct(Product product);
     List <Product> getAllProducts();
-    Product getById(int id);
 
+    Product getByEAN(String ean);
 }

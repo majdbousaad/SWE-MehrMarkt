@@ -23,9 +23,12 @@ public class ProductServiceImpl implements ProductService{
         return productRepository.findAll();
     }
 
+
+
     @Override
-    public Product getById(int id) {
-        return productRepository.findById(id).get();
+
+    public Product getByEAN(String ean) {
+        return productRepository.getByEAN(ean);
     }
 
 
