@@ -22,4 +22,15 @@ public class BestellungServiceImpl implements BestellungService{
     public List<Bestellung> getAllBestellungen() {
         return bestellungRepository.findAll();
     }
+
+    @Override
+    public Bestellung getBestellung(int id) {
+        return bestellungRepository.findById(id).get();
+    }
+
+    @Override
+    public List<Bestellung> getAnstehendeBestellungen() {
+
+        return bestellungRepository.findByTatsLieferdatum(null);
+    }
 }

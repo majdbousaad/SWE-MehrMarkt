@@ -8,4 +8,8 @@ public interface BestellungService {
 
      Bestellung saveBestellung(Bestellung bestellung);
      List<Bestellung> getAllBestellungen();
+
+     Bestellung getBestellung(int id);
+
+     List<Bestellung> getAnstehendeBestellungen();
 }

@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
-enum BestellungsStatus {spaet, puenktlich, nochNichtErhalten}
 @Entity
 
 public class Bestellung {
@@ -23,9 +22,9 @@ public class Bestellung {
     private List<Ware> waren;
 
     public BestellungsStatus getBestellungsStatus() {
-        if(tats_lieferdatum == null){
+        if(tatsLieferdatum == null){
             return BestellungsStatus.nochNichtErhalten;
-        } else if (tats_lieferdatum.isBefore(vors_lieferdatum)) {
+        } else if (tatsLieferdatum.isBefore(vslLieferdatum)) {
             return BestellungsStatus.puenktlich;
         } else {
             return BestellungsStatus.spaet;
@@ -42,15 +41,15 @@ public class Bestellung {
 
     private double gesamtPreis;
 
-    private LocalDateTime vors_lieferdatum;
+    private LocalDateTime vslLieferdatum;
 
-    private LocalDateTime tats_lieferdatum;
+    private LocalDateTime tatsLieferdatum;
 
 
     public void calculateVors_lieferdatum(){
 
         LocalDateTime date = LocalDateTime.now().plus(lieferant.getLieferzeit());
-        setVors_lieferdatum(date);
+        setVslLieferdatum(date);
     }
     public double calculateGesamtPreis() {
         double summe = 0;
@@ -86,20 +85,20 @@ public class Bestellung {
         this.gesamtPreis = gesamtPreis;
     }
 
-    public LocalDateTime getVors_lieferdatum() {
-        return vors_lieferdatum;
+    public LocalDateTime getVslLieferdatum() {
+        return vslLieferdatum;
     }
 
-    public void setVors_lieferdatum(LocalDateTime vors_lieferdatum) {
-        this.vors_lieferdatum = vors_lieferdatum;
+    public void setVslLieferdatum(LocalDateTime vslLieferdatum) {
+        this.vslLieferdatum = vslLieferdatum;
     }
 
-    public LocalDateTime getTats_lieferdatum() {
-        return tats_lieferdatum;
+    public LocalDateTime getTatsLieferdatum() {
+        return tatsLieferdatum;
     }
 
-    public void setTats_lieferdatum(LocalDateTime tats_lieferdatum) {
-        this.tats_lieferdatum = tats_lieferdatum;
+    public void setTatsLieferdatum(LocalDateTime tatsLieferdatum) {
+        this.tatsLieferdatum = tatsLieferdatum;
     }
 
     public Lieferant getLieferant() {
@@ -121,6 +120,13 @@ public class Bestellung {
     public Bestellung() {
     }
 
+    public int getGesamteMenge(){
+        int sum = 0;
+        for (Ware ware : waren){
+            sum += ware.getMenge();
+        }
+        return sum;
+    }
 
 
 }

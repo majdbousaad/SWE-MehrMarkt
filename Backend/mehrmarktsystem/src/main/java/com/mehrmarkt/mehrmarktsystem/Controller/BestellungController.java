@@ -1,14 +1,11 @@
 package com.mehrmarkt.mehrmarktsystem.Controller;
 
-import com.mehrmarkt.mehrmarktsystem.Service.BestellungService;
-import com.mehrmarkt.mehrmarktsystem.Service.LieferantService;
-import com.mehrmarkt.mehrmarktsystem.Service.ProductService;
-import com.mehrmarkt.mehrmarktsystem.model.Bestellung;
-import com.mehrmarkt.mehrmarktsystem.model.Product;
-import com.mehrmarkt.mehrmarktsystem.model.Ware;
+import com.mehrmarkt.mehrmarktsystem.Service.*;
+import com.mehrmarkt.mehrmarktsystem.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -24,11 +21,32 @@ public class BestellungController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private LagerProduktService lagerProduktService;
+
+    @Autowired
+    private LagerService lagerService;
+
     @PostMapping("/add")
     public String add(@RequestBody Bestellung bestellung){
 
+        Lager lager = lagerService.getLager();
+        if(lager == null){
+            lager = lagerService.createLager();
+        }
+        int gesamteMenge = 0;
+
+        List<Bestellung> anstehendeBestellungen = bestellungService.getAnstehendeBestellungen();
+        for (Bestellung anstehendeBestellung : anstehendeBestellungen){
+            gesamteMenge += anstehendeBestellung.getGesamteMenge();
+        }
+        gesamteMenge += bestellung.getGesamteMenge();
+
+        if(lager.getSize() + gesamteMenge > lager.getMax()){
+            return "Lager ist ausgelastet";
+        }
         for (Ware ware : bestellung.getWaren()){
-            Product product = productService.getById(ware.getProduct().getId());
+            Product product = productService.getByEAN(ware.getProduct().getEAN());
             ware.setProduct(product);
         }
 
