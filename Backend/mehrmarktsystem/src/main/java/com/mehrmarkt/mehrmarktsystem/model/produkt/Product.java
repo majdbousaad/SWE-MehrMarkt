@@ -4,7 +4,7 @@ package com.mehrmarkt.mehrmarktsystem.model.produkt;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
-import com.mehrmarkt.mehrmarktsystem.model.ware.Ware;
+import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
 
 import javax.persistence.*;
 import java.util.List;
@@ -46,7 +46,7 @@ public class Product {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
     @JsonIgnore
-    private List<Ware> waren;
+    private List<GekaufteWare> waren;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lieferant_id", referencedColumnName = "id")
