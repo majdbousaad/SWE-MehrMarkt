@@ -1,6 +1,6 @@
 package com.mehrmarkt.mehrmarktsystem.Repository;
 
-import com.mehrmarkt.mehrmarktsystem.model.Bestellung;
+import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

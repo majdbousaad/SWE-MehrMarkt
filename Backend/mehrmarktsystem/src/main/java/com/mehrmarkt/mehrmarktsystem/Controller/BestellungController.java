@@ -1,7 +1,15 @@
 package com.mehrmarkt.mehrmarktsystem.Controller;
 
-import com.mehrmarkt.mehrmarktsystem.Service.*;
-import com.mehrmarkt.mehrmarktsystem.model.*;
+import com.mehrmarkt.mehrmarktsystem.Service.bestellung.BestellungService;
+import com.mehrmarkt.mehrmarktsystem.Service.lager.LagerService;
+import com.mehrmarkt.mehrmarktsystem.Service.lieferant.LieferantService;
+import com.mehrmarkt.mehrmarktsystem.Service.produkt.LagerProduktService;
+import com.mehrmarkt.mehrmarktsystem.Service.produkt.ProductService;
+import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
+import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungsStatus;
+import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
+import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
+import com.mehrmarkt.mehrmarktsystem.model.ware.Ware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

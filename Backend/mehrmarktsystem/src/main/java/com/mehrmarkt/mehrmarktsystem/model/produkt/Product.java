@@ -1,8 +1,10 @@
-package com.mehrmarkt.mehrmarktsystem.model;
+package com.mehrmarkt.mehrmarktsystem.model.produkt;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
+import com.mehrmarkt.mehrmarktsystem.model.ware.Ware;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,7 +18,7 @@ public class Product {
 
     public static int anzahl = 0;
 
-    private int preis;
+    private double preis;
 
     public String getEAN() {
         return EAN;
@@ -34,11 +36,11 @@ public class Product {
         this.name = name;
     }
 
-    public int getPreis() {
+    public double getPreis() {
         return preis;
     }
 
-    public void setPreis(int preis) {
+    public void setPreis(double preis) {
         this.preis = preis;
     }
 

@@ -1,6 +1,8 @@
-package com.mehrmarkt.mehrmarktsystem.model;
+package com.mehrmarkt.mehrmarktsystem.model.bestellung;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
+import com.mehrmarkt.mehrmarktsystem.model.ware.Ware;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;

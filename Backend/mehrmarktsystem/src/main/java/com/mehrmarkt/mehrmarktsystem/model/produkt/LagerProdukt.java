@@ -1,7 +1,7 @@
-package com.mehrmarkt.mehrmarktsystem.model;
+package com.mehrmarkt.mehrmarktsystem.model.produkt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 
 import javax.persistence.*;
 
@@ -22,8 +22,12 @@ public class LagerProdukt{
     @JoinColumn(name = "lager_id", referencedColumnName = "id")
     @JsonIgnore
     private Lager lager;
-    int menge;
-    String lagerOrt;
+    private int menge;
+    private String lagerOrt;
+
+    private String name;
+
+    private double preis;
 
     public LagerProdukt() {
     }
@@ -64,8 +68,31 @@ public class LagerProdukt{
         setEAN(lieferantProduct.getEAN());
         setLagerOrt("Not specified");
         setMenge(menge);
+        setPreis(lieferantProduct.getPreis());
         setProduct(lieferantProduct);
     }
 
+    public Lager getLager() {
+        return lager;
+    }
 
+    public void setLager(Lager lager) {
+        this.lager = lager;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPreis() {
+        return preis;
+    }
+
+    public void setPreis(double preis) {
+        this.preis = preis;
+    }
 }

@@ -1,8 +1,7 @@
-package com.mehrmarkt.mehrmarktsystem.Service;
+package com.mehrmarkt.mehrmarktsystem.Service.produkt;
 
 
-import com.mehrmarkt.mehrmarktsystem.model.LagerProdukt;
-import org.springframework.stereotype.Service;
+import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 
 import java.util.List;
 

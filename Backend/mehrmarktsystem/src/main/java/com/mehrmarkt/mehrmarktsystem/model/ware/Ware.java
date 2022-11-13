@@ -1,6 +1,8 @@
-package com.mehrmarkt.mehrmarktsystem.model;
+package com.mehrmarkt.mehrmarktsystem.model.ware;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
+import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
 
 import javax.persistence.*;
 

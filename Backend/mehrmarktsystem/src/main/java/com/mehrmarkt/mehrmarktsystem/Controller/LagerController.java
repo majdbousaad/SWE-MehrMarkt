@@ -1,9 +1,8 @@
 package com.mehrmarkt.mehrmarktsystem.Controller;
 
-import com.mehrmarkt.mehrmarktsystem.Service.LagerService;
-import com.mehrmarkt.mehrmarktsystem.model.Lager;
+import com.mehrmarkt.mehrmarktsystem.Service.lager.LagerService;
+import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 

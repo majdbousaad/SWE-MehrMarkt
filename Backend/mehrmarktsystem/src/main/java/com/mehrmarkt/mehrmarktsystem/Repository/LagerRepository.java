@@ -1,7 +1,7 @@
 package com.mehrmarkt.mehrmarktsystem.Repository;
 
 
-import com.mehrmarkt.mehrmarktsystem.model.Lager;
+import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

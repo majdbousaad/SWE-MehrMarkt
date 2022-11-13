@@ -1,8 +1,8 @@
-package com.mehrmarkt.mehrmarktsystem.Service;
+package com.mehrmarkt.mehrmarktsystem.Service.produkt;
 
 
 import com.mehrmarkt.mehrmarktsystem.Repository.LagerProduktRepository;
-import com.mehrmarkt.mehrmarktsystem.model.LagerProdukt;
+import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

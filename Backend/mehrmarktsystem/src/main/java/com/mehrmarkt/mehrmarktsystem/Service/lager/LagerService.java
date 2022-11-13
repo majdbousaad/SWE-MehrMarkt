@@ -1,6 +1,6 @@
-package com.mehrmarkt.mehrmarktsystem.Service;
+package com.mehrmarkt.mehrmarktsystem.Service.lager;
 
-import com.mehrmarkt.mehrmarktsystem.model.Lager;
+import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 
 public interface LagerService {
     Lager createLager();

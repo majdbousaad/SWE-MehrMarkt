@@ -1,6 +1,6 @@
-package com.mehrmarkt.mehrmarktsystem.Service;
+package com.mehrmarkt.mehrmarktsystem.Service.produkt;
 
-import com.mehrmarkt.mehrmarktsystem.model.Product;
+import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
 
 import java.util.List;
 

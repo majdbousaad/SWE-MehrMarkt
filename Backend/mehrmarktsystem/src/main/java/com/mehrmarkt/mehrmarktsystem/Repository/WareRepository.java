@@ -1,6 +1,6 @@
 package com.mehrmarkt.mehrmarktsystem.Repository;
 
-import com.mehrmarkt.mehrmarktsystem.model.Ware;
+import com.mehrmarkt.mehrmarktsystem.model.ware.Ware;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
