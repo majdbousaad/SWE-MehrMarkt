@@ -1,8 +1,11 @@
 package com.mehrmarkt.mehrmarktsystem.model.lager;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mehrmarkt.mehrmarktsystem.Repository.VerkaufRepository;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
+import com.mehrmarkt.mehrmarktsystem.model.verkauf.Verkauf;
+import com.mehrmarkt.mehrmarktsystem.model.ware.VerkaufteWare;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -78,5 +81,40 @@ public class Lager {
             }
         }
         return null;
+    }
+
+
+    private LagerProdukt getLagerProdukt(LagerProdukt lagerProdukt){
+        for (LagerProdukt produkt : lagerProdukts){
+            if(produkt.getEAN().equals(lagerProdukt.getEAN())){
+                return produkt;
+            }
+        }
+        return null;
+    }
+
+
+    public boolean verkaufLagerProdukt(LagerProdukt lagerProdukt, int menge) {
+
+        LagerProdukt produkt = getLagerProdukt(lagerProdukt);
+        lagerProdukt.setMenge(lagerProdukt.getMenge() - menge);
+
+        setSize(size - menge);
+        return true;
+    }
+
+    public boolean checkVerkauf(Verkauf verkauf){
+        List<VerkaufteWare> verkaufteWaren = verkauf.getVerkaufteWaren();
+
+        for (VerkaufteWare ware : verkaufteWaren){
+            LagerProdukt currentLagerProdukt = getLagerProdukt(ware.getLagerProdukt());
+            if(currentLagerProdukt == null
+                    || ware.getMenge() <= 0
+                    || currentLagerProdukt.getMenge() < ware.getMenge()){
+                return false;
+            }
+        }
+
+        return true;
     }
 }
