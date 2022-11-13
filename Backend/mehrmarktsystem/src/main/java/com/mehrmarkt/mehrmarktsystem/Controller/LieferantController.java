@@ -2,7 +2,9 @@ package com.mehrmarkt.mehrmarktsystem.Controller;
 
 
 import com.mehrmarkt.mehrmarktsystem.Service.LieferantService;
+import com.mehrmarkt.mehrmarktsystem.Service.ProductService;
 import com.mehrmarkt.mehrmarktsystem.model.Lieferant;
+import com.mehrmarkt.mehrmarktsystem.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +16,18 @@ public class LieferantController {
     @Autowired
     private LieferantService lieferantService;
 
+    @Autowired
+    private ProductService productService;
+
     @PostMapping("/add")
     public String add(@RequestBody Lieferant lieferant){
+
+        List<Product> products = lieferant.getProducts();
+
+        int i = Product.anzahl - products.size();
+        for (Product product : products){
+            product.setEAN("9673485726" + String.format("%03d", i++));
+        }
         lieferantService.saveLieferant(lieferant);
 
         return "New Lieferant is added";
