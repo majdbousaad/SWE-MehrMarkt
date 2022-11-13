@@ -11,31 +11,19 @@ import java.util.List;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private String EAN;
     private String name;
 
+    public static int anzahl = 0;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
-    @JsonIgnore
-    private List<Ware> waren;
     private int preis;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lieferant_id", referencedColumnName = "id")
-    @JsonIgnoreProperties(value = {"products", "bestellungen"})
-    private Lieferant lieferant;
-
-    public Product(){
-
+    public String getEAN() {
+        return EAN;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setEAN(String EAN) {
+        this.EAN = EAN;
     }
 
     public String getName() {
@@ -46,14 +34,6 @@ public class Product {
         this.name = name;
     }
 
-    public Lieferant getLieferant() {
-        return lieferant;
-    }
-
-    public void setLieferant(Lieferant lieferant) {
-        this.lieferant = lieferant;
-    }
-
     public int getPreis() {
         return preis;
     }
@@ -62,5 +42,26 @@ public class Product {
         this.preis = preis;
     }
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+    @JsonIgnore
+    private List<Ware> waren;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lieferant_id", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"products", "bestellungen"})
+    private Lieferant lieferant;
+
+
+
+    public Lieferant getLieferant() {
+        return lieferant;
+    }
+
+    public void setLieferant(Lieferant lieferant) {
+        this.lieferant = lieferant;
+    }
+
+    public Product() {
+        anzahl++;
+    }
 }
