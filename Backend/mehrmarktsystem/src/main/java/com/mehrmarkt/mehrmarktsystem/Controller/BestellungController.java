@@ -65,4 +65,31 @@ public class BestellungController {
     public List<Bestellung> getAllBestellungen(){
         return bestellungService.getAllBestellungen();
     }
+
+    @PatchMapping("/{bestellung_id}/erhalten")
+    public String erhalten(@PathVariable int bestellung_id){
+        Bestellung bestellung = bestellungService.getBestellung(bestellung_id);
+        if(bestellung.getBestellungsStatus() != BestellungsStatus.nochNichtErhalten){
+            return "Diese Bestellung ist schon da";
+        }
+        if(bestellung != null){
+            LocalDateTime now = LocalDateTime.now();
+            bestellung.setTatsLieferdatum(now);
+            bestellungService.saveBestellung(bestellung);
+            Lager lager = lagerService.getLager();
+
+            if(lager == null){
+                 lager = lagerService.createLager();
+            }
+
+            for (Ware ware : bestellung.getWaren()){
+                lager.addNewLagerProdukt(ware.getProduct(), ware.getMenge());
+            }
+            lagerService.updateLager(lager);
+            return "Bestellung erhalten. Lager ist aktualisiert";
+
+
+        }
+        return "Bestellung existiert nicht";
+    }
 }
