@@ -26,17 +26,17 @@ const navigation = (): VerticalNavItemsType => {
     {
       title: 'Lager',
       icon: WindowShutter,
-      path: '/'
+      path: '/Lager'
     },
     {
       title: 'Einkauf',
       icon: CartOutline,
-      path: '/'
+      path: '/Einkauf'
     },
     {
       title: 'Verkauf',
       icon: Finance,
-      path: '/'
+      path: '/Verkauf'
     }
   ]
 }

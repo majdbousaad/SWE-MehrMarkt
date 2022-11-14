@@ -4,15 +4,16 @@ import Paper from '@mui/material/Paper'
 
 export default function TodaysSells() {
   return (
-    <Paper className='h-full w-full p-5'>
-      <Typography variant='h6'>Heutige Verkäufe</Typography>
-      <Box className='flex flex-col justify-center items-center h-full '>
-        <Typography variant='h5' className='' align='center'>
-          <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-            {' '}
-            212 Produkte
-          </Box>{' '}
-          verkauft. 😎
+    <Paper className='h-full w-full p-5 flex flex-col justify-center items-start'>
+      <Typography variant='h6' align='left'>
+        Heutige Verkäufe
+      </Typography>
+      <Box className='flex flex-col justify-center items-center h-full w-full '>
+        <Typography variant='h1' className='' align='center'>
+          212
+        </Typography>
+        <Typography variant='h6' className='' align='center'>
+          Produkte verkauft. 😎
         </Typography>
       </Box>
     </Paper>

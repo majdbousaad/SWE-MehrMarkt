@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid'
 
 // ** Styled Component Import
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
+import LagerStatus from 'src/views/dashboard/LagerStatus'
 import MostPopularProducts from 'src/views/dashboard/MostPopularProducts'
 
 // ** Demo Components Imports
@@ -21,6 +22,9 @@ const Dashboard = () => {
         </Grid>
         <Grid item xs={12}>
           <Table />
+        </Grid>
+        <Grid item xs={12}>
+          <LagerStatus />
         </Grid>
       </Grid>
     </ApexChartWrapper>
