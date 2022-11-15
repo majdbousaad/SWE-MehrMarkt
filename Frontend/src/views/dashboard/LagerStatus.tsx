@@ -48,7 +48,7 @@ export default function LagerStatus() {
 
   return (
     <Card className='h-full w-full p-2 bg-red-600'>
-      <CardHeader title='Anstehende Lieferungen' />
+      <CardHeader title='Lagerstatus' />
       <CardContent>
         <ReactApexcharts options={options} series={series} type='radialBar' height={350} />
       </CardContent>
