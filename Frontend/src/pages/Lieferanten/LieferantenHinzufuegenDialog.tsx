@@ -7,17 +7,12 @@ import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import CloseIcon from 'mdi-material-ui/Close'
 import Grid from '@mui/material/Grid'
-import Input from '@mui/material/Input'
 import TextField from '@mui/material/TextField'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
-import MenuItem from '@mui/material/MenuItem'
-import InputLabel from '@mui/material/InputLabel'
 import Switch from '@mui/material/Switch'
 import { useState } from 'react'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import FormLabel from '@mui/material/FormLabel'
+import LieferantKatalog from './LieferantKatalog'
 
 interface ILiferant {
   name: string
@@ -90,14 +85,12 @@ export default function LieferantenHinzufuegenDialog({
                 <TextField placeholder='Name*' required fullWidth variant='outlined' size='small' />
                 <TextField placeholder='Anschrift*' required fullWidth variant='outlined' size='small' />
                 <TextField placeholder='Kontaktdaten*' required fullWidth variant='outlined' size='small' />
-
                 <FormGroup>
                   <FormControlLabel
                     control={<Switch checked={isActive} onChange={() => setIsActive(!isActive)} />}
                     label={isActive ? 'Aktiv' : 'Inaktiv'}
                   />
                 </FormGroup>
-
                 <Box className='TextField-without-border-radius'>
                   <Typography className='pb-3' variant='body2' align='left'>
                     Lieferzeit
@@ -139,6 +132,7 @@ export default function LieferantenHinzufuegenDialog({
               <Typography variant='h6' align='center'>
                 Katalog
               </Typography>
+              <LieferantKatalog />
             </Grid>
           </Grid>
         </Box>

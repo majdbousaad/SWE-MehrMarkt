@@ -3,7 +3,7 @@ import { useState } from 'react'
 import LieferantenHinzufuegenDialog from './LieferantenHinzufuegenDialog'
 
 export default function LieferantenHinzufuegenButton() {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
 
   function handleClose() {
     setOpen(false)
