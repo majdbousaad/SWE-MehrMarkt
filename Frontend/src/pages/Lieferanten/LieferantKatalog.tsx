@@ -13,17 +13,14 @@ import TextField from '@mui/material/TextField'
 import { v4 as uuidv4 } from 'uuid'
 
 import { useRef, useState } from 'react'
+import { ICatalogProducts } from './LieferantenProfilDialog'
 
-export default function LieferantKatalog() {
+export default function LieferantKatalog({ catalog }: { catalog: ICatalogProducts[] }) {
   function createData(id: string, name: string, eanCode: string, price: number) {
     return { id, name, eanCode, price }
   }
 
-  const [rows, setRows] = useState([
-    createData(uuidv4(), 'Frozen yoghurt', '159159', 1.5),
-    createData(uuidv4(), 'Ice cream sandwich', '2462234', 10),
-    createData(uuidv4(), 'Cupcake', '232123', 6.42)
-  ])
+  const [rows, setRows] = useState(catalog)
 
   function updateProduct(id: string, name: string, eanCode: string, price: number) {
     const newRows = rows.map(row => {
@@ -41,7 +38,7 @@ export default function LieferantKatalog() {
   }
 
   return (
-    <Card>
+    <Card raised={true}>
       <CardContent>
         <TableContainer>
           <Table sx={{ minWidth: 650 }} aria-label='simple table'>
@@ -59,14 +56,28 @@ export default function LieferantKatalog() {
             </TableHead>
             <TableBody>
               {rows.map(row => (
-                <KatalogProdukt
-                  key={'id-' + row.eanCode}
-                  id={row.id}
-                  updateProduct={updateProduct}
-                  name={row.name}
-                  eanCode={row.eanCode}
-                  price={row.price}
-                />
+                <>
+                  {row.name === '' ? (
+                    <KatalogProdukt
+                      key={'id-' + row.eanCode}
+                      id={row.id}
+                      updateProduct={updateProduct}
+                      name={row.name}
+                      eanCode={row.eanCode}
+                      price={row.price}
+                      forceEditing
+                    />
+                  ) : (
+                    <KatalogProdukt
+                      key={'id-' + row.eanCode}
+                      id={row.id}
+                      updateProduct={updateProduct}
+                      name={row.name}
+                      eanCode={row.eanCode}
+                      price={row.price}
+                    />
+                  )}
+                </>
               ))}
             </TableBody>
           </Table>
@@ -81,15 +92,17 @@ function KatalogProdukt({
   name,
   eanCode,
   price,
-  updateProduct
+  updateProduct,
+  forceEditing
 }: {
   id: string
   name: string
   eanCode: string
   price: number
   updateProduct: (id: string, name: string, eanCode: string, price: number) => void
+  forceEditing?: boolean
 }) {
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] = useState(forceEditing?.valueOf() ?? false)
 
   const nameRef = useRef<any>(null)
   const EANRef = useRef<any>(null)
@@ -122,13 +135,34 @@ function KatalogProdukt({
       ) : (
         <TableRow key={name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
           <TableCell component='th' scope='row'>
-            <TextField inputRef={nameRef} defaultValue={name} fullWidth variant='outlined' size='small' />
+            <TextField
+              inputRef={nameRef}
+              defaultValue={name}
+              placeholder={'Name'}
+              fullWidth
+              variant='outlined'
+              size='small'
+            />
           </TableCell>
           <TableCell align='left'>
-            <TextField inputRef={EANRef} defaultValue={eanCode} fullWidth variant='outlined' size='small' />
+            <TextField
+              inputRef={EANRef}
+              defaultValue={eanCode}
+              placeholder={'EAN-Nummer'}
+              fullWidth
+              variant='outlined'
+              size='small'
+            />
           </TableCell>
           <TableCell align='left'>
-            <TextField inputRef={priceRef} defaultValue={price} fullWidth variant='outlined' size='small' />
+            <TextField
+              inputRef={priceRef}
+              defaultValue={forceEditing ? null : price}
+              placeholder={'Preis'}
+              fullWidth
+              variant='outlined'
+              size='small'
+            />
           </TableCell>
           <TableCell align='center'>
             <Button size='small' color='success' variant='outlined' onClick={() => onSave()}>

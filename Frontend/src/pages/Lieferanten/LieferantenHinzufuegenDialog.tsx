@@ -88,7 +88,7 @@ export default function LieferantenHinzufuegenDialog({
                 <FormGroup>
                   <FormControlLabel
                     control={<Switch checked={isActive} onChange={() => setIsActive(!isActive)} />}
-                    label={isActive ? 'Aktiv' : 'Inaktiv'}
+                    label={isActive ? 'Status: Aktiv' : 'Status: Inaktiv'}
                   />
                 </FormGroup>
                 <Box className='TextField-without-border-radius'>
@@ -132,7 +132,7 @@ export default function LieferantenHinzufuegenDialog({
               <Typography variant='h6' align='center'>
                 Katalog
               </Typography>
-              <LieferantKatalog />
+              <LieferantKatalog catalog={[]} />
             </Grid>
           </Grid>
         </Box>
