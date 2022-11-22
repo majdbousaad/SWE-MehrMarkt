@@ -50,7 +50,7 @@ public class BestellungController {
         }
         gesamteMenge += bestellung.getGesamteMenge();
 
-        if(lager.getSize() + gesamteMenge > lager.getMax()){
+        if(bestellungService.getGesamteAnstehendeMenge() > lager.getMax()){
             return "Lager ist ausgelastet";
         }
         for (GekaufteWare gekaufteWare : bestellung.getWaren()){

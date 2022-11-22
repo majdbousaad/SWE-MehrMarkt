@@ -33,4 +33,12 @@ public class BestellungServiceImpl implements BestellungService{
 
         return bestellungRepository.findByTatsLieferdatum(null);
     }
+
+    @Override
+    public int getGesamteAnstehendeMenge() {
+        if(bestellungRepository.getGesamteAnstehendeMenge() == null){
+            return 0;
+        }
+        return bestellungRepository.getGesamteAnstehendeMenge();
+    }
 }

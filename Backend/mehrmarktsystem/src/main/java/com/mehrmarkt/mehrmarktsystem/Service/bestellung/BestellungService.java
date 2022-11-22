@@ -12,4 +12,5 @@ public interface BestellungService {
      Bestellung getBestellung(int id);
 
      List<Bestellung> getAnstehendeBestellungen();
+     int getGesamteAnstehendeMenge();
 }

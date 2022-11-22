@@ -2,6 +2,7 @@ package com.mehrmarkt.mehrmarktsystem.Repository;
 
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -12,4 +13,8 @@ public interface BestellungRepository extends JpaRepository<Bestellung, Integer>
 
     List<Bestellung> findByTatsLieferdatum(LocalDateTime datum);
 
+    @Query("SELECT sum(g.menge) from GekaufteWare g" +
+            "    join Bestellung b on b.id = g.bestellung.id" +
+            "    where b.tatsLieferdatum is null")
+    Integer getGesamteAnstehendeMenge();
 }
