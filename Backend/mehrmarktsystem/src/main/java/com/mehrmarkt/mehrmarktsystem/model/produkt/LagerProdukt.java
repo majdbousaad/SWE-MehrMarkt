@@ -30,7 +30,6 @@ public class LagerProdukt{
     private List<VerkaufteWare> verkaufteWaren;
 
     private int menge;
-    private String lagerOrt;
 
     private String name;
 

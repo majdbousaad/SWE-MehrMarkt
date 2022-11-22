@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LagerProduktRepository extends JpaRepository<LagerProdukt, String> {
-    @Query("SELECT p FROM LagerProdukt p WHERE p.EAN=?1")
     LagerProdukt getByEAN(String ean);
 }
