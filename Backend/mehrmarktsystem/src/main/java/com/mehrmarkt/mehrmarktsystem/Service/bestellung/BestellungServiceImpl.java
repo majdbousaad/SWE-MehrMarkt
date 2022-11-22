@@ -25,7 +25,12 @@ public class BestellungServiceImpl implements BestellungService{
 
     @Override
     public Bestellung getBestellung(int id) {
-        return bestellungRepository.findById(id).get();
+        try {
+            return bestellungRepository.findById(id).get();
+        } catch (Exception e){
+            return null;
+        }
+
     }
 
     @Override

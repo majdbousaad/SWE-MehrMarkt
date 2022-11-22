@@ -47,12 +47,6 @@ public class Bestellung {
 
     private LocalDateTime tatsLieferdatum;
 
-
-    public void calculateVors_lieferdatum(){
-
-        LocalDateTime date = LocalDateTime.now().plus(lieferant.getLieferzeit());
-        setVslLieferdatum(date);
-    }
     public double calculateGesamtPreis() {
         double summe = 0;
         for (GekaufteWare gekaufteWare :
@@ -120,14 +114,6 @@ public class Bestellung {
     }
 
     public Bestellung() {
-    }
-
-    public int getGesamteMenge(){
-        int sum = 0;
-        for (GekaufteWare gekaufteWare : waren){
-            sum += gekaufteWare.getMenge();
-        }
-        return sum;
     }
 
 

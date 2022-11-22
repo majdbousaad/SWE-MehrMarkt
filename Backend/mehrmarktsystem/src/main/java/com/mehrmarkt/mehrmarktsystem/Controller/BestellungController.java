@@ -46,6 +46,9 @@ public class BestellungController {
         }
         for (GekaufteWare gekaufteWare : bestellung.getWaren()){
             Product product = productService.getByEAN(gekaufteWare.getProduct().getEAN());
+            if(product == null){
+                return "Produkt existiert nicht";
+            }
             gekaufteWare.setProduct(product);
         }
 
@@ -55,7 +58,6 @@ public class BestellungController {
         bestellung.setLieferant(
                 lieferantService.getById(bestellung.getLieferant().getId())
         );
-        bestellung.calculateVors_lieferdatum();
         bestellungService.saveBestellung(bestellung);
         return "New Bestellung is added";
     }
@@ -68,23 +70,23 @@ public class BestellungController {
     @PatchMapping("/{bestellung_id}/erhalten")
     public String erhalten(@PathVariable int bestellung_id){
         Bestellung bestellung = bestellungService.getBestellung(bestellung_id);
+        if(bestellung == null){
+            return "Bestellung existiert nicht";
+        }
         if(bestellung.getBestellungsStatus() != BestellungsStatus.nochNichtErhalten){
             return "Diese Bestellung ist schon da";
         }
-        if(bestellung != null){
-            LocalDateTime now = LocalDateTime.now();
-            bestellung.setTatsLieferdatum(now);
-            bestellungService.saveBestellung(bestellung);
-            Lager lager = lagerService.getLager("Aachen");
 
-            for (GekaufteWare gekaufteWare : bestellung.getWaren()){
-                lager.addNewLagerProdukt(gekaufteWare.getProduct(), gekaufteWare.getMenge(), lager);
-            }
-            lagerService.updateLager(lager);
-            return "Bestellung erhalten. Lager ist aktualisiert";
+        LocalDateTime now = LocalDateTime.now();
+        bestellung.setTatsLieferdatum(now);
+        bestellungService.saveBestellung(bestellung);
+        Lager lager = lagerService.getLager("Aachen");
 
-
+        for (GekaufteWare gekaufteWare : bestellung.getWaren()){
+            lager.addNewLagerProdukt(gekaufteWare.getProduct(), gekaufteWare.getMenge(), lager);
         }
-        return "Bestellung existiert nicht";
+        lagerService.updateLager(lager);
+        return "Bestellung erhalten. Lager ist aktualisiert";
+
     }
 }
