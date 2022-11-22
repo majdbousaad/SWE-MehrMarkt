@@ -10,6 +10,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LagerRepository extends JpaRepository<Lager, Integer> {
     @Modifying
-    @Query("update Lager l set l.max = ?1 where l.id=1")
-    int updateSize(int maxSize);
+    @Query("update Lager l set l.max = ?2 where l.name = ?1")
+    int updateSize(String lagerort, int maxSize);
+
+
+
+    boolean existsLagerByName(String lagerort);
+    Lager getLagerByName(String lagerort);
 }

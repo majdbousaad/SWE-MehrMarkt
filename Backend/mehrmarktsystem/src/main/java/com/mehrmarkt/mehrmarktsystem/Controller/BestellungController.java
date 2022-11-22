@@ -38,17 +38,8 @@ public class BestellungController {
     @PostMapping("/add")
     public String add(@RequestBody Bestellung bestellung){
 
-        Lager lager = lagerService.getLager();
-        if(lager == null){
-            lager = lagerService.createLager();
-        }
-        int gesamteMenge = 0;
+        Lager lager = lagerService.getLager("Aachen");
 
-        List<Bestellung> anstehendeBestellungen = bestellungService.getAnstehendeBestellungen();
-        for (Bestellung anstehendeBestellung : anstehendeBestellungen){
-            gesamteMenge += anstehendeBestellung.getGesamteMenge();
-        }
-        gesamteMenge += bestellung.getGesamteMenge();
 
         if(bestellungService.getGesamteAnstehendeMenge() > lager.getMax()){
             return "Lager ist ausgelastet";
@@ -84,14 +75,10 @@ public class BestellungController {
             LocalDateTime now = LocalDateTime.now();
             bestellung.setTatsLieferdatum(now);
             bestellungService.saveBestellung(bestellung);
-            Lager lager = lagerService.getLager();
-
-            if(lager == null){
-                 lager = lagerService.createLager();
-            }
+            Lager lager = lagerService.getLager("Aachen");
 
             for (GekaufteWare gekaufteWare : bestellung.getWaren()){
-                lager.addNewLagerProdukt(gekaufteWare.getProduct(), gekaufteWare.getMenge());
+                lager.addNewLagerProdukt(gekaufteWare.getProduct(), gekaufteWare.getMenge(), lager);
             }
             lagerService.updateLager(lager);
             return "Bestellung erhalten. Lager ist aktualisiert";

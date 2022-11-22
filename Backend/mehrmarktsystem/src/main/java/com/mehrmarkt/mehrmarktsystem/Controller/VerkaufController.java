@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/verkauf")
 public class VerkaufController {
@@ -28,24 +31,34 @@ public class VerkaufController {
     @PostMapping("/add")
     public String add(@RequestBody Verkauf verkauf){
 
-        Lager lager = lagerService.getLager();
 
-        if(!lager.checkVerkauf(verkauf)) {
-            return "Fehler im Verkauf, Entweder Produkt ist nicht da oder menge ist zu groß";
-        }
-
+        Set<Lager> lagers = new HashSet<>();
         for (VerkaufteWare ware : verkauf.getVerkaufteWaren()){
-
+            if(ware.getMenge() <= 0){
+                return "ware Menge <= 0";
+            }
             LagerProdukt verkauftesProdukt = lagerProduktService.getByEAN(ware.getLagerProdukt().getEAN());
+            if(verkauftesProdukt == null){
+                return "Produkt existiert nicht";
+            }
+            if(verkauftesProdukt.getMenge() < ware.getMenge()){
+                return "zu wenige Produkte im Lager";
+            }
             ware.setLagerProdukt(verkauftesProdukt);
+            Lager lager= verkauftesProdukt.getLager();
 
             lager.verkaufLagerProdukt(verkauftesProdukt, ware.getMenge());
+            lagers.add(lager);
         }
 
         verkauf.setGesamtPreis(verkauf.calculateGesamtPreis());
 
         verkaufService.saveVerkauf(verkauf);
-        lagerService.updateLager(lager);
+        for (Lager lager:
+             lagers) {
+            lagerService.updateLager(lager);
+        }
+
 
         return "Produkte wurden erfolgreich verkauft";
 

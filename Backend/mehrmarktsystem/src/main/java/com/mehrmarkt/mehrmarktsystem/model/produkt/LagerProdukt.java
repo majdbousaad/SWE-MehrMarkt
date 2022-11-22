@@ -21,7 +21,7 @@ public class LagerProdukt{
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lager_id", referencedColumnName = "id")
+    @JoinColumn(name = "lagerort", referencedColumnName = "name")
     @JsonIgnore
     private Lager lager;
 
@@ -47,14 +47,6 @@ public class LagerProdukt{
         this.menge = menge;
     }
 
-    public String getLagerOrt() {
-        return lagerOrt;
-    }
-
-    public void setLagerOrt(String lagerOrt) {
-        this.lagerOrt = lagerOrt;
-    }
-
     public String getEAN() {
         return EAN;
     }
@@ -71,9 +63,9 @@ public class LagerProdukt{
         this.product = product;
     }
 
-    public LagerProdukt(Product lieferantProduct, int menge){
+    public LagerProdukt(Product lieferantProduct, int menge, Lager lager){
         setEAN(lieferantProduct.getEAN());
-        setLagerOrt("Not specified");
+        setLager(lager);
         setMenge(menge);
         setPreis(lieferantProduct.getPreis());
         setName(lieferantProduct.getName());

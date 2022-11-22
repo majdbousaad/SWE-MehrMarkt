@@ -15,15 +15,19 @@ import java.util.List;
 public class Lager {
 
     @Id
-    int id = 1;
+    private String name;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="lager_id")
+    @JoinColumn(name="lagerort")
     @JsonIgnoreProperties(value = {"lager", "product"})
     private List<LagerProdukt> lagerProdukts;
 
     private int max;
     private int size;
+
+    public Lager() {
+
+    }
 
     public List<LagerProdukt> getLagerProdukts() {
         return lagerProdukts;
@@ -48,13 +52,24 @@ public class Lager {
     public void setSize(int size) {
         this.size = size;
     }
-    public Lager() {
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Lager(String lagerort) {
         setSize(0);
         setMax(100);
+        setName( lagerort);
         setLagerProdukts(new ArrayList<>());
     }
 
-    public boolean addNewLagerProdukt(Product lieferantProdukt, int menge){
+    public boolean addNewLagerProdukt(Product lieferantProdukt, int menge, Lager lager){
         if(menge <= 0 || lieferantProdukt == null){
             return false;
         }
@@ -63,7 +78,7 @@ public class Lager {
             lagerProdukt.setMenge(lagerProdukt.getMenge() + menge);
 
         } else {
-            lagerProdukts.add(new LagerProdukt(lieferantProdukt, menge));
+            lagerProdukts.add(new LagerProdukt(lieferantProdukt, menge, lager));
         }
 
 
@@ -96,9 +111,7 @@ public class Lager {
 
     public boolean verkaufLagerProdukt(LagerProdukt lagerProdukt, int menge) {
 
-        LagerProdukt produkt = getLagerProdukt(lagerProdukt);
         lagerProdukt.setMenge(lagerProdukt.getMenge() - menge);
-
         setSize(size - menge);
         return true;
     }

@@ -12,9 +12,9 @@ public class LagerServiceImpl implements LagerService{
     private LagerRepository lagerRepository;
 
     @Override
-    public Lager createLager() {
+    public Lager createLager(String lagerort) {
 
-        Lager lager = new Lager();
+        Lager lager = new Lager(lagerort);
         lagerRepository.save(lager);
         return lager;
 
@@ -22,12 +22,20 @@ public class LagerServiceImpl implements LagerService{
     }
 
     @Override
-    public Lager getLager() {
-        if(lagerRepository.existsById(1)) {
-            return lagerRepository.findById(1).get();
+    public Lager getLager(String lagerort) {
+        Lager lager;
+        if(existsByName(lagerort)) {
+            lager = lagerRepository.getLagerByName(lagerort);
+        } else {
+            lager = createLager(lagerort);
         }
-        return createLager();
+        return lager;
 
+    }
+
+    @Override
+    public boolean existsByName(String lagerort) {
+        return lagerRepository.existsLagerByName(lagerort);
     }
 
     @Override
@@ -37,7 +45,7 @@ public class LagerServiceImpl implements LagerService{
     }
 
     @Override
-    public int updateMaxSize(int maxSize) {
-        return lagerRepository.updateSize(maxSize);
+    public int updateMaxSize(String lagerort, int maxSize) {
+        return lagerRepository.updateSize(lagerort, maxSize);
     }
 }

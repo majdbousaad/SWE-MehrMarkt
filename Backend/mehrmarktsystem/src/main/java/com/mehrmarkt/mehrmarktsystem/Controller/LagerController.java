@@ -14,14 +14,17 @@ public class LagerController {
     private LagerService lagerService;
 
     @Transactional
-    @PatchMapping("/updateSize/{maxSize}")
-    public String updateSize(@PathVariable int maxSize){
-        Lager lager = lagerService.getLager();
-        if(lager.getSize() >= maxSize){
-            return "Max Size ist kleiner als die Anzahl der Produkte im Lager";
+    @PatchMapping("/updateSize/{lagerort}/{maxSize}")
+    public String updateSize(@PathVariable String lagerort, @PathVariable int maxSize){
+        if(!lagerService.existsByName(lagerort)){
+            return "lager" + lagerort + "existiert nicht!";
         }
-        lagerService.updateMaxSize(maxSize);
-        return "Max Size updated successfully";
+        Lager lager = lagerService.getLager(lagerort);
+        if(lager.getSize() >= maxSize){
+            return "Max Size für "+lagerort+" ist kleiner als die Anzahl der Produkte im Lager";
+        }
+        lagerService.updateMaxSize(lagerort, maxSize);
+        return "Max Size für "+lagerort+" updated successfully";
 
 
     }
