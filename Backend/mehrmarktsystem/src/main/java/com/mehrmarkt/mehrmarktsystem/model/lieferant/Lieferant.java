@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.time.Duration;
 import java.util.List;
 
-enum Status {aktiv, inaktiv}
+enum LieferantenStatus {aktiv, inaktiv}
 @Entity
 public class Lieferant {
 
@@ -29,7 +29,7 @@ public class Lieferant {
     private List<Product> products;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private LieferantenStatus status;
 
     @OneToMany(mappedBy = "lieferant")
     @JsonIgnoreProperties(value = {"waren", "lieferant"})
@@ -89,11 +89,11 @@ public class Lieferant {
         this.lieferzeit = lieferzeit;
     }
 
-    public Status getStatus() {
+    public LieferantenStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(LieferantenStatus status) {
         this.status = status;
     }
 

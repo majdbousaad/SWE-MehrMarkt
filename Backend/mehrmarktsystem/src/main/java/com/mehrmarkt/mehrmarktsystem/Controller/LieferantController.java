@@ -26,7 +26,15 @@ public class LieferantController {
 
         int i = Product.anzahl - products.size();
         for (Product product : products){
-            product.setEAN("9673485726" + String.format("%03d", i++));
+
+            if(product.getEAN() == null) {
+                product.setEAN("9673485726" + String.format("%03d", i++));
+            }
+
+            if(productService.existsByEAN(product.getEAN())) {
+                return "Duplicated EAN nummer\nProdukt: " + product.getName() + ", ean: " + product.getEAN();
+            }
+
         }
         lieferantService.saveLieferant(lieferant);
 

@@ -10,4 +10,5 @@ public interface ProductService {
     List <Product> getAllProducts();
 
     Product getByEAN(String ean);
+    boolean existsByEAN(String ean);
 }

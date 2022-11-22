@@ -31,5 +31,10 @@ public class ProductServiceImpl implements ProductService{
         return productRepository.getByEAN(ean);
     }
 
+    @Override
+    public boolean existsByEAN(String ean) {
+        return productRepository.existsByEAN(ean);
+    }
+
 
 }
