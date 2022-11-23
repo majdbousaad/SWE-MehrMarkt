@@ -23,6 +23,16 @@ public class Lieferant {
 
     private Duration lieferzeit;
 
+    private String contact;
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
     @OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="lieferant_id")
     @JsonIgnoreProperties(value = {"lieferant", "waren" })
