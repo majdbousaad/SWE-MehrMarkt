@@ -17,4 +17,6 @@ public interface BestellungRepository extends JpaRepository<Bestellung, Integer>
             "    join Bestellung b on b.id = g.bestellung.id" +
             "    where b.tatsLieferdatum is null")
     Integer getGesamteAnstehendeMenge();
+
+    List<Bestellung> getAllByLieferantIdAndTatsLieferdatumIsNotNull(int lieferant_id);
 }

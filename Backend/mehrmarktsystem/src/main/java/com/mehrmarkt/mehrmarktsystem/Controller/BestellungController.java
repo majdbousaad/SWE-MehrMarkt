@@ -88,12 +88,26 @@ public class BestellungController {
         if(bestellung.getBestellungsStatus() != BestellungsStatus.nochNichtErhalten){
             return "Diese Bestellung ist schon da";
         }
-        //List<Bestellung> bestellungs = lieferantService.get
-        //Lieferant lieferant = bestellung.getLieferant();
+
 
         LocalDateTime now = LocalDateTime.now();
         bestellung.setTatsLieferdatum(now);
         bestellungService.saveBestellung(bestellung);
+
+        Lieferant lieferant = bestellung.getLieferant();
+        List<Bestellung> bestellungs = lieferantService.getGelieferteBestellungen(lieferant.getId());
+        Duration mittlerelieferZeit = Duration.ZERO;
+
+        for (Bestellung b:
+                bestellungs) {
+            mittlerelieferZeit= mittlerelieferZeit.plus(Duration.between(b.getBestellungsdatum(), b.getTatsLieferdatum()));
+        }
+
+        lieferant.setLieferzeit(mittlerelieferZeit.dividedBy(bestellungs.size()));
+
+        lieferantService.saveLieferant(lieferant);
+
+
         Lager defaultLager = lagerService.getLager("Aachen");
 
         Set<Lager> lagers = new HashSet<>();
@@ -117,5 +131,10 @@ public class BestellungController {
 
         return "Bestellung erhalten. Lager ist aktualisiert";
 
+    }
+
+    @GetMapping("/geliefert/{lieferant_id}")
+    List<Bestellung> getGelieferteBestellungen(@PathVariable int lieferant_id){
+        return bestellungService.getGelieferteBestellungen(lieferant_id);
     }
 }

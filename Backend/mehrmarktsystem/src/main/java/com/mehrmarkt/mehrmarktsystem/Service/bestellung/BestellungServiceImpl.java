@@ -46,4 +46,11 @@ public class BestellungServiceImpl implements BestellungService{
         }
         return bestellungRepository.getGesamteAnstehendeMenge();
     }
+
+    @Override
+    public List<Bestellung> getGelieferteBestellungen(int lieferant_id) {
+        return bestellungRepository.getAllByLieferantIdAndTatsLieferdatumIsNotNull(lieferant_id);
+    }
+
+
 }

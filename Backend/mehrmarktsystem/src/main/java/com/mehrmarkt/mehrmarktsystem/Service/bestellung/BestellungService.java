@@ -13,4 +13,6 @@ public interface BestellungService {
 
      List<Bestellung> getAnstehendeBestellungen();
      int getGesamteAnstehendeMenge();
+
+     List<Bestellung> getGelieferteBestellungen(int lieferant_id);
 }
