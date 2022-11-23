@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
+import com.mehrmarkt.mehrmarktsystem.Service.lager.LagerService;
 import com.mehrmarkt.mehrmarktsystem.Service.produkt.LagerProduktService;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
@@ -23,6 +24,9 @@ public class LagerProductController {
 
     @Autowired
     private LagerProduktService lagerProduktService;
+
+    @Autowired
+    private LagerService lagerService;
 
     @GetMapping("/lagerprodukt")
     public List<LagerProdukt> getAll(){
@@ -48,8 +52,23 @@ public class LagerProductController {
     public ResponseEntity<LagerProdukt> updateLagerprodukt(@PathVariable String ean, @RequestBody JsonPatch patch){
         LagerProdukt lagerProdukt;
         try {
+
             lagerProdukt = lagerProduktService.getByEAN(ean).orElseThrow(ProduktNotFoundException::new);
             LagerProdukt lagerProduktPatched = applyPatchToCustomer(patch, lagerProdukt);
+
+            if (!lagerProdukt.getLagerort().equals(lagerProduktPatched.getLagerort())){
+                Lager lagerA = lagerService.getLager(lagerProdukt.getLagerort());
+                Lager lagerB = lagerService.getLager(lagerProduktPatched.getLagerort());
+                lagerA.setSize(lagerA.getSize() - lagerProdukt.getMenge());
+                int lagerBNewSize = lagerB.getSize() + lagerProduktPatched.getMenge();
+                if(lagerBNewSize > lagerB.getMax()){
+                    return ResponseEntity.status(HttpStatus.INSUFFICIENT_STORAGE).build();
+                }
+                lagerB.setSize(lagerB.getSize() + lagerProduktPatched.getMenge());
+                lagerService.updateLager(lagerA);
+                lagerService.updateLager(lagerB);
+            }
+
             lagerProduktService.saveProduct(lagerProduktPatched);
             return ResponseEntity.ok(lagerProduktPatched);
 

@@ -8,13 +8,19 @@ import com.mehrmarkt.mehrmarktsystem.Service.produkt.ProductService;
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungsStatus;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
+import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
+import com.mehrmarkt.mehrmarktsystem.model.produkt.ProduktNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/bestellung")
@@ -40,11 +46,15 @@ public class BestellungController {
 
         Lager lager = lagerService.getLager("Aachen");
 
-
-        if(bestellungService.getGesamteAnstehendeMenge() > lager.getMax()){
+        int vslLagerSize = lager.getSize() + bestellungService.getGesamteAnstehendeMenge();
+        if( vslLagerSize > lager.getMax()){
             return "Lager ist ausgelastet";
         }
         for (GekaufteWare gekaufteWare : bestellung.getWaren()){
+            vslLagerSize += gekaufteWare.getMenge();
+            if( vslLagerSize > lager.getMax()){
+                return "Lager ist ausgelastet";
+            }
             Product product = productService.getByEAN(gekaufteWare.getProduct().getEAN());
             if(product == null){
                 return "Produkt existiert nicht";
@@ -80,12 +90,27 @@ public class BestellungController {
         LocalDateTime now = LocalDateTime.now();
         bestellung.setTatsLieferdatum(now);
         bestellungService.saveBestellung(bestellung);
-        Lager lager = lagerService.getLager("Aachen");
+        Lager defaultLager = lagerService.getLager("Aachen");
+
+        Set<Lager> lagers = new HashSet<>();
 
         for (GekaufteWare gekaufteWare : bestellung.getWaren()){
+            Optional<LagerProdukt> lagerProdukt = lagerProduktService.getByEAN(gekaufteWare.getProduct().getEAN());
+            Lager lager = null;
+            if(lagerProdukt.isPresent()){
+                lager = lagerService.getLager(lagerProdukt.get().getLagerort());
+            } else {
+                lager = defaultLager;
+            }
             lager.addNewLagerProdukt(gekaufteWare.getProduct(), gekaufteWare.getMenge(), lager);
+            lagers.add(lager);
         }
-        lagerService.updateLager(lager);
+
+        for (Lager lager :
+                lagers) {
+            lagerService.updateLager(lager);
+        }
+
         return "Bestellung erhalten. Lager ist aktualisiert";
 
     }
