@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LagerProduktServiceImpl implements LagerProduktService{
@@ -25,7 +26,12 @@ public class LagerProduktServiceImpl implements LagerProduktService{
     }
 
     @Override
-    public LagerProdukt getByEAN(String ean) {
+    public Optional<LagerProdukt> getByEAN(String ean) {
         return lagerProduktRepository.getByEAN(ean);
+    }
+
+    @Override
+    public List<LagerProdukt> getAllByLagerort(String lagerort) {
+        return lagerProduktRepository.getAllByLagerort(lagerort);
     }
 }

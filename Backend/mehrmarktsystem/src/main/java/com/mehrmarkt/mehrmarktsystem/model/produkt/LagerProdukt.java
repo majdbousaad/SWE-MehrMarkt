@@ -1,6 +1,11 @@
 package com.mehrmarkt.mehrmarktsystem.model.produkt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.ware.VerkaufteWare;
 
@@ -17,13 +22,17 @@ public class LagerProdukt{
     @MapsId
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "EAN", referencedColumnName = "EAN")
+    @JsonIgnore
     private Product product;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lagerort", referencedColumnName = "name")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "lagerort", referencedColumnName = "name", insertable = false, updatable = false)
     @JsonIgnore
     private Lager lager;
+
+    @Column(name="lagerort")
+    private String lagerort;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "lagerProdukt")
     @JsonIgnore
@@ -93,5 +102,13 @@ public class LagerProdukt{
 
     public void setPreis(double preis) {
         this.preis = preis;
+    }
+
+    public String getLagerort() {
+        return lagerort;
+    }
+
+    public void setLagerort(String lagerort) {
+        this.lagerort = lagerort;
     }
 }

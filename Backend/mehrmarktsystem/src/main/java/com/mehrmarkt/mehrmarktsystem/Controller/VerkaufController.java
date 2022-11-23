@@ -5,6 +5,7 @@ import com.mehrmarkt.mehrmarktsystem.Service.produkt.LagerProduktService;
 import com.mehrmarkt.mehrmarktsystem.Service.verkauf.VerkaufService;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
+import com.mehrmarkt.mehrmarktsystem.model.produkt.ProduktNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.verkauf.Verkauf;
 import com.mehrmarkt.mehrmarktsystem.model.ware.VerkaufteWare;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class VerkaufController {
             if(ware.getMenge() <= 0){
                 return "ware Menge <= 0";
             }
-            LagerProdukt verkauftesProdukt = lagerProduktService.getByEAN(ware.getLagerProdukt().getEAN());
+            LagerProdukt verkauftesProdukt = lagerProduktService.getByEAN(ware.getLagerProdukt().getEAN()).orElseThrow(ProduktNotFoundException::new);
             if(verkauftesProdukt == null){
                 return "Produkt existiert nicht";
             }
