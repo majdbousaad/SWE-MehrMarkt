@@ -18,6 +18,7 @@ public class Product {
 
     public static int anzahl = 0;
 
+   @Column(name = "price")
     private double preis;
 
     public String getEAN() {

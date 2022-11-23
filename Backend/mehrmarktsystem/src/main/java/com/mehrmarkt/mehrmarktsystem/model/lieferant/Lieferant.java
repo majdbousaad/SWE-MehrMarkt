@@ -17,6 +17,7 @@ public class Lieferant {
     private int id;
     private String name;
 
+    @Column(name = "address")
     private String adresse;
 
     // private boolean zuverlaessig = true;

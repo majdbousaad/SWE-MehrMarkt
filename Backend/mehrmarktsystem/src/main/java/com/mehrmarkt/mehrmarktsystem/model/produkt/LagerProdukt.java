@@ -38,10 +38,12 @@ public class LagerProdukt{
     @JsonIgnore
     private List<VerkaufteWare> verkaufteWaren;
 
+    @Column(name ="amount")
     private int menge;
 
     private String name;
 
+    @Column(name = "price")
     private double preis;
 
     public LagerProdukt() {

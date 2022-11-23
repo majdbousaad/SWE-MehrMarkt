@@ -8,6 +8,7 @@ import com.mehrmarkt.mehrmarktsystem.Service.produkt.ProductService;
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungsStatus;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
+import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.ProduktNotFoundException;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -86,6 +88,8 @@ public class BestellungController {
         if(bestellung.getBestellungsStatus() != BestellungsStatus.nochNichtErhalten){
             return "Diese Bestellung ist schon da";
         }
+        //List<Bestellung> bestellungs = lieferantService.get
+        //Lieferant lieferant = bestellung.getLieferant();
 
         LocalDateTime now = LocalDateTime.now();
         bestellung.setTatsLieferdatum(now);
