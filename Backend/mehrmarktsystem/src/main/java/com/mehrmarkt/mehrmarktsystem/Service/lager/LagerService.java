@@ -2,6 +2,8 @@ package com.mehrmarkt.mehrmarktsystem.Service.lager;
 
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 
+import java.util.List;
+
 public interface LagerService {
     Lager createLager(String lagerort);
 
@@ -12,5 +14,7 @@ public interface LagerService {
     void updateLager(Lager lager);
 
     int updateMaxSize(String lagerort, int maxSize);
+
+    List<Lager> getAllLager();
 
 }

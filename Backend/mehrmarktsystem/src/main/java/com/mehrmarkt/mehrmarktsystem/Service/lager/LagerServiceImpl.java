@@ -5,6 +5,8 @@ import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LagerServiceImpl implements LagerService{
 
@@ -47,5 +49,10 @@ public class LagerServiceImpl implements LagerService{
     @Override
     public int updateMaxSize(String lagerort, int maxSize) {
         return lagerRepository.updateSize(lagerort, maxSize);
+    }
+
+    @Override
+    public List<Lager> getAllLager() {
+        return lagerRepository.findAll();
     }
 }

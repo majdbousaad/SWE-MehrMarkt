@@ -2,9 +2,14 @@ package com.mehrmarkt.mehrmarktsystem.Controller;
 
 import com.mehrmarkt.mehrmarktsystem.Service.lager.LagerService;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
+import com.mehrmarkt.mehrmarktsystem.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/lager")
@@ -27,6 +32,16 @@ public class LagerController {
         return "Max Size für "+lagerort+" updated successfully";
 
 
+    }
+
+    @GetMapping("/statistik")
+    public ResponseEntity<Object> returnStatistik(){
+
+        List<Lager> lagers = lagerService.getAllLager();
+        if(lagers.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseHandler.generateLagerStatistics(lagers);
     }
 
 }
