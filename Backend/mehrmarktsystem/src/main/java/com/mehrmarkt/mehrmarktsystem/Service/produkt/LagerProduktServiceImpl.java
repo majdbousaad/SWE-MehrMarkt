@@ -34,4 +34,9 @@ public class LagerProduktServiceImpl implements LagerProduktService{
     public List<LagerProdukt> getAllByLagerort(String lagerort) {
         return lagerProduktRepository.getAllByLagerort(lagerort);
     }
+
+    @Override
+    public void deleteLagerProdukt(String ean) {
+        lagerProduktRepository.deleteById(ean);
+    }
 }

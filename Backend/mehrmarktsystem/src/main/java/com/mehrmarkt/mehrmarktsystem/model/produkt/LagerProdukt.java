@@ -20,7 +20,7 @@ public class LagerProdukt{
     private String EAN;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "EAN", referencedColumnName = "EAN")
     @JsonIgnore
     private Product product;

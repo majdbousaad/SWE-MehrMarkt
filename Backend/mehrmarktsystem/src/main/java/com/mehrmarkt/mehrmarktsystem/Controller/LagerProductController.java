@@ -17,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
+@RequestMapping("/lagerprodukt")
 @RestController
 public class LagerProductController {
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -28,12 +30,12 @@ public class LagerProductController {
     @Autowired
     private LagerService lagerService;
 
-    @GetMapping("/lagerprodukt")
+    @GetMapping("")
     public List<LagerProdukt> getAll(){
         return lagerProduktService.getAllProducts();
     }
 
-    @GetMapping("/lagerprodukt/{ean}")
+    @GetMapping("/{ean}")
     public ResponseEntity<LagerProdukt> getLagerProdukt(@PathVariable String ean){
         try {
             return ResponseEntity.ok(lagerProduktService.getByEAN(ean).orElseThrow(ProduktNotFoundException::new));
@@ -43,20 +45,24 @@ public class LagerProductController {
         }
     }
 
-    @GetMapping("/lagerprodukt/lagerort/{lagerort}")
+    @GetMapping("/lagerort/{lagerort}")
     public List<LagerProdukt> getAllByLagerort(@PathVariable String lagerort){
         return lagerProduktService.getAllByLagerort(lagerort);
     }
 
-    @PatchMapping(path = "/lagerprodukt/{ean}", consumes = {"application/json-patch+json", "application/json"})
+    @PatchMapping(path = "/{ean}", consumes = {"application/json-patch+json", "application/json"})
     public ResponseEntity<LagerProdukt> updateLagerprodukt(@PathVariable String ean, @RequestBody JsonPatch patch){
         LagerProdukt lagerProdukt;
         try {
 
             lagerProdukt = lagerProduktService.getByEAN(ean).orElseThrow(ProduktNotFoundException::new);
             LagerProdukt lagerProduktPatched = applyPatchToCustomer(patch, lagerProdukt);
-
-            if (!lagerProdukt.getLagerort().equals(lagerProduktPatched.getLagerort())){
+            boolean lagerSollAktuallisiert =
+                            !lagerProdukt.getLagerort().equals(lagerProduktPatched.getLagerort())
+                    ||
+                            lagerProdukt.getMenge() != lagerProduktPatched.getMenge()
+                    ;
+            if (lagerSollAktuallisiert){
                 Lager lagerA = lagerService.getLager(lagerProdukt.getLagerort());
                 Lager lagerB = lagerService.getLager(lagerProduktPatched.getLagerort());
                 lagerA.setSize(lagerA.getSize() - lagerProdukt.getMenge());
@@ -77,6 +83,21 @@ public class LagerProductController {
         } catch (ProduktNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+    }
+
+    @DeleteMapping("/{ean}")
+    public ResponseEntity<LagerProdukt> deleteLagerProdukt(@PathVariable String ean){
+        Optional<LagerProdukt> lagerProdukt = lagerProduktService.getByEAN(ean);
+        if(lagerProdukt.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        Lager lager =  lagerProdukt.get().getLager();
+        lager.setSize(lager.getSize() - lagerProdukt.get().getMenge());
+        lagerProduktService.deleteLagerProdukt(ean);
+        lagerService.updateLager(lager);
+
+        return ResponseEntity.ok(lagerProdukt.get());
 
     }
 

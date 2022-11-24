@@ -15,4 +15,6 @@ public interface LagerProduktService {
 
     List<LagerProdukt> getAllByLagerort(String lagerort);
 
+    void deleteLagerProdukt(String ean);
+
 }
