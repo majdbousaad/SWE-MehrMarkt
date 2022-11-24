@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LieferantServiceImpl implements LieferantService {
@@ -30,8 +31,8 @@ public class LieferantServiceImpl implements LieferantService {
     }
 
     @Override
-    public Lieferant getById(int lieferant_id) {
-        return lieferantRepository.findById(lieferant_id).get();
+    public Optional<Lieferant> getById(int lieferant_id) {
+        return lieferantRepository.findById(lieferant_id);
     }
 
     @Override

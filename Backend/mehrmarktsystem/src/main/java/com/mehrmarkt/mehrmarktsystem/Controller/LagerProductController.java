@@ -30,7 +30,7 @@ public class LagerProductController {
     @Autowired
     private LagerService lagerService;
 
-    @GetMapping("")
+    @GetMapping
     public List<LagerProdukt> getAll(){
         return lagerProduktService.getAllProducts();
     }
@@ -52,11 +52,10 @@ public class LagerProductController {
 
     @PatchMapping(path = "/{ean}", consumes = {"application/json-patch+json", "application/json"})
     public ResponseEntity<LagerProdukt> updateLagerprodukt(@PathVariable String ean, @RequestBody JsonPatch patch){
-        LagerProdukt lagerProdukt;
         try {
 
-            lagerProdukt = lagerProduktService.getByEAN(ean).orElseThrow(ProduktNotFoundException::new);
-            LagerProdukt lagerProduktPatched = applyPatchToCustomer(patch, lagerProdukt);
+            LagerProdukt lagerProdukt = lagerProduktService.getByEAN(ean).orElseThrow(ProduktNotFoundException::new);
+            LagerProdukt lagerProduktPatched = applyPatchToLagerProdukt(patch, lagerProdukt);
             boolean lagerSollAktuallisiert =
                             !lagerProdukt.getLagerort().equals(lagerProduktPatched.getLagerort())
                     ||
@@ -101,7 +100,7 @@ public class LagerProductController {
 
     }
 
-    private LagerProdukt applyPatchToCustomer(
+    private LagerProdukt applyPatchToLagerProdukt(
             JsonPatch patch, LagerProdukt targetLagerProdukt)
             throws JsonPatchException, JsonProcessingException {
         JsonNode patched = patch.apply(objectMapper.convertValue(targetLagerProdukt, JsonNode.class));

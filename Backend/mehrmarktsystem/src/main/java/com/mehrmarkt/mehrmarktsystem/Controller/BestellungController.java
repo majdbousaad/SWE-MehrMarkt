@@ -68,7 +68,7 @@ public class BestellungController {
         bestellung.setGesamtPreis(bestellung.calculateGesamtPreis());
 
         bestellung.setLieferant(
-                lieferantService.getById(bestellung.getLieferant().getId())
+                lieferantService.getById(bestellung.getLieferant().getId()).get()
         );
         bestellungService.saveBestellung(bestellung);
         return "New Bestellung is added";
