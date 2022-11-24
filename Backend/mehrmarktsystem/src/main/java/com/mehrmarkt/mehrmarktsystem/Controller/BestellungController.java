@@ -9,14 +9,16 @@ import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungsStatus;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
+import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantNotFoundException;
+import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantenStatus;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
-import com.mehrmarkt.mehrmarktsystem.model.produkt.ProduktNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -44,22 +46,32 @@ public class BestellungController {
     private LagerService lagerService;
 
     @PostMapping("/add")
-    public String add(@RequestBody Bestellung bestellung){
+    public ResponseEntity<Object> add(@RequestBody Bestellung bestellung){
+        Lieferant lieferant;
+        try {
+             lieferant = lieferantService.getById(bestellung.getLieferant().getId()).orElseThrow(LieferantNotFoundException::new);
 
+        } catch (LieferantNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        if(lieferant.getStatus() == LieferantenStatus.inaktiv){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lieferant " + lieferant.getName() + " ist inaktiv");
+        }
         Lager lager = lagerService.getLager("Aachen");
 
         int vslLagerSize = lager.getSize() + bestellungService.getGesamteAnstehendeMenge();
         if( vslLagerSize > lager.getMax()){
-            return "Lager ist ausgelastet";
+            return ResponseEntity.badRequest().body("Lager "+ lager.getName()+" ist ausgelastet");
         }
         for (GekaufteWare gekaufteWare : bestellung.getWaren()){
             vslLagerSize += gekaufteWare.getMenge();
             if( vslLagerSize > lager.getMax()){
-                return "Lager ist ausgelastet";
+                return ResponseEntity.badRequest().body("Lager "+ lager.getName()+" ist ausgelastet");
             }
             Product product = productService.getByEAN(gekaufteWare.getProduct().getEAN());
             if(product == null){
-                return "Produkt existiert nicht";
+                return ResponseEntity.badRequest().body("Produkt: "+ gekaufteWare.getProduct().getName()+" existiert nicht");
             }
             gekaufteWare.setProduct(product);
         }
@@ -71,7 +83,8 @@ public class BestellungController {
                 lieferantService.getById(bestellung.getLieferant().getId()).get()
         );
         bestellungService.saveBestellung(bestellung);
-        return "New Bestellung is added";
+        return ResponseEntity.ok(bestellung);
+
     }
 
     @GetMapping("/all")
