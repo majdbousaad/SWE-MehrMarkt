@@ -64,10 +64,11 @@ public class ResponseHandler {
         map.put("name", lieferant.getName());
         map.put("address", lieferant.getAdresse());
         map.put("contact", lieferant.getContact());
-        map.put("deliveryTime", Map.of("day",lieferzeit.toDaysPart(),
+        map.put("deliveryTime", lieferzeitFrontend(lieferzeit)
+                /*Map.of("day",lieferzeit.toDaysPart(),
                 "hour", lieferzeit.toHoursPart(),
                 "miniute",  lieferzeit.toMinutesPart(),
-                "second", lieferzeit.toSecondsPart()));
+                "second", lieferzeit.toSecondsPart())*/);
         map.put("status", lieferant.getStatus());
         map.put("reliable", lieferant.isZuverlaessig());
         return map;
@@ -81,5 +82,24 @@ public class ResponseHandler {
         map.put("price", product.getPreis());
         map.put("kacper", "hahaha(Test)");
         return map;
+    }
+
+    private static String lieferzeitFrontend(Duration lieferzeit){
+        String parsed = "";
+
+        if(lieferzeit.toDaysPart() > 0){
+            parsed += lieferzeit.toDaysPart() + "T  ";
+        }
+        if(lieferzeit.toHoursPart() > 0){
+            parsed += lieferzeit.toHoursPart() + "St  ";
+        }
+        if(lieferzeit.toMinutesPart() > 0){
+            parsed += lieferzeit.toMinutesPart() + "M  ";
+        }
+        if(lieferzeit.toSecondsPart() > 0){
+            parsed += lieferzeit.toSecondsPart() + "S  ";
+        }
+
+        return  parsed;
     }
 }
