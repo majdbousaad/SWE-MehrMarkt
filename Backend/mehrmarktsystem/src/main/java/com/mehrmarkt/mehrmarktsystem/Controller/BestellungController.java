@@ -95,18 +95,26 @@ public class BestellungController {
         bestellungService.saveBestellung(bestellung);
 
         Lieferant lieferant = bestellung.getLieferant();
-        List<Bestellung> bestellungs = lieferantService.getGelieferteBestellungen(lieferant.getId());
-        Duration mittlerelieferZeit = Duration.ZERO;
 
-        for (Bestellung b:
-                bestellungs) {
-            mittlerelieferZeit= mittlerelieferZeit.plus(Duration.between(b.getBestellungsdatum(), b.getTatsLieferdatum()));
+        Integer n = bestellungService.countGelieferteBestellungen(lieferant.getId());
+        Duration currentBestellungLieferZeit = Duration.between(bestellung.getBestellungsdatum(), bestellung.getTatsLieferdatum());
+
+        Duration mittel = (lieferant.getLieferzeit() == null)
+                ?
+                currentBestellungLieferZeit
+                :
+                lieferant.getLieferzeit()
+                .multipliedBy(n - 1)
+                .plus(currentBestellungLieferZeit)
+                        .dividedBy(n);
+
+        try {
+            mittel.toNanos();
+        } catch (RuntimeException e){
+            mittel = lieferant.getLieferzeit();
         }
-
-        lieferant.setLieferzeit(mittlerelieferZeit.dividedBy(bestellungs.size()));
-
+        lieferant.setLieferzeit(mittel);
         lieferantService.saveLieferant(lieferant);
-
 
         Lager defaultLager = lagerService.getLager("Aachen");
 
@@ -114,7 +122,7 @@ public class BestellungController {
 
         for (GekaufteWare gekaufteWare : bestellung.getWaren()){
             Optional<LagerProdukt> lagerProdukt = lagerProduktService.getByEAN(gekaufteWare.getProduct().getEAN());
-            Lager lager = null;
+            Lager lager;
             if(lagerProdukt.isPresent()){
                 lager = lagerService.getLager(lagerProdukt.get().getLagerort());
             } else {

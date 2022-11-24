@@ -52,5 +52,10 @@ public class BestellungServiceImpl implements BestellungService{
         return bestellungRepository.getAllByLieferantIdAndTatsLieferdatumIsNotNull(lieferant_id);
     }
 
+    @Override
+    public Integer countGelieferteBestellungen(int lieferant_id) {
+        return bestellungRepository.countAllByLieferantIdAndTatsLieferdatumIsNotNull(lieferant_id);
+    }
+
 
 }

@@ -19,4 +19,6 @@ public interface BestellungRepository extends JpaRepository<Bestellung, Integer>
     Integer getGesamteAnstehendeMenge();
 
     List<Bestellung> getAllByLieferantIdAndTatsLieferdatumIsNotNull(int lieferant_id);
+
+    Integer countAllByLieferantIdAndTatsLieferdatumIsNotNull(int lieferant_id);
 }
