@@ -13,6 +13,7 @@ import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantenStatus;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
+import com.mehrmarkt.mehrmarktsystem.model.produkt.ProduktNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,10 +70,13 @@ public class BestellungController {
             if( vslLagerSize > lager.getMax()){
                 return ResponseEntity.badRequest().body("Lager "+ lager.getName()+" ist ausgelastet");
             }
-            Product product = productService.getByEAN(gekaufteWare.getProduct().getEAN());
-            if(product == null){
-                return ResponseEntity.badRequest().body("Produkt: "+ gekaufteWare.getProduct().getName()+" existiert nicht");
+            Product product;
+            try {
+                product = productService.getByEAN(gekaufteWare.getProduct().getEAN()).orElseThrow(ProduktNotFoundException::new);
+            } catch (ProduktNotFoundException e){
+                return ResponseEntity.badRequest().body("Produkt mit EAN: "+ gekaufteWare.getProduct().getEAN()+" existiert nicht");
             }
+
             gekaufteWare.setProduct(product);
         }
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -27,13 +28,18 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
 
-    public Product getByEAN(String ean) {
+    public Optional<Product> getByEAN(String ean) {
         return productRepository.getByEAN(ean);
     }
 
     @Override
     public boolean existsByEAN(String ean) {
         return productRepository.existsByEAN(ean);
+    }
+
+    @Override
+    public boolean existsByEANAndLieferant_IdIsNot(String ean, int lieferant_id) {
+        return productRepository.existsByEANAndLieferant_IdIsNot(ean, lieferant_id);
     }
 
 

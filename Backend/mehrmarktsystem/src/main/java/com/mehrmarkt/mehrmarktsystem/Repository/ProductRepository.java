@@ -5,10 +5,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String> {
 
-    Product getByEAN(String ean);
+    Optional<Product> getByEAN(String ean);
 
     boolean existsByEAN(String ean);
+    
+    boolean existsByEANAndLieferant_IdIsNot(String EAN, int lieferant_id);
 }

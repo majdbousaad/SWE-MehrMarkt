@@ -2,6 +2,7 @@ package com.mehrmarkt.mehrmarktsystem.response;
 
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
+import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantenStatus;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ResponseHandler {
             maxMax += lager.getMax();
             maxSize += lager.getSize();
         }
-        map.put("gesamt", maxSize * 100/maxMax);
+        map.put("total", maxSize * 100/maxMax);
 
         return new ResponseEntity<Object>(map, HttpStatus.OK);
     }
@@ -69,18 +70,18 @@ public class ResponseHandler {
                 "hour", lieferzeit.toHoursPart(),
                 "miniute",  lieferzeit.toMinutesPart(),
                 "second", lieferzeit.toSecondsPart())*/);
-        map.put("status", lieferant.getStatus());
+        map.put("status", lieferant.getStatus() == LieferantenStatus.aktiv);
         map.put("reliable", lieferant.isZuverlaessig());
         return map;
     }
 
     private static Map<String, Object> parseProdukt(Product product){
         Map<String, Object> map=new HashMap<>();
-
+        map.put("kacper", "hahaha(Test)");
         map.put("ean", product.getEAN());
         map.put("name", product.getName());
         map.put("price", product.getPreis());
-        map.put("kacper", "hahaha(Test)");
+
         return map;
     }
 

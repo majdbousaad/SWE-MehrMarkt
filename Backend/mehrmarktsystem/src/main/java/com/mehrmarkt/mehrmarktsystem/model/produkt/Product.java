@@ -8,6 +8,7 @@ import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Product {
@@ -66,5 +67,18 @@ public class Product {
 
     public Product() {
         anzahl++;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return EAN.equals(product.EAN);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(EAN);
     }
 }
