@@ -1,5 +1,6 @@
 package com.mehrmarkt.mehrmarktsystem.model.lieferant;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
@@ -8,7 +9,6 @@ import javax.persistence.*;
 import java.time.Duration;
 import java.util.List;
 
-enum LieferantenStatus {aktiv, inaktiv}
 @Entity
 public class Lieferant {
 
@@ -44,6 +44,7 @@ public class Lieferant {
 
     @OneToMany(mappedBy = "lieferant")
     @JsonIgnoreProperties(value = {"waren", "lieferant"})
+    @JsonIgnore
     private List<Bestellung> bestellungen;
 
     boolean zuverlaessig = true;

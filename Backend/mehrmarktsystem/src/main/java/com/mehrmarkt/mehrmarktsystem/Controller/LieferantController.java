@@ -4,15 +4,15 @@ package com.mehrmarkt.mehrmarktsystem.Controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.mehrmarkt.mehrmarktsystem.Service.lieferant.LieferantService;
 import com.mehrmarkt.mehrmarktsystem.Service.produkt.ProductService;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantNotFoundException;
-import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
-import com.mehrmarkt.mehrmarktsystem.model.produkt.ProduktNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/lieferant")
@@ -64,29 +63,31 @@ public class LieferantController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> getLieferant(@PathVariable int id){
         try {
-            Optional<Lieferant> lieferant = lieferantService.getById(id);
+            Lieferant lieferant = lieferantService.getById(id).orElseThrow(LieferantNotFoundException::new);
             return ResponseHandler.getLieferant(lieferant);
 
-        } catch (Exception e){
+        } catch (LieferantNotFoundException e){
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
-
     }
 
     private Lieferant applyPatchToLieferant(
             JsonPatch patch, Lieferant targetLieferant)
             throws JsonPatchException, JsonProcessingException {
+
         JsonNode patched = patch.apply(objectMapper.convertValue(targetLieferant, JsonNode.class));
         return objectMapper.treeToValue(patched, Lieferant.class);
     }
 
     @PatchMapping(path = "/{id}", consumes = {"application/json-patch+json", "application/json"})
     public ResponseEntity<Lieferant> updateLieferant(@PathVariable int id, @RequestBody JsonPatch patch){
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         try {
             Lieferant lieferant = lieferantService.getById(id).orElseThrow(LieferantNotFoundException::new);
             Lieferant lieferantPatched = applyPatchToLieferant(patch, lieferant);
-
+            lieferantPatched.setProducts(lieferant.getProducts());
             lieferantService.saveLieferant(lieferantPatched);
             return ResponseEntity.ok(lieferantPatched);
 
@@ -97,6 +98,21 @@ public class LieferantController {
         } catch (LieferantNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> editLieferant(@PathVariable int id, @RequestBody Lieferant lieferant){
+        try {
+            Lieferant lieferant2 = lieferantService.getById(id).orElseThrow(LieferantNotFoundException::new);
+            lieferant2.setProducts(lieferant.getProducts());
+            lieferantService.saveLieferant(lieferant2);
+            return ResponseEntity.ok(lieferant);
+        } catch (LieferantNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+
+
 
     }
 }
