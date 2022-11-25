@@ -2,6 +2,8 @@ package com.mehrmarkt.mehrmarktsystem.Service.bestellung;
 
 import com.mehrmarkt.mehrmarktsystem.Repository.BestellungRepository;
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
+import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungCannotBeDeletedException;
+import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +38,7 @@ public class BestellungServiceImpl implements BestellungService{
     @Override
     public List<Bestellung> getAnstehendeBestellungen() {
 
-        return bestellungRepository.findByTatsLieferdatum(null);
+        return bestellungRepository.getAllByTatsLieferdatumIsNull();
     }
 
     @Override
@@ -53,8 +55,25 @@ public class BestellungServiceImpl implements BestellungService{
     }
 
     @Override
+    public List<Bestellung> getGelieferteBestellungen() {
+        return bestellungRepository.getAllByTatsLieferdatumIsNotNull();
+    }
+
+    @Override
     public Integer countGelieferteBestellungen(int lieferant_id) {
         return bestellungRepository.countAllByLieferantIdAndTatsLieferdatumIsNotNull(lieferant_id);
+    }
+
+    @Override
+    public void storniereBestellung(int id) {
+
+        Bestellung bestellung = bestellungRepository.findById(id)
+                .orElseThrow(BestellungNotFoundException::new);
+        if(bestellung.getTatsLieferdatum() != null){
+            throw new BestellungCannotBeDeletedException();
+        }
+        bestellungRepository.deleteById(id);
+
     }
 
 

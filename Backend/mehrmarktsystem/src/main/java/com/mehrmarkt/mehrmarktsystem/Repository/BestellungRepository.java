@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BestellungRepository extends JpaRepository<Bestellung, Integer> {
@@ -21,4 +22,9 @@ public interface BestellungRepository extends JpaRepository<Bestellung, Integer>
     List<Bestellung> getAllByLieferantIdAndTatsLieferdatumIsNotNull(int lieferant_id);
 
     Integer countAllByLieferantIdAndTatsLieferdatumIsNotNull(int lieferant_id);
+
+    List<Bestellung> getAllByTatsLieferdatumIsNotNull();
+    List<Bestellung> getAllByTatsLieferdatumIsNull();
+
+    Optional<Bestellung> getByIdAndTatsLieferdatumIsNull(int id);
 }

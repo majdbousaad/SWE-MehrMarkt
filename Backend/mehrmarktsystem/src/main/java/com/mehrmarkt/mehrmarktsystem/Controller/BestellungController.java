@@ -6,6 +6,8 @@ import com.mehrmarkt.mehrmarktsystem.Service.lieferant.LieferantService;
 import com.mehrmarkt.mehrmarktsystem.Service.produkt.LagerProduktService;
 import com.mehrmarkt.mehrmarktsystem.Service.produkt.ProductService;
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
+import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungCannotBeDeletedException;
+import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungsStatus;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
@@ -15,6 +17,7 @@ import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.ProduktNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
+import com.mehrmarkt.mehrmarktsystem.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/bestellung")
@@ -46,7 +46,7 @@ public class BestellungController {
     @Autowired
     private LagerService lagerService;
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<Object> add(@RequestBody Bestellung bestellung){
         Lieferant lieferant;
         try {
@@ -83,27 +83,35 @@ public class BestellungController {
 
         bestellung.setGesamtPreis(bestellung.calculateGesamtPreis());
 
-        bestellung.setLieferant(
-                lieferantService.getById(bestellung.getLieferant().getId()).get()
-        );
+        bestellung.setLieferant(lieferant);
         bestellungService.saveBestellung(bestellung);
         return ResponseEntity.ok(bestellung);
 
     }
 
-    @GetMapping("/all")
-    public List<Bestellung> getAllBestellungen(){
-        return bestellungService.getAllBestellungen();
+    @GetMapping("/anstehende")
+    public  ResponseEntity<Object> getAllAnstehendeBestellungen(){
+        List<Bestellung> anstehendeBestellungen = bestellungService.getAnstehendeBestellungen();
+        return ResponseHandler.sendAllBestellungen(anstehendeBestellungen);
+    }
+    @GetMapping("/gelieferte")
+    public  ResponseEntity<Object> getAllGelieferteBestellungen(){
+        List<Bestellung> gelieferteBestellungen = bestellungService.getGelieferteBestellungen();
+        return ResponseHandler.sendAllBestellungen(gelieferteBestellungen);
     }
 
-    @PatchMapping("/{bestellung_id}/erhalten")
-    public String erhalten(@PathVariable int bestellung_id){
+    @PostMapping("/{bestellung_id}")
+    public ResponseEntity<Object> erhalten(@PathVariable int bestellung_id, @RequestBody Map<String, Boolean> body){
+
+        if(!body.get("angekommen")){
+            return ResponseEntity.badRequest().build();
+        }
         Bestellung bestellung = bestellungService.getBestellung(bestellung_id);
         if(bestellung == null){
-            return "Bestellung existiert nicht";
+            return ResponseEntity.notFound().build();
         }
         if(bestellung.getBestellungsStatus() != BestellungsStatus.nochNichtErhalten){
-            return "Diese Bestellung ist schon da";
+            return ResponseEntity.badRequest().body("Bestellung Nummer " + bestellung_id + " ist schon geliefert");
         }
 
 
@@ -154,12 +162,36 @@ public class BestellungController {
             lagerService.updateLager(lager);
         }
 
-        return "Bestellung erhalten. Lager ist aktualisiert";
+        return ResponseHandler.sendBestellung(bestellung);
 
     }
 
     @GetMapping("/geliefert/{lieferant_id}")
     List<Bestellung> getGelieferteBestellungen(@PathVariable int lieferant_id){
         return bestellungService.getGelieferteBestellungen(lieferant_id);
+    }
+
+    @GetMapping("/{bestellung_id}")
+    ResponseEntity<Object> getBestellung(@PathVariable int bestellung_id){
+        Bestellung bestellung = bestellungService.getBestellung(bestellung_id);
+        if(bestellung == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseHandler.sendBestellung(bestellung);
+    }
+
+    @DeleteMapping("/{bestellung_id}")
+    ResponseEntity<Object> deleteBestellung(@PathVariable int bestellung_id){
+        try {
+            bestellungService.storniereBestellung(bestellung_id);
+        }
+        catch (BestellungNotFoundException e){
+            return ResponseEntity.notFound().build();
+        } catch (BestellungCannotBeDeletedException e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok().build();
+
     }
 }

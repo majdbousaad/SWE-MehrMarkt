@@ -1,9 +1,12 @@
 package com.mehrmarkt.mehrmarktsystem.response;
 
+import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantenStatus;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
+import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
+import com.mehrmarkt.mehrmarktsystem.model.ware.VerkaufteWare;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -31,7 +34,7 @@ public class ResponseHandler {
         return new ResponseEntity<Object>(map, HttpStatus.OK);
     }
 
-    public static ResponseEntity<Object> getLieferanten(Object responseObj){
+    public static ResponseEntity<Object> sendAllLieferanten(Object responseObj){
         List<Map<String, Object>> listMap = new ArrayList<>();
         List<Lieferant> lieferanten = (List<Lieferant>) responseObj;
 
@@ -44,7 +47,7 @@ public class ResponseHandler {
         return new ResponseEntity<Object>(listMap, HttpStatus.OK);
     }
 
-    public static ResponseEntity<Object> getLieferant(Object responseObj){
+    public static ResponseEntity<Object> sendLieferant(Object responseObj){
 
         Lieferant lieferant = (Lieferant) responseObj;
         Map<String, Object> lieferantMap = parseLieferant(lieferant);
@@ -56,6 +59,37 @@ public class ResponseHandler {
         lieferantMap.put("products", productMap);
 
         return new ResponseEntity<Object>(lieferantMap, HttpStatus.OK);
+    }
+
+    public static ResponseEntity<Object> sendBestellung(Object responseObj){
+
+        Bestellung bestellung = (Bestellung) responseObj;
+        Map<String, Object> bestellungMap = parseBestellung(bestellung);
+
+        bestellungMap.put("gesamtPreis", bestellung.getGesamtPreis());
+        List<Map<String, Object>> mapWaren = new ArrayList<>();
+        for (GekaufteWare gekaufteWare :
+                bestellung.getWaren()) {
+
+            mapWaren.add(parseWare(gekaufteWare));
+        }
+        bestellungMap.put("products", mapWaren);
+
+        return new ResponseEntity<Object>(bestellungMap, HttpStatus.OK);
+    }
+
+    public static ResponseEntity<Object> sendAllBestellungen(Object responseObj){
+
+        List<Bestellung> bestellungen = (List<Bestellung>) responseObj;
+        List<Map<String, Object>> listMap = new ArrayList<>();
+
+        for (Bestellung bestellung :
+                bestellungen) {
+
+            listMap.add(parseBestellung(bestellung));
+        }
+
+        return new ResponseEntity<Object>(listMap, HttpStatus.OK);
     }
 
     private static Map<String, Object> parseLieferant(Lieferant lieferant){
@@ -103,4 +137,35 @@ public class ResponseHandler {
 
         return  parsed;
     }
+
+    private static Map<String, Object> parseBestellung(Bestellung bestellung){
+        Map<String, Object> map=new HashMap<>();
+
+        map.put("id", bestellung.getId());
+        map.put("lieferant", bestellung.getLieferant().getName());
+        map.put("vsl", bestellung.getVslLieferdatum());
+        map.put("tats", bestellung.getTatsLieferdatum());
+        return map;
+    }
+
+    private static Map<String, Object> parseWare(GekaufteWare gekaufteWare){
+        Map<String, Object> map=new HashMap<>();
+
+        map.put("name", gekaufteWare.getProduct().getName());
+        map.put("price", gekaufteWare.getProduct().getPreis());
+        map.put("menge", gekaufteWare.getMenge());
+
+        return map;
+    }
+
+    private static Map<String, Object> parseWare(VerkaufteWare verkaufteWare){
+        Map<String, Object> map=new HashMap<>();
+
+        map.put("name", verkaufteWare.getLagerProdukt().getName());
+        map.put("price", verkaufteWare.getLagerProdukt().getPreis());
+        map.put("menge", verkaufteWare.getMenge());
+
+        return map;
+    }
+
 }

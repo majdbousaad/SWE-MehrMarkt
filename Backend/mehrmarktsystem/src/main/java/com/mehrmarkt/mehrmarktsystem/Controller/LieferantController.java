@@ -58,20 +58,20 @@ public class LieferantController {
         }
 
 
-        return ResponseHandler.getLieferant(lieferant);
+        return ResponseHandler.sendLieferant(lieferant);
     }
 
     @GetMapping
     public ResponseEntity<Object>  getAllLieferanten(){
         List<Lieferant> lieferanten = lieferantService.getAllLieferanten();
-        return ResponseHandler.getLieferanten(lieferanten);
+        return ResponseHandler.sendAllLieferanten(lieferanten);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getLieferant(@PathVariable int id){
         try {
             Lieferant lieferant = lieferantService.getById(id).orElseThrow(LieferantNotFoundException::new);
-            return ResponseHandler.getLieferant(lieferant);
+            return ResponseHandler.sendLieferant(lieferant);
 
         } catch (LieferantNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lieferant mit ID " + id + " existiert nicht");
