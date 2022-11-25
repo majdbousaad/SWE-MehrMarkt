@@ -2,6 +2,7 @@ package com.mehrmarkt.mehrmarktsystem.Controller;
 
 import com.mehrmarkt.mehrmarktsystem.Service.lager.LagerService;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
+import com.mehrmarkt.mehrmarktsystem.model.lager.LagerNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/lager")
@@ -43,5 +45,33 @@ public class LagerController {
         }
         return ResponseHandler.generateLagerStatistics(lagers);
     }
+
+    @PostMapping("/{lagerort}/standardset")
+    public ResponseEntity<Object> setLagerOrtAsStandard(@PathVariable String lagerort, @RequestBody Map<String, Boolean> body){
+
+        if(body.get("standard") == null || !body.get("standard")){
+            return ResponseEntity.badRequest().body("please use this JSON \n{\n \"standard\" : true\n }");
+        }
+
+        Lager lager;
+        try {
+            lager = lagerService.getLagerIfExists(lagerort).orElseThrow(LagerNotFoundException::new);
+        }catch (LagerNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+        if (lager.isStandard()){
+            return ResponseEntity.ok().build();
+        }
+        Lager altLager = lagerService.getStandardLager().orElseThrow(LagerNotFoundException::new);
+        altLager.setStandard(false);
+        lagerService.updateLager(altLager);
+
+        lager.setStandard(true);
+        lagerService.updateLager(lager);
+
+
+        return ResponseEntity.ok().build();
+    }
+
 
 }

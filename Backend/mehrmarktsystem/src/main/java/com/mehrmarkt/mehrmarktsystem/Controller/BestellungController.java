@@ -10,6 +10,7 @@ import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungCannotBeDeletedE
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungsStatus;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
+import com.mehrmarkt.mehrmarktsystem.model.lager.LagerNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantenStatus;
@@ -59,7 +60,13 @@ public class BestellungController {
         if(lieferant.getStatus() == LieferantenStatus.inaktiv){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lieferant " + lieferant.getName() + " ist inaktiv");
         }
-        Lager lager = lagerService.getLager("Aachen");
+        Lager lager;
+        try {
+            lager = lagerService.getStandardLager().orElseThrow(LagerNotFoundException::new);
+        } catch (LagerNotFoundException e){
+            lager = lagerService.createLager("Aachen");
+            lager.setStandard(true);
+        }
 
         int vslLagerSize = lager.getSize() + bestellungService.getGesamteAnstehendeMenge();
         if( vslLagerSize > lager.getMax()){
@@ -85,6 +92,7 @@ public class BestellungController {
 
         bestellung.setLieferant(lieferant);
         bestellungService.saveBestellung(bestellung);
+        lagerService.updateLager(lager);
         return ResponseEntity.ok(bestellung);
 
     }
@@ -141,7 +149,7 @@ public class BestellungController {
         lieferant.setLieferzeit(mittel);
         lieferantService.saveLieferant(lieferant);
 
-        Lager defaultLager = lagerService.getLager("Aachen");
+        Lager defaultLager = lagerService.getStandardLager().get();
 
         Set<Lager> lagers = new HashSet<>();
 

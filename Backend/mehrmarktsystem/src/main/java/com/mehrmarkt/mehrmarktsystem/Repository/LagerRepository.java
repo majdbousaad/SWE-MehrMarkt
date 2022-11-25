@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface LagerRepository extends JpaRepository<Lager, Integer> {
     @Modifying
@@ -17,4 +19,8 @@ public interface LagerRepository extends JpaRepository<Lager, Integer> {
 
     boolean existsLagerByName(String lagerort);
     Lager getLagerByName(String lagerort);
+
+    Optional<Lager> findByName(String lagerort);
+
+    Optional<Lager> findByStandardIsTrue();
 }

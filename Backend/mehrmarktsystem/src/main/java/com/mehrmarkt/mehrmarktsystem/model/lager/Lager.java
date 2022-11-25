@@ -1,5 +1,6 @@
 package com.mehrmarkt.mehrmarktsystem.model.lager;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
@@ -18,6 +19,8 @@ public class Lager {
     @JoinColumn(name="lagerort")
     @JsonIgnoreProperties(value = {"lager", "product"})
     private List<LagerProdukt> lagerProdukts;
+
+    private boolean standard = false;
 
     private int max;
     private int size;
@@ -118,5 +121,13 @@ public class Lager {
             lagerProdukts.add(lagerProdukt);
             setSize(size + lagerProdukt.getMenge());
         }
+    }
+
+    public boolean isStandard() {
+        return standard;
+    }
+
+    public void setStandard(boolean standard) {
+        this.standard = standard;
     }
 }

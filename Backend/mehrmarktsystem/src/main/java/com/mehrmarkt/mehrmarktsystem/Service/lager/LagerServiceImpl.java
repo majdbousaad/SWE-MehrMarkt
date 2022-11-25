@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LagerServiceImpl implements LagerService{
@@ -54,5 +55,15 @@ public class LagerServiceImpl implements LagerService{
     @Override
     public List<Lager> getAllLager() {
         return lagerRepository.findAll();
+    }
+
+    @Override
+    public Optional<Lager> getLagerIfExists(String lagerort) {
+        return lagerRepository.findByName(lagerort);
+    }
+
+    @Override
+    public Optional<Lager> getStandardLager() {
+        return lagerRepository.findByStandardIsTrue();
     }
 }
