@@ -14,7 +14,7 @@ import { useState } from 'react'
 
 interface RowType {
   name: string
-  adress: string
+  address: string
   contact: string
   deliveryTime: string
   status: 'aktiv' | 'inaktiv'
@@ -23,21 +23,21 @@ interface RowType {
 const rows: RowType[] = [
   {
     name: 'Lieferant 1',
-    adress: 'Musterstrasse 1, 1234 Musterstadt',
+    address: 'Musterstrasse 1, 1234 Musterstadt',
     contact: 'Herr Mustermann',
     deliveryTime: '1 Tag, 4 Stunden',
     status: 'aktiv'
   },
   {
     name: 'Lieferant 3',
-    adress: 'Musterstrasse 3, 1234 Musterstadt',
+    address: 'Musterstrasse 3, 1234 Musterstadt',
     contact: 'Herr Mustermann',
     deliveryTime: '1 Tag, 2 Stunden',
     status: 'aktiv'
   },
   {
     name: 'Lieferant 2',
-    adress: 'Musterstrasse 2, 1234 Musterstadt',
+    address: 'Musterstrasse 2, 1234 Musterstadt',
     contact: 'Herr Mustermann',
     deliveryTime: '1 Tag',
     status: 'inaktiv'
@@ -79,7 +79,7 @@ export default function LieferantenTabelle() {
                     </IconButton>
                   </Box>
                 </TableCell>
-                <TableCell>{row.adress}</TableCell>
+                <TableCell>{row.address}</TableCell>
                 <TableCell>{row.contact}</TableCell>
                 <TableCell>{row.deliveryTime}</TableCell>
                 <TableCell>

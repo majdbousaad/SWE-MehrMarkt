@@ -9,55 +9,46 @@ import CloseIcon from 'mdi-material-ui/Close'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Switch from '@mui/material/Switch'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import LieferantKatalog from './LieferantKatalog'
-
-interface ILiferant {
-  name: string
-  adress: string
-  contact: string
-  deliveryTime: string
-  status: 'aktiv' | 'inaktiv'
-  catalog: ICatalogProducts[]
-}
-
-interface ICatalogProducts {
-  name: string
-  price: number
-}
-
-const lieferant: ILiferant = {
-  name: 'Lieferant 1',
-  adress: 'Musterstrasse 1, 1234 Musterstadt',
-  contact: 'Herr Mustermann',
-  deliveryTime: '1 Tag, 4 Stunden',
-  status: 'aktiv',
-  catalog: [
-    {
-      name: 'Produkt 1',
-      price: 10
-    },
-    {
-      name: 'Produkt 2',
-      price: 20
-    },
-    {
-      name: 'Produkt 3',
-      price: 30
-    }
-  ]
-}
+import LieferantKatalog, { ProductEntry } from './LieferantKatalog'
 
 export default function LieferantenHinzufuegenDialog({
   open,
-  handleClose
+  handleClose,
+  handleSave
 }: {
   open: boolean
   handleClose: () => void
+  handleSave: (lieferanten: {
+    name: string
+    address: string
+    contact: string
+    active: boolean
+    products: ProductEntry[]
+  }) => void
 }) {
   const [isActive, setIsActive] = useState(true)
+  const [products, setProducts] = useState<ProductEntry[]>([])
+
+  const nameRef = useRef<HTMLInputElement>(null)
+  const adressRef = useRef<HTMLInputElement>(null)
+  const contactRef = useRef<HTMLInputElement>(null)
+
+  function onCreateLieferant() {
+    handleSave({
+      name: nameRef.current!.value,
+      address: adressRef.current!.value,
+      contact: contactRef.current!.value,
+      active: isActive,
+      products: products
+    })
+  }
+
+  function onProductsUpdate(products: ProductEntry[]) {
+    setProducts(products)
+  }
 
   return (
     <>
@@ -70,7 +61,7 @@ export default function LieferantenHinzufuegenDialog({
             <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
               Lieferant Hinzufügen
             </Typography>
-            <Button autoFocus color='primary' variant='outlined' onClick={handleClose}>
+            <Button autoFocus color='primary' variant='outlined' onClick={onCreateLieferant}>
               Erstellen
             </Button>
           </Toolbar>
@@ -82,9 +73,23 @@ export default function LieferantenHinzufuegenDialog({
                 Profil
               </Typography>
               <Box className='p-5 flex flex-col gap-4'>
-                <TextField placeholder='Name*' required fullWidth variant='outlined' size='small' />
-                <TextField placeholder='Anschrift*' required fullWidth variant='outlined' size='small' />
-                <TextField placeholder='Kontaktdaten*' required fullWidth variant='outlined' size='small' />
+                <TextField placeholder='Name*' inputRef={nameRef} required fullWidth variant='outlined' size='small' />
+                <TextField
+                  placeholder='Anschrift*'
+                  inputRef={adressRef}
+                  required
+                  fullWidth
+                  variant='outlined'
+                  size='small'
+                />
+                <TextField
+                  placeholder='Kontaktdaten*'
+                  inputRef={contactRef}
+                  required
+                  fullWidth
+                  variant='outlined'
+                  size='small'
+                />
                 <FormGroup>
                   <FormControlLabel
                     control={<Switch checked={isActive} onChange={() => setIsActive(!isActive)} />}
@@ -132,7 +137,7 @@ export default function LieferantenHinzufuegenDialog({
               <Typography variant='h6' align='center'>
                 Katalog
               </Typography>
-              <LieferantKatalog catalog={[]} />
+              <LieferantKatalog products={[]} onProductsUpdate={onProductsUpdate} />
             </Grid>
           </Grid>
         </Box>

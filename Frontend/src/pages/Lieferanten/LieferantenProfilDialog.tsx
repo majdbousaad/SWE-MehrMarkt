@@ -18,7 +18,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 interface ILiferant {
   name: string
-  adress: string
+  address: string
   contact: string
   deliveryTime: string
   status: 'aktiv' | 'inaktiv'
@@ -28,13 +28,13 @@ interface ILiferant {
 export interface ICatalogProducts {
   id: string
   name: string
-  eanCode: string
+  ean: string
   price: number
 }
 
 const lieferant: ILiferant = {
   name: 'Lieferant 1',
-  adress: 'Musterstrasse 1, 1234 Musterstadt',
+  address: 'Musterstrasse 1, 1234 Musterstadt',
   contact: 'Herr Mustermann',
   deliveryTime: '1 Tag, 4 Stunden',
   status: 'aktiv',
@@ -42,26 +42,26 @@ const lieferant: ILiferant = {
     {
       id: uuidv4(),
       name: 'Frozen yoghurt',
-      eanCode: '123456789',
+      ean: '123456789',
       price: 10
     },
     {
       id: uuidv4(),
       name: 'Ice cream sandwich',
-      eanCode: '123456789',
+      ean: '123456789',
       price: 20
     },
     {
       id: uuidv4(),
       name: 'Pizza',
-      eanCode: '123456789',
+      ean: '123456789',
       price: 30
     }
   ]
 }
 
-function createData(id: string, name: string, eanCode: string, price: number) {
-  return { id, name, eanCode, price }
+function createData(id: string, name: string, ean: string, price: number) {
+  return { id, name, ean, price }
 }
 
 export default function LieferantenProfilDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
@@ -172,7 +172,7 @@ function LieferantProfilSection({
         />
         <TextField
           placeholder='Anschrift*'
-          defaultValue={lieferant.adress}
+          defaultValue={lieferant.address}
           disabled={!isEditing}
           fullWidth
           variant={isEditing ? 'outlined' : 'standard'}

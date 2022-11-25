@@ -15,22 +15,42 @@ import { v4 as uuidv4 } from 'uuid'
 import { useRef, useState } from 'react'
 import { ICatalogProducts } from './LieferantenProfilDialog'
 
-export default function LieferantKatalog({ catalog }: { catalog: ICatalogProducts[] }) {
-  function createData(id: string, name: string, eanCode: string, price: number) {
-    return { id, name, eanCode, price }
+export interface ProductEntry {
+  name: string
+  ean: string
+  price: number
+}
+
+export default function LieferantKatalog({
+  products,
+  onProductsUpdate
+}: {
+  products: ICatalogProducts[]
+  onProductsUpdate: (products: ProductEntry[]) => void
+}) {
+  function createData(id: string, name: string, ean: string, price: number) {
+    return { id, name, ean, price }
   }
 
-  const [rows, setRows] = useState(catalog)
+  const [rows, setRows] = useState(products)
 
-  function updateProduct(id: string, name: string, eanCode: string, price: number) {
+  function updateProduct(id: string, name: string, ean: string, price: number) {
     const newRows = rows.map(row => {
       if (row.id === id) {
-        return createData(id, name, eanCode, price)
+        return createData(id, name, ean, price)
       } else {
         return row
       }
     })
     setRows(newRows)
+    const catalog = newRows.map(row => {
+      return {
+        name: row.name,
+        ean: row.ean,
+        price: row.price
+      }
+    })
+    onProductsUpdate(catalog)
   }
 
   function onAddProduct() {
@@ -59,21 +79,21 @@ export default function LieferantKatalog({ catalog }: { catalog: ICatalogProduct
                 <>
                   {row.name === '' ? (
                     <KatalogProdukt
-                      key={'id-' + row.eanCode}
+                      key={'id-' + row.ean}
                       id={row.id}
                       updateProduct={updateProduct}
                       name={row.name}
-                      eanCode={row.eanCode}
+                      ean={row.ean}
                       price={row.price}
                       forceEditing
                     />
                   ) : (
                     <KatalogProdukt
-                      key={'id-' + row.eanCode}
+                      key={'id-' + row.ean}
                       id={row.id}
                       updateProduct={updateProduct}
                       name={row.name}
-                      eanCode={row.eanCode}
+                      ean={row.ean}
                       price={row.price}
                     />
                   )}
@@ -90,16 +110,16 @@ export default function LieferantKatalog({ catalog }: { catalog: ICatalogProduct
 function KatalogProdukt({
   id,
   name,
-  eanCode,
+  ean,
   price,
   updateProduct,
   forceEditing
 }: {
   id: string
   name: string
-  eanCode: string
+  ean: string
   price: number
-  updateProduct: (id: string, name: string, eanCode: string, price: number) => void
+  updateProduct: (id: string, name: string, ean: string, price: number) => void
   forceEditing?: boolean
 }) {
   const [isEditing, setIsEditing] = useState(forceEditing?.valueOf() ?? false)
@@ -121,7 +141,7 @@ function KatalogProdukt({
             <Typography>{name}</Typography>
           </TableCell>
           <TableCell align='left'>
-            <Typography>{eanCode}</Typography>
+            <Typography>{ean}</Typography>
           </TableCell>
           <TableCell align='left'>
             <Typography>{price}€</Typography>
@@ -147,7 +167,7 @@ function KatalogProdukt({
           <TableCell align='left'>
             <TextField
               inputRef={EANRef}
-              defaultValue={eanCode}
+              defaultValue={ean}
               placeholder={'EAN-Nummer'}
               fullWidth
               variant='outlined'
