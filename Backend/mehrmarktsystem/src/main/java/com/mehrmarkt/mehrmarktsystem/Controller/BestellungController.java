@@ -89,12 +89,12 @@ public class BestellungController {
 
     }
 
-    @GetMapping("/anstehende")
+    @GetMapping("/anstehend")
     public  ResponseEntity<Object> getAllAnstehendeBestellungen(){
         List<Bestellung> anstehendeBestellungen = bestellungService.getAnstehendeBestellungen();
         return ResponseHandler.sendAllBestellungen(anstehendeBestellungen);
     }
-    @GetMapping("/gelieferte")
+    @GetMapping("/geliefert")
     public  ResponseEntity<Object> getAllGelieferteBestellungen(){
         List<Bestellung> gelieferteBestellungen = bestellungService.getGelieferteBestellungen();
         return ResponseHandler.sendAllBestellungen(gelieferteBestellungen);
