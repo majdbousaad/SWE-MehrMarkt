@@ -7,7 +7,9 @@ import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.ProduktNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.verkauf.Verkauf;
+import com.mehrmarkt.mehrmarktsystem.model.verkauf.VerkaufNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.ware.VerkaufteWare;
+import com.mehrmarkt.mehrmarktsystem.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,21 +31,27 @@ public class VerkaufController {
     @Autowired
     private VerkaufService verkaufService;
 
-    @PostMapping("/add")
-    public String add(@RequestBody Verkauf verkauf){
+    @PostMapping
+    public ResponseEntity<Object> add(@RequestBody Verkauf verkauf){
 
 
         Set<Lager> lagers = new HashSet<>();
+        if(verkauf.getVerkaufteWaren() == null){
+            return ResponseEntity.badRequest().body("Es gibt keinen Warenkorb");
+        }
         for (VerkaufteWare ware : verkauf.getVerkaufteWaren()){
             if(ware.getMenge() <= 0){
-                return "ware Menge <= 0";
+                return ResponseEntity.badRequest().body("menge muss größer 0 sein");
             }
-            LagerProdukt verkauftesProdukt = lagerProduktService.getByEAN(ware.getLagerProdukt().getEAN()).orElseThrow(ProduktNotFoundException::new);
-            if(verkauftesProdukt == null){
-                return "Produkt existiert nicht";
+            LagerProdukt verkauftesProdukt;
+            try {
+                verkauftesProdukt = lagerProduktService.getByEAN(ware.getLagerProdukt().getEAN()).orElseThrow(ProduktNotFoundException::new);
+
+            }catch (ProduktNotFoundException e){
+                return ResponseEntity.badRequest().body("Produkt existiert nicht");
             }
             if(verkauftesProdukt.getMenge() < ware.getMenge()){
-                return "zu wenige Produkte im Lager";
+                return ResponseEntity.badRequest().body("zu wenige Produkte im Lager");
             }
             ware.setLagerProdukt(verkauftesProdukt);
             Lager lager= verkauftesProdukt.getLager();
@@ -61,7 +69,7 @@ public class VerkaufController {
         }
 
 
-        return "Produkte wurden erfolgreich verkauft";
+        return ResponseEntity.ok(verkauf);
 
     }
 }
