@@ -5,6 +5,7 @@ import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantenStatus;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
+import com.mehrmarkt.mehrmarktsystem.model.verkauf.Verkauf;
 import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
 import com.mehrmarkt.mehrmarktsystem.model.ware.VerkaufteWare;
 import org.springframework.http.HttpStatus;
@@ -166,6 +167,48 @@ public class ResponseHandler {
         map.put("menge", verkaufteWare.getMenge());
 
         return map;
+    }
+
+    private static Map<String, Object> parseVerkauf(Verkauf verkauf){
+        Map<String, Object> map=new HashMap<>();
+
+        map.put("Datum", verkauf.getVerkaufsdatum());
+        map.put("id", verkauf.getId());
+        map.put("gesamtPreis", verkauf.getGesamtPreis());
+
+        return map;
+    }
+
+    public static ResponseEntity<Object> sendAllVerkaeufe(List<Verkauf> verkaeufe){
+        List<Map<String, Object>> listMap = new ArrayList<>();
+
+        for (Verkauf verkauf :
+                verkaeufe) {
+            listMap.add(parseVerkauf(verkauf));
+        }
+
+        return ResponseEntity.ok(listMap);
+    }
+
+    public static ResponseEntity<Object> sendVerkauf(Verkauf verkauf){
+        Map<String, Object> map = parseVerkauf(verkauf);
+
+        List<Map<String, Object>> verkaufteWarenMap = new ArrayList<>();
+
+        for (VerkaufteWare verkaufteWare :
+                verkauf.getVerkaufteWaren()) {
+            verkaufteWarenMap.add(parseWare(verkaufteWare));
+        }
+
+        map.put("products", verkaufteWarenMap);
+
+        return ResponseEntity.ok(map);
+    }
+
+    public static ResponseEntity<Object> send10BeliebsteProdukte(Object data){
+
+
+        return ResponseEntity.ok(data);
     }
 
 }

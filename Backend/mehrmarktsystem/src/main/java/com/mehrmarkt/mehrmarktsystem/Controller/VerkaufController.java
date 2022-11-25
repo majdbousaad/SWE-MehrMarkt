@@ -11,13 +11,11 @@ import com.mehrmarkt.mehrmarktsystem.model.verkauf.VerkaufNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.ware.VerkaufteWare;
 import com.mehrmarkt.mehrmarktsystem.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @RestController
 @RequestMapping("/verkauf")
@@ -71,5 +69,47 @@ public class VerkaufController {
 
         return ResponseEntity.ok(verkauf);
 
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> getAllVerkaeufe(){
+        List<Verkauf> verkaufs = verkaufService.getAllVerkaufen();
+
+        return ResponseHandler.sendAllVerkaeufe(verkaufs);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getVerkauf(@PathVariable int id){
+        Verkauf verkauf;
+        try {
+            verkauf = verkaufService.getVerkauf(id).orElseThrow(VerkaufNotFoundException::new);
+            return ResponseHandler.sendVerkauf(verkauf);
+        }catch (VerkaufNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/anzahlverkaeufe")
+    public ResponseEntity<Object> getAnzahlVerkaufe(){
+
+        LocalDateTime beginn = LocalDateTime.now()
+                .withHour(0).withMinute(0).withSecond(0);
+        LocalDateTime end = beginn.plusDays(1);
+
+        Integer anzahl = verkaufService.getAnzahlVerkaeufe(beginn, end);
+        if(anzahl == null){
+            anzahl = 0;
+        }
+        Map<String, Integer> map = new HashMap<>();
+        map.put("anzahl", anzahl);
+        return ResponseEntity.ok(map);
+
+
+    }
+
+    @GetMapping("/beliebsteProdukte")
+    public ResponseEntity<Object> getBeliebsteProdukte(){
+        Object beliebsteProdukte = verkaufService.getBeliebsteProdukte();
+        return ResponseHandler.send10BeliebsteProdukte(beliebsteProdukte);
     }
 }
