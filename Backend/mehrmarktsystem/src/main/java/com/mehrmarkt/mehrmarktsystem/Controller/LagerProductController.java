@@ -22,6 +22,8 @@ import java.util.Optional;
 
 @RequestMapping("/lagerprodukt")
 @RestController
+@CrossOrigin
+
 public class LagerProductController {
     private ObjectMapper objectMapper = new ObjectMapper();
 

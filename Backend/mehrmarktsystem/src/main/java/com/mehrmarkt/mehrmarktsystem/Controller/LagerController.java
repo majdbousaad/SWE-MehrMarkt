@@ -15,6 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/lager")
+@CrossOrigin
 public class LagerController {
 
     @Autowired

@@ -19,6 +19,8 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/verkauf")
+@CrossOrigin
+
 public class VerkaufController {
 
     @Autowired
