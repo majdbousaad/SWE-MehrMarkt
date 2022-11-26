@@ -130,4 +130,12 @@ public class Lieferant {
     }
     */
 
+    public void updateTo(Lieferant lieferant){
+        setStatus(lieferant.status);
+        setProducts(lieferant.products);
+        setAdresse(lieferant.adresse);
+        setContact(lieferant.contact);
+        setName(lieferant.name);
+    }
+
 }

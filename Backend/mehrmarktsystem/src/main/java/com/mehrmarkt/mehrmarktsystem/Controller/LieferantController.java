@@ -127,7 +127,7 @@ public class LieferantController {
                 }
             }
             Lieferant newLieferant = lieferantService.getById(id).orElseThrow(LieferantNotFoundException::new);
-            newLieferant.setProducts(lieferant.getProducts());
+            newLieferant.updateTo(lieferant);
             lieferantService.saveLieferant(newLieferant);
             return ResponseEntity.ok(newLieferant);
         } catch (LieferantNotFoundException e){
