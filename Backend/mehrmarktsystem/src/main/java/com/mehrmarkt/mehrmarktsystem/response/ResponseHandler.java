@@ -211,4 +211,22 @@ public class ResponseHandler {
         return ResponseEntity.ok(data);
     }
 
+    public static ResponseEntity<Object> sendLagerNamen(List<Lager> lagers){
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (Lager lager :
+                lagers) {
+            list.add(parseLager(lager));
+        }
+
+        return ResponseEntity.ok(list);
+    }
+
+    private static Map<String, Object> parseLager(Lager lager){
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", lager.getName());
+        map.put("standard", lager.isStandard());
+
+        return map;
+    }
+
 }

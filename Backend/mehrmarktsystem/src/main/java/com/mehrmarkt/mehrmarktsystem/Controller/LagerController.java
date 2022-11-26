@@ -73,5 +73,11 @@ public class LagerController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/namen")
+    public ResponseEntity<Object> getLagerNamen(){
+        List<Lager> lagers = lagerService.getAllLager();
+        return ResponseHandler.sendLagerNamen(lagers);
+    }
+
 
 }
