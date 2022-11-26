@@ -94,8 +94,7 @@ public class BestellungController {
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lieferant "+ lieferant.getName() +" ist inaktiv");
 
        }catch (LagerAusgelastetException e){
-           String name = lager.getName();
-           return ResponseEntity.badRequest().body("Lager "+ name+ " ist ausgelastet");
+           return ResponseEntity.badRequest().body("Lager "+ lager.getName()+ " ist ausgelastet");
 
        }catch (ProduktNotFoundException e){
            return ResponseEntity.badRequest().body("Produkt mit EAN: "+ produktEAN+" existiert nicht");
@@ -203,9 +202,9 @@ public class BestellungController {
             bestellungService.storniereBestellung(bestellung_id);
         }
         catch (BestellungNotFoundException e){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bestellung Nummer " + bestellung_id + " existiert nicht");
         } catch (BestellungCannotBeDeletedException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Bestellung Nummer "+bestellung_id+" ist schon geliefert und kann nicht storniert werden");
         }
 
         return ResponseEntity.ok().build();
