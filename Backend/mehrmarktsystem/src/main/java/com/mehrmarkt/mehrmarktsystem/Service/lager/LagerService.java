@@ -22,4 +22,6 @@ public interface LagerService {
 
     Optional<Lager> getStandardLager();
 
+    void initializeLagerIfNotInitialized();
+
 }

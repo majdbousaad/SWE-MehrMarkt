@@ -2,6 +2,7 @@ package com.mehrmarkt.mehrmarktsystem.Service.lager;
 
 import com.mehrmarkt.mehrmarktsystem.Repository.LagerRepository;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
+import com.mehrmarkt.mehrmarktsystem.model.lager.LagerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,5 +66,19 @@ public class LagerServiceImpl implements LagerService{
     @Override
     public Optional<Lager> getStandardLager() {
         return lagerRepository.findByStandardIsTrue();
+    }
+
+    @Override
+    public void initializeLagerIfNotInitialized() {
+        Lager lager;
+        try {
+            lager = getStandardLager().orElseThrow(LagerNotFoundException::new);
+
+        } catch (LagerNotFoundException e){
+            lager = createLager("Aachen");
+            lager.setStandard(true);
+            lagerRepository.save(lager);
+
+        }
     }
 }

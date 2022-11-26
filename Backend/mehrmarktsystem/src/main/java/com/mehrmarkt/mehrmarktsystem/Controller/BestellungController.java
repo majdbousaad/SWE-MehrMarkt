@@ -10,10 +10,10 @@ import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungCannotBeDeletedE
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.bestellung.BestellungsStatus;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
-import com.mehrmarkt.mehrmarktsystem.model.lager.LagerNotFoundException;
+import com.mehrmarkt.mehrmarktsystem.model.lager.LagerAusgelastetException;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
+import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantInactivException;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantNotFoundException;
-import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantenStatus;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.ProduktNotFoundException;
@@ -49,51 +49,60 @@ public class BestellungController {
 
     @PostMapping
     public ResponseEntity<Object> add(@RequestBody Bestellung bestellung){
-        Lieferant lieferant;
-        try {
-             lieferant = lieferantService.getById(bestellung.getLieferant().getId()).orElseThrow(LieferantNotFoundException::new);
+        lagerService.initializeLagerIfNotInitialized();
 
-        } catch (LieferantNotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        String produktEAN = null;
+        Lager lager = null;
+        int lieferantId = bestellung.getLieferant().getId();
+        Lieferant lieferant = null;
+       try {
+           lieferant = lieferantService.getById(lieferantId).orElseThrow(LieferantNotFoundException::new);
+           Lager standardLager = lagerService.getStandardLager().get();
 
-        if(lieferant.getStatus() == LieferantenStatus.inaktiv){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lieferant " + lieferant.getName() + " ist inaktiv");
-        }
-        Lager lager;
-        try {
-            lager = lagerService.getStandardLager().orElseThrow(LagerNotFoundException::new);
-        } catch (LagerNotFoundException e){
-            lager = lagerService.createLager("Aachen");
-            lager.setStandard(true);
-        }
+           Set<Lager> lagersToBeUpdated = new HashSet<>();
+           Product lieferantProduct;
+           for (GekaufteWare gekaufteWare : bestellung.getWaren()){
+               Optional<LagerProdukt> lagerProdukt = lagerProduktService.getByEAN(gekaufteWare.getProduct().getEAN());
+               if(lagerProdukt.isPresent()){
+                   lager = lagerProdukt.get().getLager();
+               }else {
+                   lager = standardLager;
+               }
+               lager.setAnstehendeMenge(lager.getAnstehendeMenge() + gekaufteWare.getMenge());
+               lagersToBeUpdated.add(lager);
+               produktEAN =  gekaufteWare.getProduct().getEAN();
+               lieferantProduct = productService.getByEAN(produktEAN).orElseThrow(ProduktNotFoundException::new);
 
-        int vslLagerSize = lager.getSize() + bestellungService.getGesamteAnstehendeMenge();
-        if( vslLagerSize > lager.getMax()){
-            return ResponseEntity.badRequest().body("Lager "+ lager.getName()+" ist ausgelastet");
-        }
-        for (GekaufteWare gekaufteWare : bestellung.getWaren()){
-            vslLagerSize += gekaufteWare.getMenge();
-            if( vslLagerSize > lager.getMax()){
-                return ResponseEntity.badRequest().body("Lager "+ lager.getName()+" ist ausgelastet");
-            }
-            Product product;
-            try {
-                product = productService.getByEAN(gekaufteWare.getProduct().getEAN()).orElseThrow(ProduktNotFoundException::new);
-            } catch (ProduktNotFoundException e){
-                return ResponseEntity.badRequest().body("Produkt mit EAN: "+ gekaufteWare.getProduct().getEAN()+" existiert nicht");
-            }
-
-            gekaufteWare.setProduct(product);
-        }
+               gekaufteWare.setProduct(lieferantProduct);
+           }
 
 
-        bestellung.setGesamtPreis(bestellung.calculateGesamtPreis());
+           bestellung.setGesamtPreis(bestellung.calculateGesamtPreis());
 
-        bestellung.setLieferant(lieferant);
-        bestellungService.saveBestellung(bestellung);
-        lagerService.updateLager(lager);
-        return ResponseEntity.ok(bestellung);
+           bestellung.setLieferant(lieferant);
+           bestellungService.saveBestellung(bestellung);
+           for (Lager l :
+                   lagersToBeUpdated) {
+               lagerService.updateLager(l);
+           }
+
+           return ResponseEntity.ok(bestellung);
+       } catch (LieferantNotFoundException e){
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lieferant mit ID "+ lieferantId + " existiert nicht");
+
+       } catch (LieferantInactivException e){
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lieferant "+ lieferant.getName() +" ist inaktiv");
+
+       }catch (LagerAusgelastetException e){
+           String name = lager.getName();
+           return ResponseEntity.badRequest().body("Lager "+ name+ " ist ausgelastet");
+
+       }catch (ProduktNotFoundException e){
+           return ResponseEntity.badRequest().body("Produkt mit EAN: "+ produktEAN+" existiert nicht");
+       }
+
+
+
 
     }
 

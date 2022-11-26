@@ -101,7 +101,10 @@ public class Bestellung {
         return lieferant;
     }
 
-    public void setLieferant(Lieferant lieferant) {
+    public void setLieferant(Lieferant lieferant) throws LieferantInactivException {
+        if(lieferant.getStatus() == LieferantenStatus.inaktiv){
+            throw new LieferantInactivException();
+        }
         this.lieferant = lieferant;
     }
 
