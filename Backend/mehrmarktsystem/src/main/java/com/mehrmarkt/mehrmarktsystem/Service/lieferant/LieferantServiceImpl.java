@@ -40,5 +40,16 @@ public class LieferantServiceImpl implements LieferantService {
         return bestellungService.getGelieferteBestellungen(lieferant_id);
     }
 
+    @Override
+    public double getZuverlaessigkeit(int lieferant_id) {
+
+
+        Integer b = lieferantRepository.anzahlGelieferteBestellungen(lieferant_id);
+        if(b == null)
+            return 0;
+        Integer a= lieferantRepository.anzahlVerspaeteteBestellungen(lieferant_id);
+        return a*100.0/b;
+    }
+
 
 }

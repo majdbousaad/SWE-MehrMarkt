@@ -80,6 +80,7 @@ public class BestellungController {
            bestellung.setGesamtPreis(bestellung.calculateGesamtPreis());
 
            bestellung.setLieferant(lieferant);
+           bestellung.setStatus(bestellung.getBestellungsStatus());
            bestellungService.saveBestellung(bestellung);
            for (Lager l :
                    lagersToBeUpdated) {
@@ -133,6 +134,7 @@ public class BestellungController {
 
         LocalDateTime now = LocalDateTime.now();
         bestellung.setTatsLieferdatum(now);
+        bestellung.setStatus(bestellung.getBestellungsStatus());
         bestellungService.saveBestellung(bestellung);
 
         Lieferant lieferant = bestellung.getLieferant();
@@ -155,6 +157,12 @@ public class BestellungController {
             mittel = lieferant.getLieferzeit();
         }
         lieferant.setLieferzeit(mittel);
+        double zuverlaessigKeitQuote = lieferantService.getZuverlaessigkeit(lieferant.getId());
+        if(zuverlaessigKeitQuote >= 30)
+            lieferant.setZuverlaessig(false);
+        else
+            lieferant.setZuverlaessig(true);
+        System.out.println(zuverlaessigKeitQuote + "%");
         lieferantService.saveLieferant(lieferant);
 
         Lager defaultLager = lagerService.getStandardLager().get();

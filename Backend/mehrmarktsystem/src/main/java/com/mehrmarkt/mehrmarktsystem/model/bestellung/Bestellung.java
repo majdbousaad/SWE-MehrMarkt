@@ -24,6 +24,16 @@ public class Bestellung {
     @JoinColumn(name="bestellung_id")
     @JsonIgnoreProperties(value = {"bestellung"})
     private List<GekaufteWare> waren;
+    @Enumerated(EnumType.STRING)
+    private BestellungsStatus status;
+
+    public BestellungsStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BestellungsStatus status) {
+        this.status = status;
+    }
 
     public BestellungsStatus getBestellungsStatus() {
         if(tatsLieferdatum == null){

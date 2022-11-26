@@ -14,4 +14,6 @@ public interface LieferantService {
     public Optional<Lieferant> getById(int lieferant_id);
 
     List<Bestellung> getGelieferteBestellungen(int lieferant_id);
+
+    double getZuverlaessigkeit(int lieferant_id);
 }
