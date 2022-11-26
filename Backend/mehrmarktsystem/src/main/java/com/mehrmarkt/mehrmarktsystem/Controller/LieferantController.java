@@ -26,6 +26,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/lieferant")
+@CrossOrigin
 public class LieferantController {
 
     ObjectMapper objectMapper = new ObjectMapper();
