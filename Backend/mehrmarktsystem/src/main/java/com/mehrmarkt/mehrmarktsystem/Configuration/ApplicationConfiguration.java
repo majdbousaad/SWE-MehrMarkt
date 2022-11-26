@@ -1,3 +1,4 @@
+
 package com.mehrmarkt.mehrmarktsystem.Configuration;
 
 
@@ -33,7 +34,7 @@ public class ApplicationConfiguration {
 	 * */
 	@Autowired
 	public DataSource dataSource;
-
+	/*
 	@Bean(name = "entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean emf() {
 		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
@@ -58,7 +59,7 @@ public class ApplicationConfiguration {
         return properties;
     }
 	
-
+	*/
 }
-	
+
 
