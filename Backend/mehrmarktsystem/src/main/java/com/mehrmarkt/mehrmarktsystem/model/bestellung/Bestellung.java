@@ -2,6 +2,8 @@ package com.mehrmarkt.mehrmarktsystem.model.bestellung;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
+import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantInactivException;
+import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantenStatus;
 import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
 import org.hibernate.annotations.CreationTimestamp;
 

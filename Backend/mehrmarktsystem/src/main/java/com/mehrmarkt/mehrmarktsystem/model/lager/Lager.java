@@ -1,6 +1,5 @@
 package com.mehrmarkt.mehrmarktsystem.model.lager;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
@@ -8,6 +7,7 @@ import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Lager {
@@ -24,6 +24,8 @@ public class Lager {
 
     private int max;
     private int size;
+
+    private int anstehendeMenge;
 
     public Lager() {
 
@@ -49,7 +51,11 @@ public class Lager {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(int size) throws LagerAusgelastetException{
+
+        if(size > max){
+            throw new LagerAusgelastetException();
+        }
         this.size = size;
     }
 
@@ -65,7 +71,7 @@ public class Lager {
     public Lager(String lagerort) {
         setSize(0);
         setMax(100);
-        setName( lagerort);
+        setName(lagerort);
         setLagerProdukts(new ArrayList<>());
     }
 
@@ -83,6 +89,7 @@ public class Lager {
 
 
         setSize(size + menge);
+        setAnstehendeMenge(anstehendeMenge - menge);
         return true;
 
     }
@@ -117,7 +124,7 @@ public class Lager {
     }
 
     public void addLagerProduktIfNotExists(LagerProdukt lagerProdukt){
-        if(!lagerProdukts.stream().anyMatch(s -> s.getEAN().equals(lagerProdukt.getEAN()))){
+        if(lagerProdukts.stream().noneMatch(s -> s.getEAN().equals(lagerProdukt.getEAN()))){
             lagerProdukts.add(lagerProdukt);
             setSize(size + lagerProdukt.getMenge());
         }
@@ -129,5 +136,29 @@ public class Lager {
 
     public void setStandard(boolean standard) {
         this.standard = standard;
+    }
+
+    public int getAnstehendeMenge() {
+        return anstehendeMenge;
+    }
+
+    public void setAnstehendeMenge(int anstehendeMenge) throws LagerAusgelastetException{
+        if(size + anstehendeMenge > max){
+            throw new LagerAusgelastetException();
+        }
+        this.anstehendeMenge = anstehendeMenge;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lager lager = (Lager) o;
+        return name.equals(lager.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

@@ -39,4 +39,14 @@ public class LagerProduktServiceImpl implements LagerProduktService{
     public void deleteLagerProdukt(String ean) {
         lagerProduktRepository.deleteById(ean);
     }
+
+    @Override
+    public boolean existsByEAN(String ean) {
+        return lagerProduktRepository.existsByEAN(ean);
+    }
+
+    @Override
+    public Integer getAnstehendeMenge(String ean) {
+        return lagerProduktRepository.getAnstehendeMenge(ean);
+    }
 }

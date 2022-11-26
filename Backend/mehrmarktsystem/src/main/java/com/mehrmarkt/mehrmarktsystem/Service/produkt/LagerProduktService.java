@@ -17,4 +17,8 @@ public interface LagerProduktService {
 
     void deleteLagerProdukt(String ean);
 
+    boolean existsByEAN(String ean);
+
+    Integer getAnstehendeMenge(String ean);
+
 }

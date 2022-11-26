@@ -72,14 +72,20 @@ public class LagerProductController {
                             lagerProdukt.getMenge() != lagerProduktPatched.getMenge()
                     ;
             if (lagerSollAktuallisiert){
+                Integer anstehendeMenge = lagerProduktService.getAnstehendeMenge(lagerProdukt.getEAN());
+                if(anstehendeMenge == null){
+                    anstehendeMenge = 0;
+                }
                 Lager lagerA = lagerService.getLager(lagerProdukt.getLagerort());
                 Lager lagerB = lagerService.getLager(lagerProduktPatched.getLagerort());
                 lagerA.setSize(lagerA.getSize() - lagerProdukt.getMenge());
+                lagerA.setAnstehendeMenge(lagerA.getAnstehendeMenge() - anstehendeMenge);
                 int lagerBNewSize = lagerB.getSize() + lagerProduktPatched.getMenge();
                 if(lagerBNewSize > lagerB.getMax()){
                     return ResponseEntity.status(HttpStatus.INSUFFICIENT_STORAGE).build();
                 }
                 lagerB.setSize(lagerB.getSize() + lagerProduktPatched.getMenge());
+                lagerB.setAnstehendeMenge(lagerB.getAnstehendeMenge() + anstehendeMenge);
                 lagerService.updateLager(lagerA);
                 lagerService.updateLager(lagerB);
             }
