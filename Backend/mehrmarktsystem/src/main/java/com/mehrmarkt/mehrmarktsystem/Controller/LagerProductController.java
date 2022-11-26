@@ -9,6 +9,7 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import com.mehrmarkt.mehrmarktsystem.Service.lager.LagerService;
 import com.mehrmarkt.mehrmarktsystem.Service.produkt.LagerProduktService;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
+import com.mehrmarkt.mehrmarktsystem.model.lager.LagerNotFoundException;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.ProduktNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,15 @@ public class LagerProductController {
     }
 
     @GetMapping("/lagerort/{lagerort}")
-    public List<LagerProdukt> getAllByLagerort(@PathVariable String lagerort){
-        return lagerProduktService.getAllByLagerort(lagerort);
+    public ResponseEntity<Object> getAllByLagerort(@PathVariable String lagerort){
+        try {
+            Lager lager = lagerService.getLagerIfExists(lagerort).orElseThrow(LagerNotFoundException::new);
+            List<LagerProdukt> lagerProdukts = lagerProduktService.getAllByLagerort(lagerort);
+            return ResponseEntity.ok(lagerProdukts);
+        }catch (LagerNotFoundException e){
+            return ResponseEntity.notFound().build();
+
+        }
     }
 
     @PatchMapping(path = "/{ean}", consumes = {"application/json-patch+json", "application/json"})
