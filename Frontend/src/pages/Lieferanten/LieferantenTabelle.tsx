@@ -44,7 +44,8 @@ const rows: RowType[] = [
   }
 ]
 
-export default function LieferantenTabelle() {
+
+export default function LieferantenTabelle({lieferanten} :{lieferanten: Lieferant[]}) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false)
 
   function onProfileDialogClose() {
