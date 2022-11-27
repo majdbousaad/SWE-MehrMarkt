@@ -9,7 +9,7 @@ import Chip from '@mui/material/Chip'
 import Box from '@mui/material/Box'
 import TableRow from '@mui/material/TableRow'
 import OpenInNew from 'mdi-material-ui/OpenInNew'
-import LieferantenProfilDialog from './LieferantenProfilDialog'
+import LieferantenProfilDialog, { ICatalogProducts } from './LieferantenProfilDialog'
 import { useState } from 'react'
 
 export interface Lieferant {
@@ -18,6 +18,7 @@ export interface Lieferant {
   contact?: string
   deliveryTime: string
   status: 'aktiv' | 'inaktiv'
+  catalog: ICatalogProducts[]
 }
 {
   /*
@@ -49,12 +50,14 @@ const rows: Lieferant[] = [
 
 export default function LieferantenTabelle({ lieferanten }: { lieferanten: Lieferant[] }) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false)
+  const [profielDialogLieferant, setProfielDialogLieferant] = useState<Lieferant>()
 
   function onProfileDialogClose() {
     setProfileDialogOpen(false)
   }
 
-  function onProfileDialogOpen() {
+  function onProfileDialogOpen(lieferant: Lieferant) {
+    setProfielDialogLieferant(lieferant)
     setProfileDialogOpen(true)
   }
 
@@ -77,7 +80,11 @@ export default function LieferantenTabelle({ lieferanten }: { lieferanten: Liefe
                 <TableCell>
                   <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                     <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{lieferant.name}</Typography>
-                    <IconButton size='small' sx={{ p: 0, marginLeft: 1 }} onClick={onProfileDialogOpen}>
+                    <IconButton
+                      size='small'
+                      sx={{ p: 0, marginLeft: 1 }}
+                      onClick={() => onProfileDialogOpen(lieferant)}
+                    >
                       <OpenInNew fontSize='small' />
                     </IconButton>
                   </Box>
@@ -98,7 +105,11 @@ export default function LieferantenTabelle({ lieferanten }: { lieferanten: Liefe
           </TableBody>
         </Table>
       </Card>
-      <LieferantenProfilDialog open={profileDialogOpen} handleClose={onProfileDialogClose} />
+      <LieferantenProfilDialog
+        initalLieferant={profielDialogLieferant}
+        open={profileDialogOpen}
+        handleClose={onProfileDialogClose}
+      />
     </>
   )
 }

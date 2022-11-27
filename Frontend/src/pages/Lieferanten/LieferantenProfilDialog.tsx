@@ -15,15 +15,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import LieferantKatalog from './LieferantKatalog'
 
 import { v4 as uuidv4 } from 'uuid'
-
-interface ILiferant {
-  name: string
-  address: string
-  contact: string
-  deliveryTime: string
-  status: 'aktiv' | 'inaktiv'
-  catalog: ICatalogProducts[]
-}
+import { Lieferant } from './LieferantenTabelle'
 
 export interface ICatalogProducts {
   id: string
@@ -32,43 +24,23 @@ export interface ICatalogProducts {
   price: number
 }
 
-const lieferant: ILiferant = {
-  name: 'Lieferant 1',
-  address: 'Musterstrasse 1, 1234 Musterstadt',
-  contact: 'Herr Mustermann',
-  deliveryTime: '1 Tag, 4 Stunden',
-  status: 'aktiv',
-  catalog: [
-    {
-      id: uuidv4(),
-      name: 'Frozen yoghurt',
-      ean: '123456789',
-      price: 10
-    },
-    {
-      id: uuidv4(),
-      name: 'Ice cream sandwich',
-      ean: '123456789',
-      price: 20
-    },
-    {
-      id: uuidv4(),
-      name: 'Pizza',
-      ean: '123456789',
-      price: 30
-    }
-  ]
-}
-
 function createData(id: string, name: string, ean: string, price: number) {
   return { id, name, ean, price }
 }
 
-export default function LieferantenProfilDialog({ open, handleClose }: { open: boolean; handleClose: () => void }) {
+export default function LieferantenProfilDialog({
+  initalLieferant,
+  open,
+  handleClose
+}: {
+  initalLieferant: Lieferant
+  open: boolean
+  handleClose: () => void
+}) {
   const [isActive, setIsActive] = useState(true)
   const [isDirty, setIsDirty] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const [liferant, setLiferant] = useState<ILiferant>(lieferant)
+  const [liferant, setLiferant] = useState<Lieferant>(initalLieferant)
 
   const [catalog, setCatalog] = useState([
     createData(uuidv4(), 'Frozen yoghurt', '159159', 1.5),
@@ -114,20 +86,22 @@ export default function LieferantenProfilDialog({ open, handleClose }: { open: b
         <Box sx={{ p: 2 }}>
           <Grid container>
             <Grid item md={4}>
-              <LieferantProfilSection
-                lieferant={lieferant}
-                isEditing={isEditing}
-                isActive={isActive}
-                setIsActive={setIsActive}
-                handleStartEditing={handleStartEditing}
-                handleSaveEditing={handleSaveEditing}
-              />
+              {initalLieferant && (
+                <LieferantProfilSection
+                  lieferant={initalLieferant}
+                  isEditing={isEditing}
+                  isActive={isActive}
+                  setIsActive={setIsActive}
+                  handleStartEditing={handleStartEditing}
+                  handleSaveEditing={handleSaveEditing}
+                />
+              )}
             </Grid>
             <Grid item md={8}>
               <Typography variant='h6' align='center'>
                 Katalog
               </Typography>
-              <LieferantKatalog catalog={catalog} />
+              {initalLieferant && <LieferantKatalog onProductsUpdate={() => {}} products={initalLieferant.catalog} />}
             </Grid>
           </Grid>
         </Box>
@@ -149,7 +123,7 @@ function LieferantProfilSection({
   handleSaveEditing,
   handleStartEditing
 }: {
-  lieferant: ILiferant
+  lieferant: Lieferant
   isEditing: boolean
   isActive: boolean
   setIsActive: (value: boolean) => void

@@ -75,7 +75,7 @@ export default function LieferantKatalog({
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map(row => (
+              {rows?.map(row => (
                 <>
                   {row.name === '' ? (
                     <KatalogProdukt

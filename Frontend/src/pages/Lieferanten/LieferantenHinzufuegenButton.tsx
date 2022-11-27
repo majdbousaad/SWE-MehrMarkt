@@ -3,7 +3,7 @@ import { useState } from 'react'
 import LieferantenHinzufuegenDialog from './LieferantenHinzufuegenDialog'
 import { ProductEntry } from './LieferantKatalog'
 
-export default function LieferantenHinzufuegenButton() {
+export default function LieferantenHinzufuegenButton({ fetchLieferanten }: { fetchLieferanten: () => void }) {
   const [open, setOpen] = useState(false)
 
   function handleSave(lieferant: {
@@ -17,9 +17,12 @@ export default function LieferantenHinzufuegenButton() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(lieferant)
-    };
-    fetch('http://localhost:8080/lieferant', requestOptions)
-      .then(response => console.log(response))
+    }
+    fetch('http://localhost:8080/lieferant', requestOptions).then(response => {
+      console.log(requestOptions)
+      console.log(response)
+      fetchLieferanten()
+    })
 
     //setOpen(false)
   }
