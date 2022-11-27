@@ -12,15 +12,16 @@ import OpenInNew from 'mdi-material-ui/OpenInNew'
 import LieferantenProfilDialog from './LieferantenProfilDialog'
 import { useState } from 'react'
 
-interface RowType {
+
+export interface Lieferant {
   name: string
   address: string
   contact: string
   deliveryTime: string
   status: 'aktiv' | 'inaktiv'
 }
-
-const rows: RowType[] = [
+{/*
+const rows: Lieferant[] = [
   {
     name: 'Lieferant 1',
     address: 'Musterstrasse 1, 1234 Musterstadt',
@@ -43,6 +44,7 @@ const rows: RowType[] = [
     status: 'inaktiv'
   }
 ]
+*/}
 
 
 export default function LieferantenTabelle({lieferanten} :{lieferanten: Lieferant[]}) {
@@ -70,23 +72,23 @@ export default function LieferantenTabelle({lieferanten} :{lieferanten: Lieferan
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row: RowType) => (
-              <TableRow hover key={row.name}>
+            {lieferanten.map((lieferant: Lieferant) => (
+              <TableRow hover key={lieferant.name}>
                 <TableCell>
                   <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{row.name}</Typography>
+                    <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{lieferant.name}</Typography>
                     <IconButton size='small' sx={{ p: 0, marginLeft: 1 }} onClick={onProfileDialogOpen}>
                       <OpenInNew fontSize='small' />
                     </IconButton>
                   </Box>
                 </TableCell>
-                <TableCell>{row.address}</TableCell>
-                <TableCell>{row.contact}</TableCell>
-                <TableCell>{row.deliveryTime}</TableCell>
+                <TableCell>{lieferant.address}</TableCell>
+                <TableCell>{lieferant.contact}</TableCell>
+                <TableCell>{lieferant.deliveryTime}</TableCell>
                 <TableCell>
                   <Chip
-                    label={row.status}
-                    color={row.status === 'aktiv' ? 'success' : 'secondary'}
+                    label={lieferant.status}
+                    color={lieferant.status === 'aktiv' ? 'success' : 'secondary'}
                     size='small'
                     sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}
                   />
