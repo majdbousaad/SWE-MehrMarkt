@@ -12,15 +12,15 @@ import OpenInNew from 'mdi-material-ui/OpenInNew'
 import LieferantenProfilDialog from './LieferantenProfilDialog'
 import { useState } from 'react'
 
-
 export interface Lieferant {
   name: string
   address: string
-  contact: string
+  contact?: string
   deliveryTime: string
   status: 'aktiv' | 'inaktiv'
 }
-{/*
+{
+  /*
 const rows: Lieferant[] = [
   {
     name: 'Lieferant 1',
@@ -44,10 +44,10 @@ const rows: Lieferant[] = [
     status: 'inaktiv'
   }
 ]
-*/}
+*/
+}
 
-
-export default function LieferantenTabelle({lieferanten} :{lieferanten: Lieferant[]}) {
+export default function LieferantenTabelle({ lieferanten }: { lieferanten: Lieferant[] }) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false)
 
   function onProfileDialogClose() {
