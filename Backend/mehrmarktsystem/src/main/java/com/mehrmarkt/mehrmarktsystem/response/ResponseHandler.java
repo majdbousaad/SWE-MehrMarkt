@@ -97,6 +97,7 @@ public class ResponseHandler {
         Map<String, Object> map=new HashMap<>();
         Duration lieferzeit = (lieferant.getLieferzeit() == null)?
                 Duration.ZERO : lieferant.getLieferzeit();
+        map.put("id", lieferant.getId());
         map.put("name", lieferant.getName());
         map.put("address", lieferant.getAdresse());
         map.put("contact", lieferant.getContact());
@@ -112,7 +113,6 @@ public class ResponseHandler {
 
     private static Map<String, Object> parseProdukt(Product product){
         Map<String, Object> map=new HashMap<>();
-        map.put("kacper", "hahaha(Test)");
         map.put("ean", product.getEAN());
         map.put("name", product.getName());
         map.put("price", product.getPreis());
