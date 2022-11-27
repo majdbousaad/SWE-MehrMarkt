@@ -8,13 +8,18 @@ export default function LieferantenHinzufuegenButton() {
 
   function handleSave(lieferant: {
     name: string
-    address: string
+    adresse: string
     contact: string
-    active: boolean
+    active: number
     products: ProductEntry[]
   }): void {
-    console.log(lieferant)
-    console.log(JSON.stringify(lieferant))
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(lieferant)
+    };
+    fetch('http://localhost:8080/lieferant', requestOptions)
+      .then(response => console.log(response))
 
     //setOpen(false)
   }

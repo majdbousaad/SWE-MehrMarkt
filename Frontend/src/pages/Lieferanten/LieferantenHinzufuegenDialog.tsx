@@ -9,7 +9,7 @@ import CloseIcon from 'mdi-material-ui/Close'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Switch from '@mui/material/Switch'
-import { useRef, useState } from 'react'
+import { useRef, useState} from 'react'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import LieferantKatalog, { ProductEntry } from './LieferantKatalog'
@@ -21,11 +21,11 @@ export default function LieferantenHinzufuegenDialog({
 }: {
   open: boolean
   handleClose: () => void
-  handleSave: (lieferanten: {
+  handleSave: (lieferant: {
     name: string
-    address: string
+    adresse: string
     contact: string
-    active: boolean
+    status: number
     products: ProductEntry[]
   }) => void
 }) {
@@ -37,13 +37,17 @@ export default function LieferantenHinzufuegenDialog({
   const contactRef = useRef<HTMLInputElement>(null)
 
   function onCreateLieferant() {
-    handleSave({
+
+    const lieferant = {
       name: nameRef.current!.value,
-      address: adressRef.current!.value,
+      adresse: adressRef.current!.value,
       contact: contactRef.current!.value,
-      active: isActive,
+      status: (isActive)? 1 : 0,
       products: products
-    })
+    }
+
+    handleSave(lieferant)
+    handleClose()
   }
 
   function onProductsUpdate(products: ProductEntry[]) {
@@ -96,6 +100,7 @@ export default function LieferantenHinzufuegenDialog({
                     label={isActive ? 'Status: Aktiv' : 'Status: Inaktiv'}
                   />
                 </FormGroup>
+                {/*
                 <Box className='TextField-without-border-radius'>
                   <Typography className='pb-3' variant='body2' align='left'>
                     Lieferzeit
@@ -131,6 +136,8 @@ export default function LieferantenHinzufuegenDialog({
                     </Grid>
                   </Grid>
                 </Box>
+                */}
+
               </Box>
             </Grid>
             <Grid item md={8}>
