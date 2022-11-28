@@ -144,7 +144,7 @@ export default function LieferantenHinzufuegenDialog({
               <Typography variant='h6' align='center'>
                 Katalog
               </Typography>
-              <LieferantKatalog products={[]} onProductsUpdate={onProductsUpdate} />
+              <LieferantKatalog products={[]} onProductsUpdate={onProductsUpdate} isEditing={true} />
             </Grid>
           </Grid>
         </Box>

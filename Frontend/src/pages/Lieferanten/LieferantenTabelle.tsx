@@ -9,55 +9,35 @@ import Chip from '@mui/material/Chip'
 import Box from '@mui/material/Box'
 import TableRow from '@mui/material/TableRow'
 import OpenInNew from 'mdi-material-ui/OpenInNew'
-import LieferantenProfilDialog, { ICatalogProducts } from './LieferantenProfilDialog'
-import { useState } from 'react'
+import LieferantenProfilDialog  from './LieferantenProfilDialog'
+import { useState, useEffect } from 'react'
+import { ICatalogProducts, Lieferant, ILieferantJsonResponseOne } from './interfaces'
+import axios from 'axios'
 
-export interface Lieferant {
-  name: string
-  address: string
-  contact?: string
-  deliveryTime: string
-  status: 'aktiv' | 'inaktiv'
-  catalog: ICatalogProducts[]
-}
-{
-  /*
-const rows: Lieferant[] = [
-  {
-    name: 'Lieferant 1',
-    address: 'Musterstrasse 1, 1234 Musterstadt',
-    contact: 'Herr Mustermann',
-    deliveryTime: '1 Tag, 4 Stunden',
-    status: 'aktiv'
-  },
-  {
-    name: 'Lieferant 3',
-    address: 'Musterstrasse 3, 1234 Musterstadt',
-    contact: 'Herr Mustermann',
-    deliveryTime: '1 Tag, 2 Stunden',
-    status: 'aktiv'
-  },
-  {
-    name: 'Lieferant 2',
-    address: 'Musterstrasse 2, 1234 Musterstadt',
-    contact: 'Herr Mustermann',
-    deliveryTime: '1 Tag',
-    status: 'inaktiv'
-  }
-]
-*/
-}
+
 
 export default function LieferantenTabelle({ lieferanten }: { lieferanten: Lieferant[] }) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false)
-  const [profielDialogLieferant, setProfielDialogLieferant] = useState<Lieferant>()
+  const [profielDialogLieferant, setProfielDialogLieferant] = useState<ILieferantJsonResponseOne>()
 
   function onProfileDialogClose() {
     setProfileDialogOpen(false)
   }
 
-  function onProfileDialogOpen(lieferant: Lieferant) {
-    setProfielDialogLieferant(lieferant)
+  async function fetchLieferant(lieferant: Lieferant){
+    await axios.get("http://localhost:8080/lieferant/" + lieferant.id).then(response => {
+      //TODO: Delete this console.log when done
+      console.log(response)
+      const lieferantenResponse = response.data as ILieferantJsonResponseOne
+      setProfielDialogLieferant(lieferantenResponse)
+      console.log(profielDialogLieferant)
+    })
+  }
+
+  async function onProfileDialogOpen(lieferant: Lieferant) {
+
+    await fetchLieferant(lieferant)
+    
     setProfileDialogOpen(true)
   }
 
@@ -105,11 +85,12 @@ export default function LieferantenTabelle({ lieferanten }: { lieferanten: Liefe
           </TableBody>
         </Table>
       </Card>
+      {profielDialogLieferant && (
       <LieferantenProfilDialog
-        initalLieferant={profielDialogLieferant}
+        lieferant={profielDialogLieferant}
         open={profileDialogOpen}
         handleClose={onProfileDialogClose}
-      />
+      />)}
     </>
   )
 }

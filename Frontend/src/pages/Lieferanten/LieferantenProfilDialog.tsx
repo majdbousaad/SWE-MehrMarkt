@@ -15,33 +15,28 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import LieferantKatalog from './LieferantKatalog'
 
 import { v4 as uuidv4 } from 'uuid'
-import { Lieferant } from './LieferantenTabelle'
+import { ILieferantJsonResponseOne, ILieferantRequest, Lieferant } from './interfaces'
+import axios from 'axios'
 
-export interface ICatalogProducts {
-  id: string
-  name: string
-  ean: string
-  price: number
-}
 
 function createData(id: string, name: string, ean: string, price: number) {
   return { id, name, ean, price }
 }
 
 export default function LieferantenProfilDialog({
-  initalLieferant,
+  lieferant,
   open,
-  handleClose
+  handleClose,
 }: {
-  initalLieferant: Lieferant
+  lieferant: ILieferantJsonResponseOne
   open: boolean
   handleClose: () => void
 }) {
   const [isActive, setIsActive] = useState(true)
   const [isDirty, setIsDirty] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const [liferant, setLiferant] = useState<Lieferant>(initalLieferant)
-
+  //const [lieferant, setLieferant] = useState<ILieferantJsonResponseOne>(profielDialogLieferant)
+  
   const [catalog, setCatalog] = useState([
     createData(uuidv4(), 'Frozen yoghurt', '159159', 1.5),
     createData(uuidv4(), 'Ice cream sandwich', '2462234', 10),
@@ -56,11 +51,36 @@ export default function LieferantenProfilDialog({
     setIsEditing(false)
     setIsDirty(true)
   }
+  
+  async function updateLieferant(){
 
-  function handleSave() {
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify ({
+        id: lieferant.id,
+        contact: lieferant.contact,
+        products: lieferant.products,
+        name: lieferant.name,
+        status: (lieferant.status)? 'aktiv' : 'inaktiv'
+
+      })
+  };
+
+   await fetch('http://localhost:8080/lieferant/' + lieferant.id, requestOptions)
+      .then(response => response.json())
+      .then(data => console.log(data));
+  }
+  
+    async function handleSave() {
     setIsDirty(false)
+     await updateLieferant()
+
     handleClose()
   }
+  
+
+  
 
   function handleAbort() {
     setIsDirty(false)
@@ -80,15 +100,16 @@ export default function LieferantenProfilDialog({
             </Typography>
             <Button autoFocus color='success' variant='contained' disabled={!isDirty} onClick={handleSave}>
               Änderungen speichern
+
             </Button>
           </Toolbar>
         </AppBar>
         <Box sx={{ p: 2 }}>
           <Grid container>
             <Grid item md={4}>
-              {initalLieferant && (
+              {lieferant && (
                 <LieferantProfilSection
-                  lieferant={initalLieferant}
+                  lieferant={lieferant}
                   isEditing={isEditing}
                   isActive={isActive}
                   setIsActive={setIsActive}
@@ -101,7 +122,7 @@ export default function LieferantenProfilDialog({
               <Typography variant='h6' align='center'>
                 Katalog
               </Typography>
-              {initalLieferant && <LieferantKatalog onProductsUpdate={() => {}} products={initalLieferant.catalog} />}
+              {lieferant && <LieferantKatalog onProductsUpdate={() => {}} products={lieferant.products} isEditing={isEditing} />}
             </Grid>
           </Grid>
         </Box>
@@ -123,7 +144,7 @@ function LieferantProfilSection({
   handleSaveEditing,
   handleStartEditing
 }: {
-  lieferant: Lieferant
+  lieferant: ILieferantJsonResponseOne
   isEditing: boolean
   isActive: boolean
   setIsActive: (value: boolean) => void
