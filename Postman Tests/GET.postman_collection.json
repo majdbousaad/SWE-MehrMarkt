@@ -1,0 +1,253 @@
+{
+	"info": {
+		"_postman_id": "b687c7de-a2fa-4c7f-92e7-2a9b0419ea2f",
+		"name": "GET",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get all Lager Products",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/lagerprodukt",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lagerprodukt"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all Lieferanten",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/lieferant",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lieferant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all Lieferant By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/lieferant/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lieferant",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all Produkte by lagerort",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Lieferando 2\",\r\n    \"adresse\": \"Duesseldorf\",\r\n    \"lieferzeit\": \"PT0H01M\",\r\n    \"products\" :[\r\n        {   \r\n            \"name\" : \"Brot\",\r\n            \"preis\" : \"3\"\r\n        },\r\n        {   \r\n            \"name\" : \"Kaese\",\r\n            \"preis\" : \"3\"\r\n        },\r\n        {   \r\n            \"name\" : \"Schocko\",\r\n            \"preis\" : \"3\"\r\n        }\r\n        \r\n    ],\r\n    \"status\": \"aktiv\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/lagerprodukt/lagerort/Aachen",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lagerprodukt",
+						"lagerort",
+						"Aachen"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all anstehende Bestellungen",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Lieferando 2\",\r\n    \"adresse\": \"Duesseldorf\",\r\n    \"lieferzeit\": \"PT0H01M\",\r\n    \"products\" :[\r\n        {   \r\n            \"name\" : \"Brot\",\r\n            \"preis\" : \"3\"\r\n        },\r\n        {   \r\n            \"name\" : \"Kaese\",\r\n            \"preis\" : \"3\"\r\n        },\r\n        {   \r\n            \"name\" : \"Schocko\",\r\n            \"preis\" : \"3\"\r\n        }\r\n        \r\n    ],\r\n    \"status\": \"aktiv\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/bestellung/anstehend",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bestellung",
+						"anstehend"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all gelieferte Bestellungen Copy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/bestellung/geliefert",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bestellung",
+						"geliefert"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all verkäufe",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/verkauf",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"verkauf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Verkauf By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/verkauf/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"verkauf",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Bestellung by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/bestellung/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bestellung",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all Bestellungen By lieferant",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/bestellung/geliefert/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bestellung",
+						"geliefert",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Lager Namen",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/lager/namen",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lager",
+						"namen"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

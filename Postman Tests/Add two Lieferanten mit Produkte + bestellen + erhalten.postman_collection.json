@@ -1,0 +1,145 @@
+{
+	"info": {
+		"_postman_id": "5e01f364-b3eb-4469-874b-396432e08273",
+		"name": "Add two Lieferanten mit Produkte + bestellen + erhalten",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "adding Liferando with 3 products Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Lieferando 2\",\r\n    \"adresse\": \"Duesseldorf\",\r\n    \"contact\" : \"01526367384\",\r\n    \"products\" :[\r\n        {   \r\n            \"ean\" : \"1323123123\",\r\n            \"name\" : \"Brot\",\r\n            \"preis\" : \"3\"\r\n        },\r\n        {   \r\n            \"ean\" : \"1323123124\",\r\n            \"name\" : \"Kaese\",\r\n            \"preis\" : \"3\"\r\n        },\r\n        {   \r\n            \"ean\" : \"1323123125\",\r\n            \"name\" : \"Schocko\",\r\n            \"preis\" : \"3\"\r\n        }\r\n        \r\n    ],\r\n    \"status\": \"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/lieferant",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lieferant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "adding DHLwith 4 products",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"DHL\",\r\n    \"adresse\": \"Duesseldorf\",\r\n    \"contact\" : \"majd@hoa\",\r\n    \"products\" :[\r\n        {   \r\n            \"ean\" : \"4324255\",\r\n            \"name\" : \"Brot DHL\",\r\n            \"preis\" : \"3\"\r\n        },\r\n        {   \r\n            \"ean\" : \"4324256\",\r\n            \"name\" : \"Kaese DHL\",\r\n            \"preis\" : \"3\"\r\n        },\r\n        {   \r\n            \"ean\" : \"4324257\",\r\n            \"name\" : \"Schocko DHL\",\r\n            \"preis\" : \"3\"\r\n        },\r\n        {   \r\n            \"ean\" : \"4324258\",\r\n            \"name\" : \"Birne DHL\",\r\n            \"preis\" : \"3\"\r\n        }\r\n        \r\n    ],\r\n    \"status\": \"aktiv\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/lieferant",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lieferant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bestellung from Lieferant 1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n    \"waren\" :[\r\n        {\r\n            \"product\" :{\"ean\" : \"1323123123\"},\r\n            \"menge\" : \"10\"\r\n        },\r\n        {\r\n            \"product\" :{\"ean\" : \"1323123124\"},\r\n            \"menge\" : \"10\"\r\n        }\r\n    ],\r\n    \"lieferant\" : {\"id\" : \"1\"},\r\n    \"vslLieferdatum\" :  \"2024-12-03T10:15:30\"\r\n\r\n\r\n    \r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/bestellung",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bestellung"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bestellung erhalten",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"angekommen\" : true\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/bestellung/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bestellung",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verkauf",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n    \"verkaufteWaren\" :[\r\n        {\r\n            \"lagerProdukt\" :{\"ean\" : \"1323123124\"},\r\n            \"menge\" : \"5\"\r\n        },\r\n        {\r\n            \"lagerProdukt\" :{\"ean\" : \"1323123125\"},\r\n            \"menge\" : \"5\"\r\n        }\r\n    ]\r\n\r\n\r\n    \r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/verkauf",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"verkauf"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
