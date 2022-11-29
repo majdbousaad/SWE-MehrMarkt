@@ -1,0 +1,66 @@
+{
+	"info": {
+		"_postman_id": "d6df1923-b2c5-4b53-a86c-0b064e3f5b9a",
+		"name": "Statistcs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get Anzahl Verkäufe",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/verkauf/anzahlverkaeufe",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"verkauf",
+						"anzahlverkaeufe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get beliebste Produkte",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/verkauf/beliebsteProdukte",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"verkauf",
+						"beliebsteProdukte"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Lager Statistiks Copy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/lager/statistik",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lager",
+						"statistik"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "4075fcf9-721c-4b87-ba09-1545e2dc85f1",
+		"name": "Update",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "edit Lieferant By Id PUT",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"DHL\",\r\n    \"adresse\": \"Duesseldorf\",\r\n    \"contact\" : \"majd@hoa\",\r\n    \"products\" :[\r\n        {   \r\n            \"ean\" : \"4324255\",\r\n            \"name\" : \"Brot DHL\",\r\n            \"preis\" : \"3\"\r\n        },\r\n        {   \r\n            \"ean\" : \"4324256\",\r\n            \"name\" : \"Kaese DHL\",\r\n            \"preis\" : \"3\"\r\n        },\r\n        {   \r\n            \"ean\" : \"4324257\",\r\n            \"name\" : \"Schocko DHL\",\r\n            \"preis\" : \"3\"\r\n        },\r\n        {   \r\n            \"ean\" : \"4324258\",\r\n            \"name\" : \"Birne DHL\",\r\n            \"preis\" : \"3\"\r\n        }\r\n        \r\n    ],\r\n    \"status\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/lieferant/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lieferant",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit lagerprodukt",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    \r\n    { \"op\": \"replace\", \"path\": \"/lagerort\", \"value\": \"qwe\" }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/lagerprodukt/1323123124",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lagerprodukt",
+						"1323123124"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update lager max Size",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/lager/updateSize/Aachen/1000",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lager",
+						"updateSize",
+						"Aachen",
+						"1000"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
