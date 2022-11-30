@@ -10,7 +10,7 @@ export default function LieferantenHinzufuegenButton({ fetchLieferanten }: { fet
     name: string
     adresse: string
     contact: string
-    active: number
+    status: number
     products: ProductEntry[]
   }): void {
     const requestOptions = {

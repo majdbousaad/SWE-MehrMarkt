@@ -83,7 +83,7 @@ export default function LieferantenProfilDialog({
         contact: lieferant.contact,
         products: products,
         name: lieferant.name,
-        status: (lieferant.status)? 'aktiv' : 'inaktiv'
+        status: (isActive)? 'aktiv' : 'inaktiv'
 
       })
   };
