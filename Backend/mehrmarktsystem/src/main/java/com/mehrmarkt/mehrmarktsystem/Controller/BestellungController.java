@@ -71,7 +71,9 @@ public class BestellungController {
                lager.setAnstehendeMenge(lager.getAnstehendeMenge() + gekaufteWare.getMenge());
                lagersToBeUpdated.add(lager);
                produktEAN =  gekaufteWare.getProduct().getEAN();
-               lieferantProduct = productService.getByEAN(produktEAN).orElseThrow(ProduktNotFoundException::new);
+               lieferantProduct = productService.
+                       getByEANAndLieferant_Id(produktEAN, lieferantId).
+                       orElseThrow(ProduktNotFoundException::new);
 
                gekaufteWare.setProduct(lieferantProduct);
            }
