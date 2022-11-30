@@ -3,7 +3,7 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import LieferantenHinzufuegenButton from './LieferantenHinzufuegenButton'
 import LieferantenTabelle from './LieferantenTabelle'
-import { createContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Lieferant, ILieferantJsonResponseAll } from './interfaces'
 
@@ -38,7 +38,7 @@ export default function LieferantenPage() {
     <Card>
       <CardHeader title='Lieferanten' action={<LieferantenHinzufuegenButton fetchLieferanten={fetchLieferanten} />} />
       <CardContent>
-        <LieferantenTabelle lieferanten={lieferanten} />
+        <LieferantenTabelle lieferanten={lieferanten} fetchLieferanten={fetchLieferanten}/>
       </CardContent>
     </Card>
   )

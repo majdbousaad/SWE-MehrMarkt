@@ -13,13 +13,9 @@ import TextField from '@mui/material/TextField'
 import { v4 as uuidv4 } from 'uuid'
 
 import { useRef, useState } from 'react'
-import { ICatalogProducts } from './interfaces'
+import { ICatalogProducts, ProductEntry } from './interfaces'
 
-export interface ProductEntry {
-  name: string
-  ean: string
-  price: number
-}
+
 
 export default function LieferantKatalog({
   products,
@@ -49,14 +45,17 @@ export default function LieferantKatalog({
       return {
         name: row.name,
         ean: row.ean,
-        price: row.price
+        preis: row.price
       }
     })
     onProductsUpdate(catalog)
+    
   }
 
   function onAddProduct() {
     setRows([...rows, createData(uuidv4(), '', '', 0)])
+    console.log(rows)
+
   }
   return (
     <Card raised={true}>

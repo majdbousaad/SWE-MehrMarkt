@@ -1,4 +1,8 @@
-
+export interface ProductEntry {
+  name: string
+  ean: string
+  preis: number
+}
 
 export interface ILieferantJsonResponseAll {
     id: number
@@ -36,15 +40,4 @@ export interface ILieferantJsonResponseAll {
     deliveryTime: string
     status: 'aktiv' | 'inaktiv'
     catalog: ICatalogProducts[]
-  }
-
-  export interface ILieferantRequest {
-    id: number
-    address: string
-    contact?: string
-    deliveryTime: string
-    name: string
-    reliable: boolean
-    status: 'aktiv' | 'inaktiv'
-    products: ICatalogProducts[]
   }

@@ -12,7 +12,8 @@ import Switch from '@mui/material/Switch'
 import { useRef, useState} from 'react'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import LieferantKatalog, { ProductEntry } from './LieferantKatalog'
+import LieferantKatalog from './LieferantKatalog'
+import { ProductEntry } from './interfaces'
 
 export default function LieferantenHinzufuegenDialog({
   open,
@@ -100,43 +101,7 @@ export default function LieferantenHinzufuegenDialog({
                     label={isActive ? 'Status: Aktiv' : 'Status: Inaktiv'}
                   />
                 </FormGroup>
-                {/*
-                <Box className='TextField-without-border-radius'>
-                  <Typography className='pb-3' variant='body2' align='left'>
-                    Lieferzeit
-                  </Typography>
-                  <Grid container justifyContent='space-between'>
-                    <Grid item md={4}>
-                      <TextField type='number' defaultValue={0} fullWidth variant='filled' size='small' label='Tage' />
-                    </Grid>
-                    <Grid item md={4}>
-                      <TextField
-                        type='number'
-                        defaultValue={0}
-                        fullWidth
-                        variant='filled'
-                        size='small'
-                        label='Stunden'
-                      />
-                    </Grid>
-                    <Grid item md={4}>
-                      <TextField
-                        type='number'
-                        defaultValue={0}
-                        fullWidth
-                        variant='filled'
-                        size='small'
-                        label='Minuten'
-                        sx={{
-                          '& fieldset': {
-                            borderRadius: '220px'
-                          }
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                </Box>
-                */}
+                
 
               </Box>
             </Grid>

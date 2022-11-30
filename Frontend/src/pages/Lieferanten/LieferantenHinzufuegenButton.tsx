@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button'
 import { useState } from 'react'
+import { ProductEntry } from './interfaces'
 import LieferantenHinzufuegenDialog from './LieferantenHinzufuegenDialog'
-import { ProductEntry } from './LieferantKatalog'
 
 export default function LieferantenHinzufuegenButton({ fetchLieferanten }: { fetchLieferanten: () => void }) {
   const [open, setOpen] = useState(false)

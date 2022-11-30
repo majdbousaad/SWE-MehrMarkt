@@ -16,7 +16,15 @@ import axios from 'axios'
 
 
 
-export default function LieferantenTabelle({ lieferanten }: { lieferanten: Lieferant[] }) {
+export default function LieferantenTabelle(
+  { 
+    lieferanten, 
+    fetchLieferanten 
+  }: 
+  { 
+    lieferanten: Lieferant[]
+     fetchLieferanten : () => void
+    }) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false)
   const [profielDialogLieferant, setProfielDialogLieferant] = useState<ILieferantJsonResponseOne>()
 
@@ -90,6 +98,7 @@ export default function LieferantenTabelle({ lieferanten }: { lieferanten: Liefe
         lieferant={profielDialogLieferant}
         open={profileDialogOpen}
         handleClose={onProfileDialogClose}
+        fetchLieferanten={fetchLieferanten}
       />)}
     </>
   )

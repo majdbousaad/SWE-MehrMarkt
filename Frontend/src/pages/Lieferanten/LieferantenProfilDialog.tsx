@@ -12,10 +12,10 @@ import Switch from '@mui/material/Switch'
 import { useState } from 'react'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import LieferantKatalog from './LieferantKatalog'
+import LieferantKatalog  from './LieferantKatalog'
 
 import { v4 as uuidv4 } from 'uuid'
-import { ILieferantJsonResponseOne, ILieferantRequest, Lieferant } from './interfaces'
+import { ILieferantJsonResponseOne, ProductEntry } from './interfaces'
 import axios from 'axios'
 
 
@@ -27,21 +27,39 @@ export default function LieferantenProfilDialog({
   lieferant,
   open,
   handleClose,
+  fetchLieferanten
 }: {
   lieferant: ILieferantJsonResponseOne
   open: boolean
   handleClose: () => void
+  fetchLieferanten: () => void
 }) {
   const [isActive, setIsActive] = useState(true)
   const [isDirty, setIsDirty] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   //const [lieferant, setLieferant] = useState<ILieferantJsonResponseOne>(profielDialogLieferant)
   
-  const [catalog, setCatalog] = useState([
-    createData(uuidv4(), 'Frozen yoghurt', '159159', 1.5),
-    createData(uuidv4(), 'Ice cream sandwich', '2462234', 10),
-    createData(uuidv4(), 'Cupcake', '232123', 6.42)
-  ])
+  const catalogWithID = lieferant.products.map(row => {
+    return {
+      id: uuidv4(),
+      name: row.name,
+      ean: row.ean,
+      price: row.price
+    }
+  })
+
+  const [products, setProducts] = useState<ProductEntry[]>(() =>{
+    const value = lieferant.products.map(row => {
+      return {
+        name: row.name,
+        ean: row.ean,
+        preis: row.price
+      }
+    })
+    return value
+  })
+
+
 
   function handleStartEditing() {
     setIsEditing(true)
@@ -52,15 +70,18 @@ export default function LieferantenProfilDialog({
     setIsDirty(true)
   }
   
+  function onProductsUpdate(products: ProductEntry[] ){
+      setProducts(products)
+  }
   async function updateLieferant(){
-
     const requestOptions = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify ({
         id: lieferant.id,
+        adresse: lieferant.address,
         contact: lieferant.contact,
-        products: lieferant.products,
+        products: products,
         name: lieferant.name,
         status: (lieferant.status)? 'aktiv' : 'inaktiv'
 
@@ -75,6 +96,7 @@ export default function LieferantenProfilDialog({
     async function handleSave() {
     setIsDirty(false)
      await updateLieferant()
+     fetchLieferanten()
 
     handleClose()
   }
@@ -122,7 +144,7 @@ export default function LieferantenProfilDialog({
               <Typography variant='h6' align='center'>
                 Katalog
               </Typography>
-              {lieferant && <LieferantKatalog onProductsUpdate={() => {}} products={lieferant.products} isEditing={isEditing} />}
+              {lieferant && <LieferantKatalog onProductsUpdate={onProductsUpdate} products={catalogWithID} isEditing={isEditing} />}
             </Grid>
           </Grid>
         </Box>
@@ -161,6 +183,7 @@ function LieferantProfilSection({
           placeholder='Name*'
           defaultValue={lieferant.name}
           disabled={!isEditing}
+          onChange={e => lieferant.name= e.target.value}
           fullWidth
           variant={isEditing ? 'outlined' : 'standard'}
           size='small'
@@ -168,6 +191,7 @@ function LieferantProfilSection({
         <TextField
           placeholder='Anschrift*'
           defaultValue={lieferant.address}
+          onChange={e => lieferant.address = e.target.value}
           disabled={!isEditing}
           fullWidth
           variant={isEditing ? 'outlined' : 'standard'}
@@ -176,6 +200,7 @@ function LieferantProfilSection({
         <TextField
           placeholder='Kontaktdaten*'
           defaultValue={lieferant.contact}
+          onChange={e => lieferant.contact= e.target.value}
           disabled={!isEditing}
           fullWidth
           variant={isEditing ? 'outlined' : 'standard'}
@@ -188,51 +213,7 @@ function LieferantProfilSection({
             disabled={!isEditing}
           />
         </FormGroup>
-        <Box className='TextField-without-border-radius'>
-          <Typography className='pb-3' variant='body2' align='left'>
-            Lieferzeit
-          </Typography>
-          <Grid container justifyContent='space-between'>
-            <Grid item md={4}>
-              <TextField
-                type='number'
-                defaultValue={0}
-                fullWidth
-                disabled={!isEditing}
-                variant={isEditing ? 'filled' : 'standard'}
-                size='small'
-                label='Tage'
-              />
-            </Grid>
-            <Grid item md={4}>
-              <TextField
-                type='number'
-                defaultValue={0}
-                fullWidth
-                disabled={!isEditing}
-                variant={isEditing ? 'filled' : 'standard'}
-                size='small'
-                label='Stunden'
-              />
-            </Grid>
-            <Grid item md={4}>
-              <TextField
-                type='number'
-                defaultValue={0}
-                fullWidth
-                disabled={!isEditing}
-                variant={isEditing ? 'filled' : 'standard'}
-                size='small'
-                label='Minuten'
-                sx={{
-                  '& fieldset': {
-                    borderRadius: '220px'
-                  }
-                }}
-              />
-            </Grid>
-          </Grid>
-        </Box>
+        
         <DisplayEditingControl
           handleSaveEditing={handleSaveEditing}
           handleStartEditing={handleStartEditing}
