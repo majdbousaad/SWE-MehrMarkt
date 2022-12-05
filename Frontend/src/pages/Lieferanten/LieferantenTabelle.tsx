@@ -11,47 +11,36 @@ import TableRow from '@mui/material/TableRow'
 import OpenInNew from 'mdi-material-ui/OpenInNew'
 import LieferantenProfilDialog from './LieferantenProfilDialog'
 import { useState } from 'react'
+import { Lieferant, ILieferantJsonResponseOne } from '../../lib/interfaces'
+import axios from 'axios'
 
-interface RowType {
-  name: string
-  address: string
-  contact: string
-  deliveryTime: string
-  status: 'aktiv' | 'inaktiv'
-}
-
-const rows: RowType[] = [
-  {
-    name: 'Lieferant 1',
-    address: 'Musterstrasse 1, 1234 Musterstadt',
-    contact: 'Herr Mustermann',
-    deliveryTime: '1 Tag, 4 Stunden',
-    status: 'aktiv'
-  },
-  {
-    name: 'Lieferant 3',
-    address: 'Musterstrasse 3, 1234 Musterstadt',
-    contact: 'Herr Mustermann',
-    deliveryTime: '1 Tag, 2 Stunden',
-    status: 'aktiv'
-  },
-  {
-    name: 'Lieferant 2',
-    address: 'Musterstrasse 2, 1234 Musterstadt',
-    contact: 'Herr Mustermann',
-    deliveryTime: '1 Tag',
-    status: 'inaktiv'
-  }
-]
-
-export default function LieferantenTabelle() {
+export default function LieferantenTabelle({ lieferanten }: { lieferanten: Lieferant[] }) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false)
+  const [profielDialogLieferant, setProfielDialogLieferant] = useState<ILieferantJsonResponseOne>()
 
   function onProfileDialogClose() {
     setProfileDialogOpen(false)
   }
 
-  function onProfileDialogOpen() {
+  async function fetchLieferant(lieferant: Lieferant) {
+    await axios
+      .get('http://localhost:8080/lieferant/' + lieferant.id)
+      .then(response => {
+        //TODO: Delete this console.log when done
+        console.log(response)
+        const lieferantenResponse = response.data as ILieferantJsonResponseOne
+        setProfielDialogLieferant(lieferantenResponse)
+        console.log(profielDialogLieferant)
+      })
+      .catch(error => {
+        console.log('missing error handling')
+        console.log(error)
+      })
+  }
+
+  async function onProfileDialogOpen(lieferant: Lieferant) {
+    await fetchLieferant(lieferant)
+
     setProfileDialogOpen(true)
   }
 
@@ -69,23 +58,27 @@ export default function LieferantenTabelle() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row: RowType) => (
-              <TableRow hover key={row.name}>
+            {lieferanten?.map((lieferant: Lieferant) => (
+              <TableRow hover key={lieferant.name}>
                 <TableCell>
                   <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{row.name}</Typography>
-                    <IconButton size='small' sx={{ p: 0, marginLeft: 1 }} onClick={onProfileDialogOpen}>
+                    <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{lieferant.name}</Typography>
+                    <IconButton
+                      size='small'
+                      sx={{ p: 0, marginLeft: 1 }}
+                      onClick={() => onProfileDialogOpen(lieferant)}
+                    >
                       <OpenInNew fontSize='small' />
                     </IconButton>
                   </Box>
                 </TableCell>
-                <TableCell>{row.address}</TableCell>
-                <TableCell>{row.contact}</TableCell>
-                <TableCell>{row.deliveryTime}</TableCell>
+                <TableCell>{lieferant.address}</TableCell>
+                <TableCell>{lieferant.contact}</TableCell>
+                <TableCell>{lieferant.deliveryTime}</TableCell>
                 <TableCell>
                   <Chip
-                    label={row.status}
-                    color={row.status === 'aktiv' ? 'success' : 'secondary'}
+                    label={lieferant.status}
+                    color={lieferant.status === 'aktiv' ? 'success' : 'secondary'}
                     size='small'
                     sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}
                   />
@@ -95,7 +88,13 @@ export default function LieferantenTabelle() {
           </TableBody>
         </Table>
       </Card>
-      <LieferantenProfilDialog open={profileDialogOpen} handleClose={onProfileDialogClose} />
+      {profielDialogLieferant && (
+        <LieferantenProfilDialog
+          lieferant={profielDialogLieferant}
+          open={profileDialogOpen}
+          handleClose={onProfileDialogClose}
+        />
+      )}
     </>
   )
 }

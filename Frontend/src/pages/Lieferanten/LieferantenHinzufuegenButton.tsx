@@ -1,20 +1,28 @@
 import Button from '@mui/material/Button'
 import { useState } from 'react'
+import { ProductEntry } from '../../lib/interfaces'
 import LieferantenHinzufuegenDialog from './LieferantenHinzufuegenDialog'
-import { ProductEntry } from './LieferantKatalog'
 
-export default function LieferantenHinzufuegenButton() {
+export default function LieferantenHinzufuegenButton({ fetchLieferanten }: { fetchLieferanten: () => void }) {
   const [open, setOpen] = useState(false)
 
   function handleSave(lieferant: {
     name: string
-    address: string
+    adresse: string
     contact: string
-    active: boolean
+    status: number
     products: ProductEntry[]
   }): void {
-    console.log(lieferant)
-    console.log(JSON.stringify(lieferant))
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(lieferant)
+    }
+    fetch('http://localhost:8080/lieferant', requestOptions).then(response => {
+      console.log(requestOptions)
+      console.log(response)
+      fetchLieferanten()
+    })
 
     //setOpen(false)
   }

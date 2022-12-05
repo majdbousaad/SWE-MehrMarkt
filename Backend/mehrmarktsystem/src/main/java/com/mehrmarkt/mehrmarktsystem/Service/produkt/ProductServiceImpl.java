@@ -42,5 +42,10 @@ public class ProductServiceImpl implements ProductService{
         return productRepository.existsByEANAndLieferant_IdIsNot(ean, lieferant_id);
     }
 
+    @Override
+    public Optional<Product> getByEANAndLieferant_Id(String ean, int lieferant_id) {
+        return productRepository.getByEANAndLieferant_Id(ean, lieferant_id);
+    }
+
 
 }

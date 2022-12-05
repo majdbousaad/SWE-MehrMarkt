@@ -13,20 +13,16 @@ import TextField from '@mui/material/TextField'
 import { v4 as uuidv4 } from 'uuid'
 
 import { useRef, useState } from 'react'
-import { ICatalogProducts } from './LieferantenProfilDialog'
-
-export interface ProductEntry {
-  name: string
-  ean: string
-  price: number
-}
+import { ICatalogProducts, ProductEntry } from '../../lib/interfaces'
 
 export default function LieferantKatalog({
   products,
-  onProductsUpdate
+  onProductsUpdate,
+  isEditing
 }: {
   products: ICatalogProducts[]
   onProductsUpdate: (products: ProductEntry[]) => void
+  isEditing?: boolean
 }) {
   function createData(id: string, name: string, ean: string, price: number) {
     return { id, name, ean, price }
@@ -47,7 +43,7 @@ export default function LieferantKatalog({
       return {
         name: row.name,
         ean: row.ean,
-        price: row.price
+        preis: row.price
       }
     })
     onProductsUpdate(catalog)
@@ -55,6 +51,7 @@ export default function LieferantKatalog({
 
   function onAddProduct() {
     setRows([...rows, createData(uuidv4(), '', '', 0)])
+    console.log(rows)
   }
 
   return (
@@ -67,15 +64,17 @@ export default function LieferantKatalog({
                 <TableCell>Name</TableCell>
                 <TableCell>EAN-Nummer</TableCell>
                 <TableCell>Preis</TableCell>
-                <TableCell align='center'>
-                  <Button size='small' variant='contained' onClick={() => onAddProduct()}>
-                    Produkt hinzufügen
-                  </Button>
-                </TableCell>
+                {isEditing && (
+                  <TableCell align='center'>
+                    <Button size='small' variant='contained' onClick={() => onAddProduct()}>
+                      Produkt hinzufügen
+                    </Button>
+                  </TableCell>
+                )}
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map(row => (
+              {rows?.map(row => (
                 <>
                   {row.name === '' ? (
                     <KatalogProdukt
@@ -85,6 +84,7 @@ export default function LieferantKatalog({
                       name={row.name}
                       ean={row.ean}
                       price={row.price}
+                      isEditing={isEditing}
                       forceEditing
                     />
                   ) : (
@@ -95,6 +95,7 @@ export default function LieferantKatalog({
                       name={row.name}
                       ean={row.ean}
                       price={row.price}
+                      isEditing={isEditing}
                     />
                   )}
                 </>
@@ -113,6 +114,7 @@ function KatalogProdukt({
   ean,
   price,
   updateProduct,
+  isEditing,
   forceEditing
 }: {
   id: string
@@ -120,9 +122,10 @@ function KatalogProdukt({
   ean: string
   price: number
   updateProduct: (id: string, name: string, ean: string, price: number) => void
+  isEditing?: boolean
   forceEditing?: boolean
 }) {
-  const [isEditing, setIsEditing] = useState(forceEditing?.valueOf() ?? false)
+  const [isEditing2, setIsEditing2] = useState(forceEditing?.valueOf() ?? false)
 
   const nameRef = useRef<any>(null)
   const EANRef = useRef<any>(null)
@@ -130,12 +133,12 @@ function KatalogProdukt({
 
   function onSave() {
     updateProduct(id, nameRef.current.value, EANRef.current.value, parseFloat(priceRef.current.value))
-    setIsEditing(false)
+    setIsEditing2(false)
   }
 
   return (
     <>
-      {!isEditing ? (
+      {!isEditing2 ? (
         <TableRow key={name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
           <TableCell component='th' scope='row'>
             <Typography>{name}</Typography>
@@ -146,11 +149,13 @@ function KatalogProdukt({
           <TableCell align='left'>
             <Typography>{price}€</Typography>
           </TableCell>
-          <TableCell align='center'>
-            <Button size='small' color='primary' variant='outlined' onClick={() => setIsEditing(true)}>
-              Bearbeiten
-            </Button>
-          </TableCell>
+          {isEditing && (
+            <TableCell align='center'>
+              <Button size='small' color='primary' variant='outlined' onClick={() => setIsEditing2(true)}>
+                Bearbeiten
+              </Button>
+            </TableCell>
+          )}
         </TableRow>
       ) : (
         <TableRow key={name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>

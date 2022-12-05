@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, String> {
 
     Optional<Product> getByEAN(String ean);
-
+    Optional<Product> getByEANAndLieferant_Id(String ean, int lieferant_id);
     boolean existsByEAN(String ean);
     
     boolean existsByEANAndLieferant_IdIsNot(String EAN, int lieferant_id);

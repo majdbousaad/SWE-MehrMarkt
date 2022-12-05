@@ -12,7 +12,8 @@ import Switch from '@mui/material/Switch'
 import { useRef, useState } from 'react'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import LieferantKatalog, { ProductEntry } from './LieferantKatalog'
+import LieferantKatalog from './LieferantKatalog'
+import { ProductEntry } from '../../lib/interfaces'
 
 export default function LieferantenHinzufuegenDialog({
   open,
@@ -21,11 +22,11 @@ export default function LieferantenHinzufuegenDialog({
 }: {
   open: boolean
   handleClose: () => void
-  handleSave: (lieferanten: {
+  handleSave: (lieferant: {
     name: string
-    address: string
+    adresse: string
     contact: string
-    active: boolean
+    status: number
     products: ProductEntry[]
   }) => void
 }) {
@@ -37,13 +38,16 @@ export default function LieferantenHinzufuegenDialog({
   const contactRef = useRef<HTMLInputElement>(null)
 
   function onCreateLieferant() {
-    handleSave({
+    const lieferant = {
       name: nameRef.current!.value,
-      address: adressRef.current!.value,
+      adresse: adressRef.current!.value,
       contact: contactRef.current!.value,
-      active: isActive,
+      status: isActive ? 1 : 0,
       products: products
-    })
+    }
+
+    handleSave(lieferant)
+    handleClose()
   }
 
   function onProductsUpdate(products: ProductEntry[]) {
@@ -96,48 +100,13 @@ export default function LieferantenHinzufuegenDialog({
                     label={isActive ? 'Status: Aktiv' : 'Status: Inaktiv'}
                   />
                 </FormGroup>
-                <Box className='TextField-without-border-radius'>
-                  <Typography className='pb-3' variant='body2' align='left'>
-                    Lieferzeit
-                  </Typography>
-                  <Grid container justifyContent='space-between'>
-                    <Grid item md={4}>
-                      <TextField type='number' defaultValue={0} fullWidth variant='filled' size='small' label='Tage' />
-                    </Grid>
-                    <Grid item md={4}>
-                      <TextField
-                        type='number'
-                        defaultValue={0}
-                        fullWidth
-                        variant='filled'
-                        size='small'
-                        label='Stunden'
-                      />
-                    </Grid>
-                    <Grid item md={4}>
-                      <TextField
-                        type='number'
-                        defaultValue={0}
-                        fullWidth
-                        variant='filled'
-                        size='small'
-                        label='Minuten'
-                        sx={{
-                          '& fieldset': {
-                            borderRadius: '220px'
-                          }
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                </Box>
               </Box>
             </Grid>
             <Grid item md={8}>
               <Typography variant='h6' align='center'>
                 Katalog
               </Typography>
-              <LieferantKatalog products={[]} onProductsUpdate={onProductsUpdate} />
+              <LieferantKatalog products={[]} onProductsUpdate={onProductsUpdate} isEditing={true} />
             </Grid>
           </Grid>
         </Box>
