@@ -13,9 +13,7 @@ import TextField from '@mui/material/TextField'
 import { v4 as uuidv4 } from 'uuid'
 
 import { useRef, useState } from 'react'
-import { ICatalogProducts, ProductEntry } from './interfaces'
-
-
+import { ICatalogProducts, ProductEntry } from '../../lib/interfaces'
 
 export default function LieferantKatalog({
   products,
@@ -49,14 +47,13 @@ export default function LieferantKatalog({
       }
     })
     onProductsUpdate(catalog)
-    
   }
 
   function onAddProduct() {
     setRows([...rows, createData(uuidv4(), '', '', 0)])
     console.log(rows)
-
   }
+
   return (
     <Card raised={true}>
       <CardContent>
@@ -68,11 +65,12 @@ export default function LieferantKatalog({
                 <TableCell>EAN-Nummer</TableCell>
                 <TableCell>Preis</TableCell>
                 {isEditing && (
-                <TableCell align='center'>
-                  <Button size='small' variant='contained' onClick={() => onAddProduct()}>
-                    Produkt hinzufügen
-                  </Button>
-                </TableCell>)}
+                  <TableCell align='center'>
+                    <Button size='small' variant='contained' onClick={() => onAddProduct()}>
+                      Produkt hinzufügen
+                    </Button>
+                  </TableCell>
+                )}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -151,12 +149,13 @@ function KatalogProdukt({
           <TableCell align='left'>
             <Typography>{price}€</Typography>
           </TableCell>
-          {isEditing  && (
-          <TableCell align='center'>
-            <Button size='small' color='primary' variant='outlined' onClick={() => setIsEditing2(true)}>
-              Bearbeiten
-            </Button>
-          </TableCell>)}
+          {isEditing && (
+            <TableCell align='center'>
+              <Button size='small' color='primary' variant='outlined' onClick={() => setIsEditing2(true)}>
+                Bearbeiten
+              </Button>
+            </TableCell>
+          )}
         </TableRow>
       ) : (
         <TableRow key={name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>

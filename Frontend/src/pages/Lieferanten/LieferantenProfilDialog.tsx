@@ -12,34 +12,27 @@ import Switch from '@mui/material/Switch'
 import { useState } from 'react'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import LieferantKatalog  from './LieferantKatalog'
+import LieferantKatalog from './LieferantKatalog'
 
 import { v4 as uuidv4 } from 'uuid'
-import { ILieferantJsonResponseOne, ProductEntry } from './interfaces'
-import axios from 'axios'
-
-
-function createData(id: string, name: string, ean: string, price: number) {
-  return { id, name, ean, price }
-}
+import { ILieferantJsonResponseOne, ProductEntry } from '../../lib/interfaces'
 
 export default function LieferantenProfilDialog({
   lieferant,
   open,
-  handleClose,
-  fetchLieferanten
+  handleClose
 }: {
   lieferant: ILieferantJsonResponseOne
   open: boolean
   handleClose: () => void
-  fetchLieferanten: () => void
 }) {
   const [isActive, setIsActive] = useState(true)
   const [isDirty, setIsDirty] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+
   //const [lieferant, setLieferant] = useState<ILieferantJsonResponseOne>(profielDialogLieferant)
-  
-  const catalogWithID = lieferant.products.map(row => {
+
+  const catalogWithID = lieferant?.products?.map(row => {
     return {
       id: uuidv4(),
       name: row.name,
@@ -48,18 +41,17 @@ export default function LieferantenProfilDialog({
     }
   })
 
-  const [products, setProducts] = useState<ProductEntry[]>(() =>{
-    const value = lieferant.products.map(row => {
+  const [products, setProducts] = useState<ProductEntry[]>(() => {
+    const value = lieferant?.products?.map(row => {
       return {
         name: row.name,
         ean: row.ean,
         preis: row.price
       }
     })
+
     return value
   })
-
-
 
   function handleStartEditing() {
     setIsEditing(true)
@@ -69,40 +61,35 @@ export default function LieferantenProfilDialog({
     setIsEditing(false)
     setIsDirty(true)
   }
-  
-  function onProductsUpdate(products: ProductEntry[] ){
-      setProducts(products)
+
+  function onProductsUpdate(products: ProductEntry[]) {
+    setProducts(products)
   }
-  async function updateLieferant(){
+  async function updateLieferant() {
     const requestOptions = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify ({
+      body: JSON.stringify({
         id: lieferant.id,
         adresse: lieferant.address,
         contact: lieferant.contact,
         products: products,
         name: lieferant.name,
-        status: (isActive)? 'aktiv' : 'inaktiv'
-
+        status: isActive ? 'aktiv' : 'inaktiv'
       })
-  };
+    }
 
-   await fetch('http://localhost:8080/lieferant/' + lieferant.id, requestOptions)
+    await fetch('http://localhost:8080/lieferant/' + lieferant.id, requestOptions)
       .then(response => response.json())
-      .then(data => console.log(data));
+      .then(data => console.log(data))
   }
-  
-    async function handleSave() {
+
+  async function handleSave() {
     setIsDirty(false)
-     await updateLieferant()
-     fetchLieferanten()
+    await updateLieferant()
 
     handleClose()
   }
-  
-
-  
 
   function handleAbort() {
     setIsDirty(false)
@@ -122,7 +109,6 @@ export default function LieferantenProfilDialog({
             </Typography>
             <Button autoFocus color='success' variant='contained' disabled={!isDirty} onClick={handleSave}>
               Änderungen speichern
-
             </Button>
           </Toolbar>
         </AppBar>
@@ -144,7 +130,9 @@ export default function LieferantenProfilDialog({
               <Typography variant='h6' align='center'>
                 Katalog
               </Typography>
-              {lieferant && <LieferantKatalog onProductsUpdate={onProductsUpdate} products={catalogWithID} isEditing={isEditing} />}
+              {lieferant && (
+                <LieferantKatalog onProductsUpdate={onProductsUpdate} products={catalogWithID} isEditing={isEditing} />
+              )}
             </Grid>
           </Grid>
         </Box>
@@ -183,7 +171,7 @@ function LieferantProfilSection({
           placeholder='Name*'
           defaultValue={lieferant.name}
           disabled={!isEditing}
-          onChange={e => lieferant.name= e.target.value}
+          onChange={e => (lieferant.name = e.target.value)}
           fullWidth
           variant={isEditing ? 'outlined' : 'standard'}
           size='small'
@@ -191,7 +179,7 @@ function LieferantProfilSection({
         <TextField
           placeholder='Anschrift*'
           defaultValue={lieferant.address}
-          onChange={e => lieferant.address = e.target.value}
+          onChange={e => (lieferant.address = e.target.value)}
           disabled={!isEditing}
           fullWidth
           variant={isEditing ? 'outlined' : 'standard'}
@@ -200,7 +188,7 @@ function LieferantProfilSection({
         <TextField
           placeholder='Kontaktdaten*'
           defaultValue={lieferant.contact}
-          onChange={e => lieferant.contact= e.target.value}
+          onChange={e => (lieferant.contact = e.target.value)}
           disabled={!isEditing}
           fullWidth
           variant={isEditing ? 'outlined' : 'standard'}
@@ -213,7 +201,7 @@ function LieferantProfilSection({
             disabled={!isEditing}
           />
         </FormGroup>
-        
+
         <DisplayEditingControl
           handleSaveEditing={handleSaveEditing}
           handleStartEditing={handleStartEditing}

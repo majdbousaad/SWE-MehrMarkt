@@ -9,11 +9,11 @@ import CloseIcon from 'mdi-material-ui/Close'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Switch from '@mui/material/Switch'
-import { useRef, useState} from 'react'
+import { useRef, useState } from 'react'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import LieferantKatalog from './LieferantKatalog'
-import { ProductEntry } from './interfaces'
+import { ProductEntry } from '../../lib/interfaces'
 
 export default function LieferantenHinzufuegenDialog({
   open,
@@ -38,12 +38,11 @@ export default function LieferantenHinzufuegenDialog({
   const contactRef = useRef<HTMLInputElement>(null)
 
   function onCreateLieferant() {
-
     const lieferant = {
       name: nameRef.current!.value,
       adresse: adressRef.current!.value,
       contact: contactRef.current!.value,
-      status: (isActive)? 1 : 0,
+      status: isActive ? 1 : 0,
       products: products
     }
 
@@ -101,8 +100,6 @@ export default function LieferantenHinzufuegenDialog({
                     label={isActive ? 'Status: Aktiv' : 'Status: Inaktiv'}
                   />
                 </FormGroup>
-                
-
               </Box>
             </Grid>
             <Grid item md={8}>

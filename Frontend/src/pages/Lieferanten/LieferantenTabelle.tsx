@@ -9,22 +9,12 @@ import Chip from '@mui/material/Chip'
 import Box from '@mui/material/Box'
 import TableRow from '@mui/material/TableRow'
 import OpenInNew from 'mdi-material-ui/OpenInNew'
-import LieferantenProfilDialog  from './LieferantenProfilDialog'
-import { useState, useEffect } from 'react'
-import { ICatalogProducts, Lieferant, ILieferantJsonResponseOne } from './interfaces'
+import LieferantenProfilDialog from './LieferantenProfilDialog'
+import { useState } from 'react'
+import { Lieferant, ILieferantJsonResponseOne } from '../../lib/interfaces'
 import axios from 'axios'
 
-
-
-export default function LieferantenTabelle(
-  { 
-    lieferanten, 
-    fetchLieferanten 
-  }: 
-  { 
-    lieferanten: Lieferant[]
-     fetchLieferanten : () => void
-    }) {
+export default function LieferantenTabelle({ lieferanten }: { lieferanten: Lieferant[] }) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false)
   const [profielDialogLieferant, setProfielDialogLieferant] = useState<ILieferantJsonResponseOne>()
 
@@ -32,20 +22,25 @@ export default function LieferantenTabelle(
     setProfileDialogOpen(false)
   }
 
-  async function fetchLieferant(lieferant: Lieferant){
-    await axios.get("http://localhost:8080/lieferant/" + lieferant.id).then(response => {
-      //TODO: Delete this console.log when done
-      console.log(response)
-      const lieferantenResponse = response.data as ILieferantJsonResponseOne
-      setProfielDialogLieferant(lieferantenResponse)
-      console.log(profielDialogLieferant)
-    })
+  async function fetchLieferant(lieferant: Lieferant) {
+    await axios
+      .get('http://localhost:8080/lieferant/' + lieferant.id)
+      .then(response => {
+        //TODO: Delete this console.log when done
+        console.log(response)
+        const lieferantenResponse = response.data as ILieferantJsonResponseOne
+        setProfielDialogLieferant(lieferantenResponse)
+        console.log(profielDialogLieferant)
+      })
+      .catch(error => {
+        console.log('missing error handling')
+        console.log(error)
+      })
   }
 
   async function onProfileDialogOpen(lieferant: Lieferant) {
-
     await fetchLieferant(lieferant)
-    
+
     setProfileDialogOpen(true)
   }
 
@@ -63,7 +58,7 @@ export default function LieferantenTabelle(
             </TableRow>
           </TableHead>
           <TableBody>
-            {lieferanten.map((lieferant: Lieferant) => (
+            {lieferanten?.map((lieferant: Lieferant) => (
               <TableRow hover key={lieferant.name}>
                 <TableCell>
                   <Box sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -94,12 +89,12 @@ export default function LieferantenTabelle(
         </Table>
       </Card>
       {profielDialogLieferant && (
-      <LieferantenProfilDialog
-        lieferant={profielDialogLieferant}
-        open={profileDialogOpen}
-        handleClose={onProfileDialogClose}
-        fetchLieferanten={fetchLieferanten}
-      />)}
+        <LieferantenProfilDialog
+          lieferant={profielDialogLieferant}
+          open={profileDialogOpen}
+          handleClose={onProfileDialogClose}
+        />
+      )}
     </>
   )
 }
