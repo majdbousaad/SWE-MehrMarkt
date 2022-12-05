@@ -19,8 +19,6 @@ export default function LieferantenHinzufuegenButton({ fetchLieferanten }: { fet
       body: JSON.stringify(lieferant)
     }
     fetch('http://localhost:8080/lieferant', requestOptions).then(response => {
-      console.log(requestOptions)
-      console.log(response)
       fetchLieferanten()
     })
 

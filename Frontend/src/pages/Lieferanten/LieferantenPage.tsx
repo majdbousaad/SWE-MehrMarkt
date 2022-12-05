@@ -18,8 +18,6 @@ export default function LieferantenPage() {
     axios
       .get('http://localhost:8080/lieferant')
       .then(response => {
-        //TODO: Delete this console.log when done
-        console.log(response.data)
         const lieferantenResponse = response.data as ILieferantJsonResponseAll[]
         setLieferanten(
           lieferantenResponse.map(lieferant => ({

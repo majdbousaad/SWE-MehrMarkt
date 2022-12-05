@@ -17,6 +17,7 @@ import axios from 'axios'
 export default function LieferantenTabelle({ lieferanten }: { lieferanten: Lieferant[] }) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false)
   const [profielDialogLieferant, setProfielDialogLieferant] = useState<ILieferantJsonResponseOne>()
+  const [profielDialogInitialLieferant, setProfielDialogInitialLieferant] = useState<ILieferantJsonResponseOne>()
 
   function onProfileDialogClose() {
     setProfileDialogOpen(false)
@@ -30,7 +31,7 @@ export default function LieferantenTabelle({ lieferanten }: { lieferanten: Liefe
         console.log(response)
         const lieferantenResponse = response.data as ILieferantJsonResponseOne
         setProfielDialogLieferant(lieferantenResponse)
-        console.log(profielDialogLieferant)
+        setProfielDialogInitialLieferant(lieferantenResponse)
       })
       .catch(error => {
         console.log('missing error handling')
@@ -88,9 +89,11 @@ export default function LieferantenTabelle({ lieferanten }: { lieferanten: Liefe
           </TableBody>
         </Table>
       </Card>
-      {profielDialogLieferant && (
+      {profielDialogLieferant && profielDialogInitialLieferant && (
         <LieferantenProfilDialog
           lieferant={profielDialogLieferant}
+          initialLieferant={profielDialogInitialLieferant}
+          setLieferant={setProfielDialogLieferant}
           open={profileDialogOpen}
           handleClose={onProfileDialogClose}
         />

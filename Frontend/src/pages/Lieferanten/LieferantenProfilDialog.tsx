@@ -7,30 +7,28 @@ import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import CloseIcon from 'mdi-material-ui/Close'
 import Grid from '@mui/material/Grid'
-import TextField from '@mui/material/TextField'
-import Switch from '@mui/material/Switch'
 import { useState } from 'react'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import LieferantKatalog from './LieferantKatalog'
 
 import { v4 as uuidv4 } from 'uuid'
 import { ILieferantJsonResponseOne, ProductEntry } from '../../lib/interfaces'
+import { LieferantProfilSection } from './LieferantProfilSection'
 
 export default function LieferantenProfilDialog({
   lieferant,
+  initialLieferant,
+  setLieferant,
   open,
   handleClose
 }: {
   lieferant: ILieferantJsonResponseOne
+  initialLieferant: ILieferantJsonResponseOne
+  setLieferant: (lieferant: ILieferantJsonResponseOne) => void
   open: boolean
   handleClose: () => void
 }) {
-  const [isActive, setIsActive] = useState(true)
   const [isDirty, setIsDirty] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-
-  //const [lieferant, setLieferant] = useState<ILieferantJsonResponseOne>(profielDialogLieferant)
 
   const catalogWithID = lieferant?.products?.map(row => {
     return {
@@ -59,7 +57,10 @@ export default function LieferantenProfilDialog({
 
   function handleSaveEditing() {
     setIsEditing(false)
-    setIsDirty(true)
+    setIsDirty(JSON.stringify(initialLieferant) !== JSON.stringify(lieferant))
+
+    console.log(initialLieferant)
+    console.log(lieferant)
   }
 
   function onProductsUpdate(products: ProductEntry[]) {
@@ -75,7 +76,7 @@ export default function LieferantenProfilDialog({
         contact: lieferant.contact,
         products: products,
         name: lieferant.name,
-        status: isActive ? 'aktiv' : 'inaktiv'
+        status: lieferant.status ? 'aktiv' : 'inaktiv'
       })
     }
 
@@ -85,6 +86,16 @@ export default function LieferantenProfilDialog({
   }
 
   async function handleSave() {
+    console.log(
+      JSON.stringify({
+        id: lieferant.id,
+        adresse: lieferant.address,
+        contact: lieferant.contact,
+        products: products,
+        name: lieferant.name,
+        status: lieferant.status ? 'aktiv' : 'inaktiv'
+      })
+    )
     setIsDirty(false)
     await updateLieferant()
 
@@ -94,6 +105,10 @@ export default function LieferantenProfilDialog({
   function handleAbort() {
     setIsDirty(false)
     handleClose()
+  }
+
+  function handleCreateOrder() {
+    console.log('create order')
   }
 
   return (
@@ -107,8 +122,18 @@ export default function LieferantenProfilDialog({
             <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
               Lieferanten Detailansicht
             </Typography>
-            <Button autoFocus color='success' variant='contained' disabled={!isDirty} onClick={handleSave}>
-              Änderungen speichern
+            <Button
+              autoFocus
+              color='success'
+              variant='contained'
+              hidden={!isDirty}
+              disabled={!isDirty}
+              onClick={handleSave}
+            >
+              Änderungen speicherns
+            </Button>
+            <Button sx={{ marginLeft: 2 }} autoFocus color='info' variant='contained' onClick={handleCreateOrder}>
+              Bestellung aufgeben
             </Button>
           </Toolbar>
         </AppBar>
@@ -118,9 +143,8 @@ export default function LieferantenProfilDialog({
               {lieferant && (
                 <LieferantProfilSection
                   lieferant={lieferant}
+                  setLieferant={setLieferant}
                   isEditing={isEditing}
-                  isActive={isActive}
-                  setIsActive={setIsActive}
                   handleStartEditing={handleStartEditing}
                   handleSaveEditing={handleSaveEditing}
                 />
@@ -146,73 +170,7 @@ export default function LieferantenProfilDialog({
   )
 }
 
-function LieferantProfilSection({
-  lieferant,
-  isEditing,
-  isActive,
-  setIsActive,
-  handleSaveEditing,
-  handleStartEditing
-}: {
-  lieferant: ILieferantJsonResponseOne
-  isEditing: boolean
-  isActive: boolean
-  setIsActive: (value: boolean) => void
-  handleSaveEditing: () => void
-  handleStartEditing: () => void
-}) {
-  return (
-    <>
-      <Typography variant='h6' align='center'>
-        Profil
-      </Typography>
-      <Box className='p-5 flex flex-col gap-4'>
-        <TextField
-          placeholder='Name*'
-          defaultValue={lieferant.name}
-          disabled={!isEditing}
-          onChange={e => (lieferant.name = e.target.value)}
-          fullWidth
-          variant={isEditing ? 'outlined' : 'standard'}
-          size='small'
-        />
-        <TextField
-          placeholder='Anschrift*'
-          defaultValue={lieferant.address}
-          onChange={e => (lieferant.address = e.target.value)}
-          disabled={!isEditing}
-          fullWidth
-          variant={isEditing ? 'outlined' : 'standard'}
-          size='small'
-        />
-        <TextField
-          placeholder='Kontaktdaten*'
-          defaultValue={lieferant.contact}
-          onChange={e => (lieferant.contact = e.target.value)}
-          disabled={!isEditing}
-          fullWidth
-          variant={isEditing ? 'outlined' : 'standard'}
-          size='small'
-        />
-        <FormGroup>
-          <FormControlLabel
-            control={<Switch checked={isActive} onChange={() => setIsActive(!isActive)} />}
-            label={isActive ? 'Aktiv' : 'Inaktiv'}
-            disabled={!isEditing}
-          />
-        </FormGroup>
-
-        <DisplayEditingControl
-          handleSaveEditing={handleSaveEditing}
-          handleStartEditing={handleStartEditing}
-          isEditing={isEditing}
-        />
-      </Box>
-    </>
-  )
-}
-
-function DisplayEditingControl({
+export function DisplayEditingControl({
   handleSaveEditing,
   handleStartEditing,
   isEditing

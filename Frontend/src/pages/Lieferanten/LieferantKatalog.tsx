@@ -24,16 +24,28 @@ export default function LieferantKatalog({
   onProductsUpdate: (products: ProductEntry[]) => void
   isEditing?: boolean
 }) {
-  function createData(id: string, name: string, ean: string, price: number) {
-    return { id, name, ean, price }
+  function createData(id: string, name: string, ean: string, price: number, isNew: boolean) {
+    return { id, name, ean, price, isNew }
   }
 
-  const [rows, setRows] = useState(products)
+  interface IRow {
+    id: string
+    name: string
+    ean: string
+    price: number
+    isNew: boolean
+  }
+
+  const [rows, setRows] = useState<IRow[]>(
+    products.map(row => {
+      return createData(uuidv4(), row.name, row.ean, row.price, false)
+    })
+  )
 
   function updateProduct(id: string, name: string, ean: string, price: number) {
     const newRows = rows.map(row => {
       if (row.id === id) {
-        return createData(id, name, ean, price)
+        return createData(id, name, ean, price, false)
       } else {
         return row
       }
@@ -50,8 +62,7 @@ export default function LieferantKatalog({
   }
 
   function onAddProduct() {
-    setRows([...rows, createData(uuidv4(), '', '', 0)])
-    console.log(rows)
+    setRows([...rows, createData(uuidv4(), '', '', 0, true)])
   }
 
   return (
@@ -75,30 +86,16 @@ export default function LieferantKatalog({
             </TableHead>
             <TableBody>
               {rows?.map(row => (
-                <>
-                  {row.name === '' ? (
-                    <KatalogProdukt
-                      key={'id-' + row.ean}
-                      id={row.id}
-                      updateProduct={updateProduct}
-                      name={row.name}
-                      ean={row.ean}
-                      price={row.price}
-                      isEditing={isEditing}
-                      forceEditing
-                    />
-                  ) : (
-                    <KatalogProdukt
-                      key={'id-' + row.ean}
-                      id={row.id}
-                      updateProduct={updateProduct}
-                      name={row.name}
-                      ean={row.ean}
-                      price={row.price}
-                      isEditing={isEditing}
-                    />
-                  )}
-                </>
+                <KatalogProdukt
+                  key={'id-' + row.id}
+                  id={row.id}
+                  updateProduct={updateProduct}
+                  name={row.name}
+                  ean={row.ean}
+                  price={row.price}
+                  isEditing={isEditing}
+                  forceEditing={row.isNew}
+                />
               ))}
             </TableBody>
           </Table>
@@ -139,7 +136,7 @@ function KatalogProdukt({
   return (
     <>
       {!isEditing2 ? (
-        <TableRow key={name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+        <TableRow key={'keyRow-' + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
           <TableCell component='th' scope='row'>
             <Typography>{name}</Typography>
           </TableCell>
@@ -158,7 +155,7 @@ function KatalogProdukt({
           )}
         </TableRow>
       ) : (
-        <TableRow key={name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+        <TableRow key={'keyRow-' + id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
           <TableCell component='th' scope='row'>
             <TextField
               inputRef={nameRef}
