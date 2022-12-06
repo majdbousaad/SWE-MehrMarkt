@@ -18,11 +18,13 @@ import { ICatalogProducts, ProductEntry } from '../../lib/interfaces'
 export default function LieferantKatalog({
   products,
   onProductsUpdate,
-  isEditing
+  isEditing,
+  updateProductsBeimLieferant
 }: {
   products: ICatalogProducts[]
   onProductsUpdate: (products: ProductEntry[]) => void
   isEditing?: boolean
+  updateProductsBeimLieferant: (rows: ICatalogProducts[]) => void
 }) {
   function createData(id: string, name: string, ean: string, price: number, isNew: boolean) {
     return { id, name, ean, price, isNew }
@@ -58,7 +60,19 @@ export default function LieferantKatalog({
         preis: row.price
       }
     })
+
+    const productsForLieferant = newRows.map(row => {
+      return {
+        id: row.id,
+        name: row.name,
+        ean: row.ean,
+        price: row.price
+      }
+    })
+    
     onProductsUpdate(catalog)
+    updateProductsBeimLieferant(productsForLieferant)
+    
   }
 
   function onAddProduct() {

@@ -11,7 +11,7 @@ import { useState } from 'react'
 import LieferantKatalog from './LieferantKatalog'
 
 import { v4 as uuidv4 } from 'uuid'
-import { ILieferantJsonResponseOne, ProductEntry } from '../../lib/interfaces'
+import { ICatalogProducts, ILieferantJsonResponseOne, ProductEntry } from '../../lib/interfaces'
 import { LieferantProfilSection } from './LieferantProfilSection'
 
 export default function LieferantenProfilDialog({
@@ -58,6 +58,9 @@ export default function LieferantenProfilDialog({
     setIsEditing(true)
   }
 
+  function updateProductsBeimLieferant(rows: ICatalogProducts[]){
+    setLieferant({...lieferant, products:rows})
+  }
   function handleSaveEditing() {
     setIsEditing(false)
     setIsDirty(JSON.stringify(initialLieferant) !== JSON.stringify(lieferant))
@@ -159,7 +162,7 @@ export default function LieferantenProfilDialog({
                 Katalog
               </Typography>
               {lieferant && (
-                <LieferantKatalog onProductsUpdate={onProductsUpdate} products={catalogWithID} isEditing={isEditing} />
+                <LieferantKatalog onProductsUpdate={onProductsUpdate} products={catalogWithID} isEditing={isEditing} updateProductsBeimLieferant={updateProductsBeimLieferant} />
               )}
             </Grid>
           </Grid>
