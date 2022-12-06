@@ -41,7 +41,7 @@ export default function LieferantenPage() {
     <Card>
       <CardHeader title='Lieferanten' action={<LieferantenHinzufuegenButton fetchLieferanten={fetchLieferanten} />} />
       <CardContent>
-        <LieferantenTabelle lieferanten={lieferanten} />
+        <LieferantenTabelle lieferanten={lieferanten} fetchLieferanten={fetchLieferanten} />
       </CardContent>
     </Card>
   )

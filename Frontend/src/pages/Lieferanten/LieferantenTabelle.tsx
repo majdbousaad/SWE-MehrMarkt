@@ -14,7 +14,7 @@ import { useState } from 'react'
 import { Lieferant, ILieferantJsonResponseOne } from '../../lib/interfaces'
 import axios from 'axios'
 
-export default function LieferantenTabelle({ lieferanten }: { lieferanten: Lieferant[] }) {
+export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { lieferanten: Lieferant[], fetchLieferanten: () => void }) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false)
   const [profielDialogLieferant, setProfielDialogLieferant] = useState<ILieferantJsonResponseOne>()
   const [profielDialogInitialLieferant, setProfielDialogInitialLieferant] = useState<ILieferantJsonResponseOne>()
@@ -96,6 +96,7 @@ export default function LieferantenTabelle({ lieferanten }: { lieferanten: Liefe
           setLieferant={setProfielDialogLieferant}
           open={profileDialogOpen}
           handleClose={onProfileDialogClose}
+          fetchLieferanten={fetchLieferanten}
         />
       )}
     </>

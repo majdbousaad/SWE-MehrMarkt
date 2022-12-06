@@ -19,13 +19,16 @@ export default function LieferantenProfilDialog({
   initialLieferant,
   setLieferant,
   open,
-  handleClose
+  handleClose,
+  fetchLieferanten
+  
 }: {
   lieferant: ILieferantJsonResponseOne
   initialLieferant: ILieferantJsonResponseOne
   setLieferant: (lieferant: ILieferantJsonResponseOne) => void
   open: boolean
   handleClose: () => void
+  fetchLieferanten: () => void
 }) {
   const [isDirty, setIsDirty] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
@@ -98,7 +101,8 @@ export default function LieferantenProfilDialog({
     )
     setIsDirty(false)
     await updateLieferant()
-
+    
+    fetchLieferanten();
     handleClose()
   }
 
