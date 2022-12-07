@@ -69,8 +69,9 @@ export default function LieferantenProfilDialog({
     console.log(lieferant)
   }
 
-  function onProductsUpdate(products: ProductEntry[]) {
-    setProducts(products)
+  function onProductsUpdate(pProducts: ProductEntry[]) {
+    setProducts(pProducts)
+    console.log(pProducts)
   }
   async function updateLieferant() {
     const requestOptions = {
@@ -145,7 +146,7 @@ export default function LieferantenProfilDialog({
             >
               Änderungen speichern
             </Button>
-            <PlaceOrderButton />
+            <PlaceOrderButton catalog={products} lieferant={lieferant} />
           </Toolbar>
         </AppBar>
         <Box sx={{ p: 2 }}>
@@ -210,7 +211,7 @@ export function DisplayEditingControl({
   }
 }
 
-function PlaceOrderButton() {
+function PlaceOrderButton({ catalog, lieferant }: { catalog: ProductEntry[]; lieferant: ILieferantJsonResponseOne }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   return (
