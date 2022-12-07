@@ -56,7 +56,17 @@ export default function LieferantenHinzufuegenDialog({
 
   return (
     <>
-      <Dialog fullScreen open={open} onClose={handleClose}>
+      <Dialog
+        maxWidth='xl'
+        fullWidth
+        PaperProps={{
+          sx: {
+            minHeight: '90%'
+          }
+        }}
+        open={open}
+        onClose={handleClose}
+      >
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>
             <IconButton edge='start' color='inherit' onClick={handleClose} aria-label='close'>
@@ -106,7 +116,12 @@ export default function LieferantenHinzufuegenDialog({
               <Typography variant='h6' align='center'>
                 Katalog
               </Typography>
-              <LieferantKatalog products={[]} onProductsUpdate={onProductsUpdate} isEditing={true} updateProductsBeimLieferant={(rows: ICatalogProducts[]) => console.log("Hi")}/>
+              <LieferantKatalog
+                products={[]}
+                onProductsUpdate={onProductsUpdate}
+                isEditing={true}
+                updateProductsBeimLieferant={(rows: ICatalogProducts[]) => console.log('Hi')}
+              />
             </Grid>
           </Grid>
         </Box>

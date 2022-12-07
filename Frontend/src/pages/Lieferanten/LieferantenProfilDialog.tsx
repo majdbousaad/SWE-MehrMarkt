@@ -21,7 +21,6 @@ export default function LieferantenProfilDialog({
   open,
   handleClose,
   fetchLieferanten
-  
 }: {
   lieferant: ILieferantJsonResponseOne
   initialLieferant: ILieferantJsonResponseOne
@@ -58,8 +57,8 @@ export default function LieferantenProfilDialog({
     setIsEditing(true)
   }
 
-  function updateProductsBeimLieferant(rows: ICatalogProducts[]){
-    setLieferant({...lieferant, products:rows})
+  function updateProductsBeimLieferant(rows: ICatalogProducts[]) {
+    setLieferant({ ...lieferant, products: rows })
   }
   function handleSaveEditing() {
     setIsEditing(false)
@@ -104,8 +103,8 @@ export default function LieferantenProfilDialog({
     )
     setIsDirty(false)
     await updateLieferant()
-    
-    fetchLieferanten();
+
+    fetchLieferanten()
     handleClose()
   }
 
@@ -114,13 +113,19 @@ export default function LieferantenProfilDialog({
     handleClose()
   }
 
-  function handleCreateOrder() {
-    console.log('create order')
-  }
-
   return (
     <>
-      <Dialog fullScreen open={open} onClose={handleAbort}>
+      <Dialog
+        maxWidth='xl'
+        fullWidth
+        PaperProps={{
+          sx: {
+            minHeight: '90%'
+          }
+        }}
+        open={open}
+        onClose={handleAbort}
+      >
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>
             <IconButton edge='start' color='inherit' onClick={handleAbort} aria-label='close'>
@@ -139,9 +144,7 @@ export default function LieferantenProfilDialog({
             >
               Änderungen speicherns
             </Button>
-            <Button sx={{ marginLeft: 2 }} autoFocus color='info' variant='contained' onClick={handleCreateOrder}>
-              Bestellung aufgeben
-            </Button>
+            <PlaceOrderButton />
           </Toolbar>
         </AppBar>
         <Box sx={{ p: 2 }}>
@@ -162,7 +165,12 @@ export default function LieferantenProfilDialog({
                 Katalog
               </Typography>
               {lieferant && (
-                <LieferantKatalog onProductsUpdate={onProductsUpdate} products={catalogWithID} isEditing={isEditing} updateProductsBeimLieferant={updateProductsBeimLieferant} />
+                <LieferantKatalog
+                  onProductsUpdate={onProductsUpdate}
+                  products={catalogWithID}
+                  isEditing={isEditing}
+                  updateProductsBeimLieferant={updateProductsBeimLieferant}
+                />
               )}
             </Grid>
           </Grid>
@@ -199,4 +207,16 @@ export function DisplayEditingControl({
       </Button>
     )
   }
+}
+
+function PlaceOrderButton() {
+  function handleCreateOrder() {
+    console.log('create order')
+  }
+
+  return (
+    <Button sx={{ marginLeft: 2 }} autoFocus color='info' variant='contained' onClick={handleCreateOrder}>
+      Bestellung aufgeben
+    </Button>
+  )
 }
