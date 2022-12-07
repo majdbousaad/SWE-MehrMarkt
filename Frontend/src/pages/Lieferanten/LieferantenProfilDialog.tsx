@@ -1,18 +1,19 @@
-import Dialog from '@mui/material/Dialog'
 import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
-import CloseIcon from 'mdi-material-ui/Close'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
 import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import CloseIcon from 'mdi-material-ui/Close'
 import { useState } from 'react'
 import LieferantKatalog from './LieferantKatalog'
 
 import { v4 as uuidv4 } from 'uuid'
 import { ICatalogProducts, ILieferantJsonResponseOne, ProductEntry } from '../../lib/interfaces'
 import { LieferantProfilSection } from './LieferantProfilSection'
+import { PlaceOrderDialog } from './PlaceOrderDialog'
 
 export default function LieferantenProfilDialog({
   lieferant,
@@ -142,7 +143,7 @@ export default function LieferantenProfilDialog({
               disabled={!isDirty}
               onClick={handleSave}
             >
-              Änderungen speicherns
+              Änderungen speichern
             </Button>
             <PlaceOrderButton />
           </Toolbar>
@@ -210,13 +211,14 @@ export function DisplayEditingControl({
 }
 
 function PlaceOrderButton() {
-  function handleCreateOrder() {
-    console.log('create order')
-  }
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   return (
-    <Button sx={{ marginLeft: 2 }} autoFocus color='info' variant='contained' onClick={handleCreateOrder}>
-      Bestellung aufgeben
-    </Button>
+    <>
+      <Button sx={{ marginLeft: 2 }} autoFocus color='info' variant='contained' onClick={() => setIsDialogOpen(true)}>
+        Bestellung aufgeben
+      </Button>
+      <PlaceOrderDialog isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+    </>
   )
 }
