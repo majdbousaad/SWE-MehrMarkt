@@ -3,14 +3,9 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import CardHeader from '@mui/material/CardHeader'
-import Table from '@mui/material/Table/Table'
-import TableHead from '@mui/material/TableHead/TableHead'
-import TableCell from '@mui/material/TableCell/TableCell'
-import TableRow from '@mui/material/TableRow/TableRow'
-import TableBody from '@mui/material/TableBody/TableBody'
-import IconButton from '@mui/material/IconButton/IconButton'
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'
+import { CardHeader, IconButton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
+
 
 
 interface ILagerProduct{
