@@ -41,3 +41,28 @@ export interface Lieferant {
   status: 'aktiv' | 'inaktiv'
   catalog: ICatalogProducts[]
 }
+
+
+// bestellung
+export interface IOrderProductEntry {
+  name: string
+  ean: string
+  price: number
+  amount: number
+}
+export interface ProductEAN {
+  ean: string
+}
+export interface LieferantID {
+  id: number
+}
+
+export interface Ware {
+  product: ProductEAN
+  menge:number
+}
+export interface Bestellung {
+  waren: Ware[]
+  lieferant: LieferantID
+  vslLieferdatum: string
+}

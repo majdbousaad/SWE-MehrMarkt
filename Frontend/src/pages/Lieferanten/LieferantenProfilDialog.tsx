@@ -219,7 +219,7 @@ function PlaceOrderButton({ catalog, lieferant }: { catalog: ProductEntry[]; lie
       <Button sx={{ marginLeft: 2 }} autoFocus color='info' variant='contained' onClick={() => setIsDialogOpen(true)}>
         Bestellung aufgeben
       </Button>
-      <PlaceOrderDialog isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+      <PlaceOrderDialog isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} id={lieferant.id} />
     </>
   )
 }
