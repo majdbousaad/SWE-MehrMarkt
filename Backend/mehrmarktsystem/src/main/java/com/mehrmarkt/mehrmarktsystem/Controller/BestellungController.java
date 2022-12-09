@@ -30,6 +30,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/bestellung")
+@CrossOrigin
 public class BestellungController {
 
     @Autowired
