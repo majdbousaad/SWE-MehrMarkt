@@ -2,6 +2,8 @@ import AppBar from '@mui/material/AppBar'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import IconButton from '@mui/material/IconButton'
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import CloseIcon from 'mdi-material-ui/Close'
@@ -153,8 +155,22 @@ export function PlaceOrderDialog({
                         />
                       </TableCell>
                       <TableCell align='right'>
-                        <Button variant='outlined' onClick={() => addToWaren(row.ean,row.amount)}>BESTELLEN</Button>
-                        <Button variant='outlined' onClick={() => {deleteFromWaren(row.ean);}}>Löschen</Button>
+                      <IconButton 
+                      color="primary" 
+                      aria-label="add to shopping cart"
+                      onClick={() => addToWaren(row.ean,row.amount)}
+                      >
+                      
+                      <ShoppingCartCheckoutIcon />
+                      </IconButton>
+
+                      <IconButton 
+                      color="primary" 
+                      aria-label="add to shopping cart"
+                      onClick={() => {deleteFromWaren(row.ean);}}
+                      >
+                      <DeleteIcon />
+                      </IconButton>
                       </TableCell>
                         
                     </TableRow>

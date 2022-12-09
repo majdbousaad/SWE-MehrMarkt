@@ -2,6 +2,7 @@ import AppBar from '@mui/material/AppBar'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import IconButton from '@mui/material/IconButton'
+import DeleteIcon from '@mui/icons-material/Delete';
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import CloseIcon from 'mdi-material-ui/Close'
@@ -104,7 +105,13 @@ export function OrderDetailsDialog({
                         {rows.find(s => s.ean == row.product.ean)?.name}
                       </TableCell>
                       <TableCell align='right'>{row.menge}</TableCell>
-                      <TableCell align='right'><Button variant='outlined' onClick={() => {deleteFromWaren(row.product.ean);}}>Löschen</Button></TableCell>
+                      <TableCell align='right'><IconButton 
+                      color="primary" 
+                      aria-label="add to shopping cart"
+                      onClick={() => {deleteFromWaren(row.product.ean);}}
+                      >
+                      <DeleteIcon />
+                      </IconButton></TableCell>
                         
                     </TableRow>
                   ))}

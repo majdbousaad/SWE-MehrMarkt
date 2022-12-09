@@ -65,6 +65,7 @@ export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { 
                   <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                     <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{lieferant.name}</Typography>
                     <IconButton
+                      color="primary"
                       size='small'
                       sx={{ p: 0, marginLeft: 1 }}
                       onClick={() => onProfileDialogOpen(lieferant)}
