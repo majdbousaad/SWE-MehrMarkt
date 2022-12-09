@@ -15,13 +15,9 @@ import TableHead from '@mui/material/TableHead'
 import TableBody from '@mui/material/TableBody'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import TextField from '@mui/material/TextField'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
-import { Input } from '@mui/material'
 import { Ware, IOrderProductEntry, Bestellung } from 'src/lib/interfaces'
 
-export function OrderDetailsDialog({
+export default function OrderDetailsDialog({
   isOpen,
   setIsDialogOpen,
   waren,
@@ -39,14 +35,6 @@ export function OrderDetailsDialog({
 
   function handleClose() {
     setIsDialogOpen(false)
-  }
-
-
-  interface IOrderProductEntry {
-    name: string
-    ean: string
-    price: number
-    amount: number
   }
 
   function bestellen(waren: Ware[], lieferant_id: number){
@@ -103,7 +91,7 @@ export function OrderDetailsDialog({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {waren.map(row => (
+                  {waren?.map(row => (
                     <TableRow key={row.product.ean}>
                       <TableCell component='th' scope='row'>
                         {rows.find(s => s.ean == row.product.ean)?.name}

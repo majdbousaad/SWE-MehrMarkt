@@ -13,7 +13,7 @@ import { useRef, useState } from 'react'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import LieferantKatalog from './LieferantKatalog'
-import { ICatalogProducts, ProductEntry } from '../../lib/interfaces'
+import {ProductEntry } from '../../lib/interfaces'
 
 export default function LieferantenHinzufuegenDialog({
   open,
@@ -120,7 +120,7 @@ export default function LieferantenHinzufuegenDialog({
                 products={[]}
                 onProductsUpdate={onProductsUpdate}
                 isEditing={true}
-                updateProductsBeimLieferant={(rows: ICatalogProducts[]) => console.log('Hi')}
+                updateProductsBeimLieferant={() => {void 0}}
               />
             </Grid>
           </Grid>

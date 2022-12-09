@@ -1,14 +1,11 @@
-import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { Box, CardHeader, IconButton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
-import OpenInNew from 'mdi-material-ui/OpenInNew'
-import DownloadDoneIcon from '@mui/icons-material/DownloadDone';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import {CardHeader} from '@mui/material'
+import Lieferungen from './Lieferungen'
 
-interface ILieferungAll{
+export interface ILieferungAll{
   tats: string,
   id: number,
   lieferant: string,
@@ -57,102 +54,23 @@ export default function EinkaufPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({angekommen:true})
     }
-    fetch('http://localhost:8080/bestellung/' + orderId, requestOptions).then(response => {
+    fetch('http://localhost:8080/bestellung/' + orderId, requestOptions).then(() => {
       fetchAnstehendeLiefererungen()
-    fetchGelieferteLiefererungen()
+      fetchGelieferteLiefererungen()
     })
   }
 
   return (
+    <>
+
     <Card>
-      <CardHeader title='Einkauf' />
+    <CardHeader title='Einkauf' />
       <CardContent>
-
-      <Card>
-        <CardHeader title='AnstehendeLieferungen' />
-        <CardContent>
-        <Table sx={{ minWidth: 800 }}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Lieferungsnummer</TableCell>
-              <TableCell>Lieferant</TableCell>
-              <TableCell>Vsl. Lieferdatum</TableCell>
-              <TableCell>Zugestellt</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {anstehendeLiefererungen?.map((anstehendeLiefererung: ILieferungAll) => (
-              <TableRow hover key={anstehendeLiefererung.id}>
-                <TableCell>
-                  <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{anstehendeLiefererung.id}</Typography>
-                    <IconButton
-                      color="primary"
-                      size='small'
-                      sx={{ p: 0, marginLeft: 1 }}
-                      //onClick={() => orderArrived(anstehendeLiefererung.id)}
-                    >
-                      <OpenInNewIcon fontSize='small' />
-                    </IconButton>
-                  </Box>
-                </TableCell>
-                <TableCell>{anstehendeLiefererung.lieferant}</TableCell>
-                <TableCell>{anstehendeLiefererung.vsl}</TableCell>
-                <TableCell><IconButton 
-                      color="primary" 
-                      aria-label="add to shopping cart"
-                      onClick={() => orderArrived(anstehendeLiefererung.id)}
-                      >
-                      <DownloadDoneIcon />
-                      </IconButton></TableCell>
-                
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader title='GelieferteLieferungen' />
-        <CardContent>
-        <Table sx={{ minWidth: 800 }}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Lieferungsnummer</TableCell>
-              <TableCell>Lieferant</TableCell>
-              <TableCell>Lieferdatum</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {gelieferteLiefererungen?.map((gelieferteLiefererung: ILieferungAll) => (
-              <TableRow hover key={gelieferteLiefererung.id}>
-                <TableCell>
-                  <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{gelieferteLiefererung.id}</Typography>
-                    <IconButton
-                      color="primary"
-                      size='small'
-                      sx={{ p: 0, marginLeft: 1 }}
-                      //onClick={() => onProfileDialogOpen(anstehendeLiefererung)}
-                    >
-                      <OpenInNewIcon fontSize='small' />
-                    </IconButton>
-                  </Box>
-                </TableCell>
-                <TableCell>{gelieferteLiefererung.lieferant}</TableCell>
-                <TableCell>{gelieferteLiefererung.tats}</TableCell>
-                
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        </CardContent>
-      </Card>
-
+        <Lieferungen lieferungen={anstehendeLiefererungen} orderArrived={orderArrived} arrived={false}/>
+        <Lieferungen lieferungen={gelieferteLiefererungen} orderArrived={() =>void 0} arrived={true}/>
       </CardContent>
     </Card>
+    </>
   )
 }
 

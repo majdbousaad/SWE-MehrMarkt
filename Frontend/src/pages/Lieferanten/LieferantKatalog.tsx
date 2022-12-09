@@ -39,13 +39,13 @@ export default function LieferantKatalog({
   }
 
   const [rows, setRows] = useState<IRow[]>(
-    products.map(row => {
+    products?.map(row => {
       return createData(uuidv4(), row.name, row.ean, row.price, false)
     })
   )
 
   function updateProduct(id: string, name: string, ean: string, price: number) {
-    const newRows = rows.map(row => {
+    const newRows = rows?.map(row => {
       if (row.id === id) {
         return createData(id, name, ean, price, false)
       } else {
@@ -53,7 +53,7 @@ export default function LieferantKatalog({
       }
     })
     setRows(newRows)
-    const catalog = newRows.map(row => {
+    const catalog = newRows?.map(row => {
       return {
         name: row.name,
         ean: row.ean,
@@ -61,7 +61,7 @@ export default function LieferantKatalog({
       }
     })
 
-    const productsForLieferant = newRows.map(row => {
+    const productsForLieferant = newRows?.map((row) => {
       return {
         id: row.id,
         name: row.name,

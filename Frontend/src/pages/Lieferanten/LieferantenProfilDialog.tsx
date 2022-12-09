@@ -12,8 +12,8 @@ import LieferantKatalog from './LieferantKatalog'
 
 import { v4 as uuidv4 } from 'uuid'
 import { ICatalogProducts, ILieferantJsonResponseOne, ProductEntry } from '../../lib/interfaces'
-import { LieferantProfilSection } from './LieferantProfilSection'
-import { PlaceOrderDialog } from './PlaceOrderDialog'
+import  LieferantProfilSection from './LieferantProfilSection'
+import  PlaceOrderDialog from './PlaceOrderDialog'
 
 export default function LieferantenProfilDialog({
   lieferant,
@@ -211,7 +211,7 @@ export function DisplayEditingControl({
   }
 }
 
-function PlaceOrderButton({ catalog, lieferant }: { catalog: ProductEntry[]; lieferant: ILieferantJsonResponseOne }) {
+function PlaceOrderButton({ lieferant }: { catalog: ProductEntry[]; lieferant: ILieferantJsonResponseOne }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   return (

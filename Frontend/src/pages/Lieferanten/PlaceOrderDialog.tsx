@@ -19,11 +19,10 @@ import CardContent from '@mui/material/CardContent'
 import TextField from '@mui/material/TextField'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { Input } from '@mui/material'
 import { IOrderProductEntry, Ware } from 'src/lib/interfaces'
-import { OrderDetailsDialog } from './OrderDetailsDialog'
+import  OrderDetailsDialog  from './OrderDetailsDialog'
 
-export function PlaceOrderDialog({
+export default function PlaceOrderDialog({
   isOpen,
   setIsDialogOpen,
   id
@@ -36,14 +35,6 @@ export function PlaceOrderDialog({
     setIsDialogOpen(false)
   }
 
-  function createData(
-    name: string,
-    ean: string,
-    price: number,
-    amount: number
-  ): { name: string; ean: string; price: number; amount: number } {
-    return { name, ean, price, amount }
-  }
   async function fetchProducts(id: number) {
     await axios
       .get('http://localhost:8080/lieferant/' + id + '/products')
@@ -58,12 +49,12 @@ export function PlaceOrderDialog({
         console.log(error)
       })
   }
-  //const rows: IOrderProductEntry[] = [createData('Cupcake', '313123', 3.7, 0), createData('Brot', '1432135', 1.42, 0)]
 
   const [rows, setRows] = useState<IOrderProductEntry[]>([])
   useEffect(()=>{
     fetchProducts(id)
-  }, [])
+  }, [id])
+
   interface IOrderProductEntry {
     name: string
     ean: string
@@ -72,7 +63,7 @@ export function PlaceOrderDialog({
   }
 
 
-  const [waren, setWaren] = useState<Ware[]>([])
+  const [waren] = useState<Ware[]>([])
 
   function addToWaren(ean: string, menge: number){
     if(menge == 0){
@@ -101,12 +92,14 @@ export function PlaceOrderDialog({
     setRows(rows.map(row => {
       
       if(row.ean === ean){
+
         return {...row, amount: 0}
       }
+
       return row
     }));
 
-    var s = document.getElementById(ean) as HTMLInputElement;
+    const s = document.getElementById(ean) as HTMLInputElement;
     s.value = String(0);
     
 
