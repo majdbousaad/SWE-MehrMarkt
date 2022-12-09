@@ -48,6 +48,25 @@ public class ResponseHandler {
         return new ResponseEntity<Object>(listMap, HttpStatus.OK);
     }
 
+    public static ResponseEntity<Object> sendAllProdukteBeiLieferant(Object responseObj){
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        List<Product> products = (List<Product>) responseObj;
+
+
+        for (Product product :
+                products) {
+
+            listMap.add(new HashMap<>(Map.of(
+                    "name", product.getName(),
+                    "ean", product.getEAN(),
+                    "price", product.getPreis(),
+                    "amount", 0
+            )));
+        }
+
+        return new ResponseEntity<Object>(listMap, HttpStatus.OK);
+    }
+
     public static ResponseEntity<Object> sendLieferant(Object responseObj){
 
         Lieferant lieferant = (Lieferant) responseObj;

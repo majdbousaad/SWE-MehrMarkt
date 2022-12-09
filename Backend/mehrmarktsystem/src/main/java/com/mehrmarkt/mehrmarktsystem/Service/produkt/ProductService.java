@@ -16,4 +16,6 @@ public interface ProductService {
     boolean existsByEANAndLieferant_IdIsNot(String ean, int lieferant_id);
 
     Optional<Product> getByEANAndLieferant_Id(String ean, int lieferant_id);
+
+    List<Product> getProdukteBeiLieferant(int lieferant_id);
 }

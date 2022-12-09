@@ -79,6 +79,18 @@ public class LieferantController {
         }
     }
 
+    @GetMapping("/{id}/products")
+    public ResponseEntity<Object> getProduktebeiLieferant(@PathVariable int id){
+        List<Product> produkte = productService.getProdukteBeiLieferant(id);
+        if(produkte == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lieferant mit ID " + id + " existiert nicht");
+
+        }
+        return ResponseHandler.sendAllProdukteBeiLieferant(produkte);
+
+
+    }
+
     private Lieferant applyPatchToLieferant(
             JsonPatch patch, Lieferant targetLieferant)
             throws JsonPatchException, JsonProcessingException {
