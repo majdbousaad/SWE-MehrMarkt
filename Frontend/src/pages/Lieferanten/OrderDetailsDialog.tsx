@@ -64,7 +64,11 @@ export function OrderDetailsDialog({
     
       fetch('http://localhost:8080/bestellung', requestOptions).then(response => {
       
-      console.log("if response status is 400, then lager is probably ausgelastet")
+      if(response.status == 400){
+        alert("Lager ist ausgelastet")
+      } else {
+        alert("Bestellung ist aufgegeben")
+      }
       console.log(response)
     })
     setIsDialogOpen(false)
