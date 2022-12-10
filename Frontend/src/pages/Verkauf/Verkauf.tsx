@@ -97,7 +97,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
           <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
             Verkauf
           </Typography>
-          <SellDetailsButton fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} waren={waren} lagerProducts={lagerProducts} deleteFromWaren={deleteFromWaren}/>
+          <SellDetailsButton fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} waren={waren} deleteFromWaren={deleteFromWaren}/>
         </Toolbar>
       </AppBar>
       <Card>
@@ -174,7 +174,6 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
 
   function SellDetailsButton({ 
     waren, 
-    lagerProducts, 
     deleteFromWaren,
     fetchVerkaeufe,
     deleteAllWaren,
@@ -183,7 +182,6 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
   { 
     waren: Ware[], 
     deleteFromWaren: (ean: string) => void
-    lagerProducts: IOrderProductEntry[]
     fetchVerkaeufe: () => void
     deleteAllWaren: () => void
     fetchAnzahl: () => void
@@ -195,7 +193,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
         <Button autoFocus color='success' variant='contained' onClick={() => setIsDialogOpen(true)}>
               Zur Verkaufsübersicht
             </Button>
-        <VerkaufsDetailsDialog fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} lagerProducts={lagerProducts}  deleteFromWaren={deleteFromWaren}/>
+        <VerkaufsDetailsDialog fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren}/>
       </>
     )
   }

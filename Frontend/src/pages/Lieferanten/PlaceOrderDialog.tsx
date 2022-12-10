@@ -19,7 +19,7 @@ import CardContent from '@mui/material/CardContent'
 import TextField from '@mui/material/TextField'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { IOrderProductEntry, Ware } from 'src/lib/interfaces'
+import { Ware } from 'src/lib/interfaces'
 import  OrderDetailsDialog  from './OrderDetailsDialog'
 
 export default function PlaceOrderDialog({
@@ -129,7 +129,7 @@ export default function PlaceOrderDialog({
           <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
             Bestellung aufgeben
           </Typography>
-          <OrderDetailsButton deleteAllWaren={deleteAllWaren} waren={waren} rows={rows} deleteFromWaren={deleteFromWaren} lieferant_id={id} />
+          <OrderDetailsButton deleteAllWaren={deleteAllWaren} waren={waren}  deleteFromWaren={deleteFromWaren} lieferant_id={id} />
         </Toolbar>
       </AppBar>
       <DialogContent>
@@ -196,13 +196,12 @@ export default function PlaceOrderDialog({
 
 function OrderDetailsButton({ 
   waren, 
-  rows, deleteFromWaren, 
   lieferant_id,
+  deleteFromWaren,
   deleteAllWaren
 }: 
 { 
   waren: Ware[], 
-  rows: IOrderProductEntry[], 
   deleteFromWaren: (ean: string) => void
   lieferant_id: number
   deleteAllWaren: () => void
@@ -214,7 +213,7 @@ function OrderDetailsButton({
       <Button autoFocus color='success' variant='contained' onClick={() => setIsDialogOpen(true)}>
             Zur Bestellübersicht
           </Button>
-      <OrderDetailsDialog deleteAllWaren={deleteAllWaren} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} rows={rows}  deleteFromWaren={deleteFromWaren} lieferant_id={lieferant_id}/>
+      <OrderDetailsDialog deleteAllWaren={deleteAllWaren} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren} lieferant_id={lieferant_id}/>
     </>
   )
 }

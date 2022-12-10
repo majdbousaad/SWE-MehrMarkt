@@ -15,14 +15,13 @@ import TableHead from '@mui/material/TableHead'
 import TableBody from '@mui/material/TableBody'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import { IOrderProductEntry, Ware } from 'src/lib/interfaces'
+import { Ware } from 'src/lib/interfaces'
 
 
 export default function VerkaufsDetailsDialog({
   isOpen,
   setIsDialogOpen,
   waren,
-  lagerProducts,
   deleteFromWaren,
   fetchVerkaeufe,
   deleteAllWaren,
@@ -31,7 +30,6 @@ export default function VerkaufsDetailsDialog({
   isOpen: boolean
   setIsDialogOpen: (isOpen: boolean) => void
   waren: Ware[]
-  lagerProducts: IOrderProductEntry[]
   deleteFromWaren: (ean:string) => void
   fetchVerkaeufe: () => void,
   deleteAllWaren: () =>void,
