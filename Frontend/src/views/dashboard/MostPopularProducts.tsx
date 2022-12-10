@@ -45,7 +45,7 @@ export default function MostPopularProducts() {
     <Card sx={{ position: 'relative' }}>
       <CardContent>
         <Typography variant='h6'>Beliebteste Produkte</Typography>
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{maxHeight: 200}}>
           <Table sx={{ minWidth: 500 }} aria-label='simple table'>
             <TableHead>
               <TableRow>

@@ -12,6 +12,7 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import DownloadDoneIcon from '@mui/icons-material/DownloadDone';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { TableContainer } from '@mui/material'
 
 export default function Lieferungen({ lieferungen, orderArrived, arrived }: { lieferungen: ILieferungAll[], orderArrived: (lieferung_id: number) => void, arrived: boolean}) {
   
@@ -21,48 +22,50 @@ export default function Lieferungen({ lieferungen, orderArrived, arrived }: { li
       <Card>
         <CardHeader title={arrived? 'Gelieferte Bestellungen' : 'Ausstehende Lieferungen'} />
         <CardContent>
-        <Table sx={{ minWidth: 800 }}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Lieferungsnummer</TableCell>
-              <TableCell>Lieferant</TableCell>
-              <TableCell>{arrived? 'Lieferdatum': 'Vsl. Lieferdatum'}</TableCell>
-              {!arrived &&(<TableCell>Zugestellt</TableCell>)}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {lieferungen?.map((lieferung: ILieferungAll) => (
-              <TableRow hover key={lieferung.id}>
-                <TableCell>
-                  <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{lieferung.id}</Typography>
-                    <IconButton
-                      color="primary"
-                      size='small'
-                      sx={{ p: 0, marginLeft: 1 }}
-                      
-                      //onClick={() => orderArrived(anstehendeLiefererung.id)}
-                    >
-                      <OpenInNewIcon fontSize='small' />
-                    </IconButton>
-                  </Box>
-                </TableCell>
-                <TableCell>{lieferung.lieferant}</TableCell>
-                <TableCell>{arrived? lieferung.tats : lieferung.vsl}</TableCell>
-                {!arrived && (
-                <TableCell><IconButton 
-                      color="primary" 
-                      aria-label="add to shopping cart"
-                      onClick={() => orderArrived(lieferung.id)}
-                      >
-                      <DownloadDoneIcon />
-                      </IconButton>
-                </TableCell>
-                )}
+        <TableContainer sx={{maxHeight:300}}>
+          <Table sx={{ minWidth: 800 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Lieferungsnummer</TableCell>
+                <TableCell>Lieferant</TableCell>
+                <TableCell>{arrived? 'Lieferdatum': 'Vsl. Lieferdatum'}</TableCell>
+                {!arrived &&(<TableCell>Zugestellt</TableCell>)}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {lieferungen?.map((lieferung: ILieferungAll) => (
+                <TableRow hover key={lieferung.id}>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                      <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{lieferung.id}</Typography>
+                      <IconButton
+                        color="primary"
+                        size='small'
+                        sx={{ p: 0, marginLeft: 1 }}
+                        
+                        //onClick={() => orderArrived(anstehendeLiefererung.id)}
+                      >
+                        <OpenInNewIcon fontSize='small' />
+                      </IconButton>
+                    </Box>
+                  </TableCell>
+                  <TableCell>{lieferung.lieferant}</TableCell>
+                  <TableCell>{arrived? lieferung.tats : lieferung.vsl}</TableCell>
+                  {!arrived && (
+                  <TableCell><IconButton 
+                        color="primary" 
+                        aria-label="add to shopping cart"
+                        onClick={() => orderArrived(lieferung.id)}
+                        >
+                        <DownloadDoneIcon />
+                        </IconButton>
+                  </TableCell>
+                  )}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
         </CardContent>
       </Card>
     </>
