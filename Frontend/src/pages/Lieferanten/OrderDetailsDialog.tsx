@@ -23,7 +23,8 @@ export default function OrderDetailsDialog({
   waren,
   rows,
   deleteFromWaren,
-  lieferant_id
+  lieferant_id,
+  deleteAllWaren
 }: {
   isOpen: boolean
   setIsDialogOpen: (isOpen: boolean) => void
@@ -31,6 +32,7 @@ export default function OrderDetailsDialog({
   rows: IOrderProductEntry[]
   deleteFromWaren: (ean:string) => void
   lieferant_id: number
+  deleteAllWaren: () => void
 }) {
 
   function handleClose() {
@@ -59,6 +61,7 @@ export default function OrderDetailsDialog({
       }
       console.log(response)
     })
+    deleteAllWaren()
     setIsDialogOpen(false)
 
   }
@@ -73,7 +76,7 @@ export default function OrderDetailsDialog({
           <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
             Bestellübersicht
           </Typography>
-          <Button autoFocus color='success' variant='contained' onClick={() => bestellen(waren, lieferant_id)}>
+          <Button disabled={waren?.length == 0} autoFocus color='success' variant='contained' onClick={() => bestellen(waren, lieferant_id)}>
             Betstellen!
           </Button>
         </Toolbar>

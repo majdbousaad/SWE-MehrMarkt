@@ -58,10 +58,19 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
     for(let i = 0; i < waren.length; i++){
       if(waren[i].product.ean == ean){
         waren.splice(i, 1);
+        break;
         
       }
     }
-
+    setLagerProducts(lagerProducts.map(row => {
+      
+        if(row.ean === ean){
+  
+          return {...row, amount: 0}
+        }
+  
+        return row
+      }));
     const s = document.getElementById(ean + 'verkauf') as HTMLInputElement;
     s.value = String(0);
     
@@ -70,18 +79,11 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
 
   function deleteAllWaren(){
     setWaren([])
-    setLagerProducts(lagerProducts?.map(lagerProduct => {
+    setLagerProducts(lagerProducts.map(row => {
 
-        const s = document.getElementById(lagerProduct.ean + 'verkauf') as HTMLInputElement;
-        s.value = String(0);
-        
-        return {
-            amount:0,
-            ean: lagerProduct.ean,
-            name: lagerProduct.name,
-            price: lagerProduct.price
-        } as IOrderProductEntry
-      }))
+        return {...row, amount: 0}
+  
+      }));
   }
   
     return (

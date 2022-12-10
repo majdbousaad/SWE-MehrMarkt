@@ -63,7 +63,7 @@ export default function PlaceOrderDialog({
   }
 
 
-  const [waren] = useState<Ware[]>([])
+  const [waren, setWaren] = useState<Ware[]>([])
 
   function addToWaren(ean: string, menge: number){
     if(menge == 0){
@@ -99,10 +99,24 @@ export default function PlaceOrderDialog({
       return row
     }));
 
-    const s = document.getElementById(ean) as HTMLInputElement;
+    const s = document.getElementById(ean + 'bestellung') as HTMLInputElement;
     s.value = String(0);
     
 
+  }
+
+  function deleteAllWaren(){
+    setWaren([])
+    setRows(rows?.map(row => {
+
+        return {...row, amount: 0}
+  
+      }));
+
+    rows?.map(row =>{
+      const s = document.getElementById(row?.ean + 'bestellung') as HTMLInputElement;
+    s.value = String(0);
+    })
   }
   
   return (
@@ -115,7 +129,7 @@ export default function PlaceOrderDialog({
           <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
             Bestellung aufgeben
           </Typography>
-          <OrderDetailsButton waren={waren} rows={rows} deleteFromWaren={deleteFromWaren} lieferant_id={id} />
+          <OrderDetailsButton deleteAllWaren={deleteAllWaren} waren={waren} rows={rows} deleteFromWaren={deleteFromWaren} lieferant_id={id} />
         </Toolbar>
       </AppBar>
       <DialogContent>
@@ -139,13 +153,15 @@ export default function PlaceOrderDialog({
                       </TableCell>
                       <TableCell align='right'>{row.price}</TableCell>
                       <TableCell align='right'>
-                        <TextField
-                          id = {row.ean}
-                          size='small'
-                          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                          defaultValue={row.amount}
+                      <TextField
+                          id={row.ean + 'bestellung'}
+                          type="number"
+                          InputLabelProps={{
+                              shrink: true,
+                          }}
                           onChange={(e) => row.amount = Number(e.target.value)}
-                        />
+                          defaultValue={0}
+                      />
                       </TableCell>
                       <TableCell align='right'>
                       <IconButton 
@@ -181,13 +197,15 @@ export default function PlaceOrderDialog({
 function OrderDetailsButton({ 
   waren, 
   rows, deleteFromWaren, 
-  lieferant_id 
+  lieferant_id,
+  deleteAllWaren
 }: 
 { 
   waren: Ware[], 
   rows: IOrderProductEntry[], 
   deleteFromWaren: (ean: string) => void
   lieferant_id: number
+  deleteAllWaren: () => void
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -196,7 +214,7 @@ function OrderDetailsButton({
       <Button autoFocus color='success' variant='contained' onClick={() => setIsDialogOpen(true)}>
             Zur Bestellübersicht
           </Button>
-      <OrderDetailsDialog isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} rows={rows}  deleteFromWaren={deleteFromWaren} lieferant_id={lieferant_id}/>
+      <OrderDetailsDialog deleteAllWaren={deleteAllWaren} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} rows={rows}  deleteFromWaren={deleteFromWaren} lieferant_id={lieferant_id}/>
     </>
   )
 }
