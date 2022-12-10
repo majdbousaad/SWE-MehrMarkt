@@ -17,9 +17,6 @@ interface IBeliebtesProdukt{
   verbleibend: number
 }
 export default function MostPopularProducts() {
-  function createData(name: string, sold: number, stored: number) {
-    return { name, sold, stored }
-  }
 
   const [beliebsteLagerProducts, setBeliebsteLagerProducts] = useState<IBeliebtesProdukt[]>([])
 
@@ -42,20 +39,14 @@ export default function MostPopularProducts() {
 
 
 
-  const rows = [
-    createData('Frozen yoghurt', 159, 200),
-    createData('Ice cream sandwich', 237, 20),
-    createData('Eclair', 262, 160),
-    createData('Cupcake', 305, 37),
-    createData('Gingerbread', 356, 98)
-  ]
+ 
 
   return (
     <Card sx={{ position: 'relative' }}>
       <CardContent>
         <Typography variant='h6'>Beliebteste Produkte</Typography>
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+          <Table sx={{ minWidth: 500 }} aria-label='simple table'>
             <TableHead>
               <TableRow>
                 <TableCell>Produktbezeichnung</TableCell>

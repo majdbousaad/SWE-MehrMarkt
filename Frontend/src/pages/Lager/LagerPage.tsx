@@ -7,7 +7,7 @@ import { CardHeader, IconButton, Table, TableBody, TableCell, TableHead, TableRo
 
 
 
-interface ILagerProduct{
+export interface ILagerProduct{
   name: string,
   menge: number,
   lagerort: string,

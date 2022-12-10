@@ -1,3 +1,3 @@
-import VerkaufPage from './LagerPage'
+import VerkaufPage from './VerkaufPage'
 
 export default VerkaufPage
