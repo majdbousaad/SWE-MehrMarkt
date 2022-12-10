@@ -6,19 +6,23 @@ import { IOrderProductEntry, Ware } from 'src/lib/interfaces'
 import Button from '@mui/material/Button'
 import VerkaufsDetailsDialog from './VerkaufsDetailsDialog'
 import { Typography, AppBar,Toolbar, Card, CardContent, IconButton, Table, TableBody, TableCell, TableHead, TableRow , TextField} from '@mui/material'
+import InputAdornment from '@mui/material/InputAdornment';
+import Magnify from 'mdi-material-ui/Magnify';
+import TableContainer from '@mui/material/TableContainer';
 
 
 
 export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: () => void, fetchAnzahl: () => void}) {
     const [lagerProducts, setLagerProducts] = useState<IOrderProductEntry[]>([])
-  
+    const [search, setSearch] = useState<string>('')
+
     useEffect(() => {
-      fetchLagerProducts()
-    }, [])
+      fetchLagerProducts(search)
+    }, [search])
   
-    function fetchLagerProducts(): void {
+    function fetchLagerProducts(search:string): void {
       axios
-        .get('http://localhost:8080/lagerprodukt')
+        .get('http://localhost:8080/lagerprodukt/search?text=' + search)
         .then(response => {
           const lagerProductsResponse = response.data as IOrderProductEntry[]
           setLagerProducts(lagerProductsResponse?.map(lagerProduct => {
@@ -38,7 +42,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
   
     const [waren, setWaren] = useState<Ware[]>([])
 
-  function addToWaren(ean: string, menge: number){
+  function addToWaren(ean: string, menge: number, name:string){
     if(menge == 0){
       return
     }
@@ -50,7 +54,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
       }
     }
     if(!exists)
-      waren.push({product: {ean: ean}, menge: menge})
+      waren.push({product: {ean: ean}, menge: menge, name:name})
     console.log(waren)
   }
 
@@ -98,6 +102,19 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
       </AppBar>
       <Card>
         <CardContent>
+        <TextField
+          onChange={(e) => setSearch(e.target.value)}
+          size='small'
+          sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <Magnify fontSize='small' />
+              </InputAdornment>
+            )
+          }}
+        />
+        <TableContainer sx={{maxHeight: 500}}>
           <Table sx={{ minWidth: 800 }}>
             <TableHead>
               <TableRow>
@@ -129,7 +146,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                         color="primary" 
                         aria-label="add to shopping cart"
                         
-                        onClick={() => addToWaren(lagerProduct.ean, lagerProduct.amount)}
+                        onClick={() => addToWaren(lagerProduct.ean, lagerProduct.amount, lagerProduct.name)}
                         >
                         <ShoppingCartCheckoutIcon />
                     </IconButton>
@@ -148,6 +165,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
               ))}
             </TableBody>
           </Table>
+          </TableContainer>
           </CardContent>
         </Card>
         </>
