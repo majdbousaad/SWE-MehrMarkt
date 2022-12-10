@@ -65,7 +65,7 @@ export default function PlaceOrderDialog({
 
   const [waren, setWaren] = useState<Ware[]>([])
 
-  function addToWaren(ean: string, menge: number){
+  function addToWaren(ean: string, menge: number, name:string){
     if(menge == 0){
       return
     }
@@ -77,7 +77,7 @@ export default function PlaceOrderDialog({
       }
     }
     if(!exists)
-      waren.push({product: {ean: ean}, menge: menge})
+      waren.push({product: {ean: ean}, menge: menge, name:name})
     console.log(waren)
   }
 
@@ -167,7 +167,7 @@ export default function PlaceOrderDialog({
                       <IconButton 
                       color="primary" 
                       aria-label="add to shopping cart"
-                      onClick={() => addToWaren(row.ean,row.amount)}
+                      onClick={() => addToWaren(row.ean,row.amount, row.name)}
                       >
                       
                       <ShoppingCartCheckoutIcon />

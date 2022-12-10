@@ -40,9 +40,15 @@ export default function OrderDetailsDialog({
   }
 
   function bestellen(waren: Ware[], lieferant_id: number){
-    const bestellung: Bestellung = {
+    const bestellung = {
         lieferant: {id: lieferant_id},
-        waren: waren,
+        waren: waren?.map(ware =>{
+
+          return {
+            product: ware.product,
+            menge: ware.menge
+          }
+        }),
         vslLieferdatum: "2024-12-03T10:15:30"
     }
     const requestOptions = {
@@ -97,7 +103,7 @@ export default function OrderDetailsDialog({
                   {waren?.map(row => (
                     <TableRow key={row.product.ean}>
                       <TableCell component='th' scope='row'>
-                        {rows.find(s => s.ean == row.product.ean)?.name}
+                        {row?.name}
                       </TableCell>
                       <TableCell align='right'>{row.menge}</TableCell>
                       <TableCell align='right'><IconButton 

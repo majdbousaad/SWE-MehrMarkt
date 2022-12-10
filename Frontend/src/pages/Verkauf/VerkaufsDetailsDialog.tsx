@@ -100,7 +100,7 @@ export default function VerkaufsDetailsDialog({
                   {waren?.map(row => (
                     <TableRow key={row?.product?.ean}>
                       <TableCell component='th' scope='row'>
-                        {lagerProducts.find(s => s?.ean == row?.product?.ean)?.name}
+                        {row?.name}
                       </TableCell>
                       <TableCell align='right'>{row.menge}</TableCell>
                       <TableCell align='right'><IconButton 

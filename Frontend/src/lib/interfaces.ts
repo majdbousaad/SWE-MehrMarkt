@@ -58,6 +58,7 @@ export interface LieferantID {
 }
 
 export interface Ware {
+  name: string
   product: ProductEAN
   menge:number
 }
