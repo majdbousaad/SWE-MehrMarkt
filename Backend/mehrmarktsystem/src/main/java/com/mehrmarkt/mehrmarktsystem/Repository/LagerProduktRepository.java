@@ -20,4 +20,6 @@ public interface LagerProduktRepository extends JpaRepository<LagerProdukt, Stri
             "    where b.tatsLieferdatum is null " +
             "    AND g.product.EAN = ?1")
     Integer getAnstehendeMenge(String ean);
+
+    List<LagerProdukt> findByEANContainingOrNameContainingIgnoreCase(String ean, String name);
 }
