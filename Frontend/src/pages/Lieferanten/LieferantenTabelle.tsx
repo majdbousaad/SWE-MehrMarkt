@@ -82,6 +82,14 @@ export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { 
                     size='small'
                     sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}
                   />
+                  {!lieferant.reliable && (
+                  <Chip
+                    label={'unzuverlässig'}
+                    color={'secondary'}
+                    size='small'
+                    sx={{ fontWeight: 500, fontSize: '0.875rem !important', margin: '5px' }}
+                  />
+                  )}
                 </TableCell>
               </TableRow>
             ))}

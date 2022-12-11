@@ -40,6 +40,7 @@ export interface Lieferant {
   deliveryTime: string
   status: 'aktiv' | 'inaktiv'
   catalog: ICatalogProducts[]
+  reliable: boolean
 }
 
 

@@ -27,7 +27,8 @@ export default function LieferantenPage() {
             contact: lieferant.contact,
             deliveryTime: lieferant.deliveryTime,
             status: lieferant.status ? 'aktiv' : 'inaktiv',
-            catalog: []
+            catalog: [],
+            reliable: lieferant.reliable
           }))
         )
       })
