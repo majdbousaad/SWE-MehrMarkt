@@ -63,15 +63,19 @@ export default function LieferantenProfilDialog({
   }
   function handleSaveEditing() {
     setIsEditing(false)
-    setIsDirty(JSON.stringify(initialLieferant) !== JSON.stringify(lieferant))
-
-    console.log(initialLieferant)
-    console.log(lieferant)
+    const liefer = {...lieferant, products:products?.map(row => {
+      
+      return {
+        ean:row.ean,
+        price: row.preis,
+        name:row.name
+      }
+    })}
+    setIsDirty(JSON.stringify(initialLieferant) !== JSON.stringify(liefer))
   }
 
   function onProductsUpdate(pProducts: ProductEntry[]) {
     setProducts(pProducts)
-    console.log(pProducts)
   }
   async function updateLieferant() {
     const requestOptions = {
@@ -88,21 +92,13 @@ export default function LieferantenProfilDialog({
     }
 
     await fetch('http://localhost:8080/lieferant/' + lieferant.id, requestOptions)
-      .then(response => response.json())
-      .then(data => console.log(data))
+      .catch(() =>{
+        alert('Es gibt keine Verbindung zur Datenbank')
+      })
   }
 
   async function handleSave() {
-    console.log(
-      JSON.stringify({
-        id: lieferant.id,
-        adresse: lieferant.address,
-        contact: lieferant.contact,
-        products: products,
-        name: lieferant.name,
-        status: lieferant.status ? 'aktiv' : 'inaktiv'
-      })
-    )
+
     setIsDirty(false)
     await updateLieferant()
 

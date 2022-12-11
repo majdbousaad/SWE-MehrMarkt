@@ -143,7 +143,7 @@ function KatalogProdukt({
   const priceRef = useRef<any>(null)
 
   function onSave() {
-    updateProduct(id, nameRef.current.value, EANRef.current.value, parseFloat(priceRef.current.value))
+    updateProduct(id, nameRef.current.value, (forceEditing)? EANRef.current.value : ean, parseFloat(priceRef.current.value))
     setIsEditing2(false)
   }
 
@@ -180,6 +180,7 @@ function KatalogProdukt({
               size='small'
             />
           </TableCell>
+          {forceEditing && (
           <TableCell align='left'>
             <TextField
               inputRef={EANRef}
@@ -190,6 +191,9 @@ function KatalogProdukt({
               size='small'
             />
           </TableCell>
+          ) || (<TableCell align='left'>
+          <Typography>{ean}</Typography>
+        </TableCell>)}
           <TableCell align='left'>
             <TextField
               inputRef={priceRef}
@@ -201,7 +205,7 @@ function KatalogProdukt({
             />
           </TableCell>
           <TableCell align='center'>
-            <Button size='small' color='success' variant='outlined' onClick={() => onSave()}>
+            <Button size='small' color='success' variant='outlined' onClick={() => {onSave()}}>
               Speichern
             </Button>
           </TableCell>
