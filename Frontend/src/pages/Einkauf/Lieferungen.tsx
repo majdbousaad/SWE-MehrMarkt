@@ -16,6 +16,30 @@ import { TableContainer } from '@mui/material'
 
 export default function Lieferungen({ lieferungen, orderArrived, arrived }: { lieferungen: ILieferungAll[], orderArrived: (lieferung_id: number) => void, arrived: boolean}) {
   
+  function padTo2Digits(num: number) {
+    return num.toString().padStart(2, '0');
+  }
+  
+  // 👇️ format as "YYYY-MM-DD hh:mm:ss"
+  // You can tweak formatting easily
+  function formatDate(date: Date) {
+    return (
+      'am ' + 
+      [
+        
+        padTo2Digits(date.getDate()),
+        padTo2Digits(date.getMonth() + 1),
+        date.getFullYear()
+      ].join('.') +
+      ' um ' +
+      [
+        padTo2Digits(date.getHours()),
+        padTo2Digits(date.getMinutes()),
+        padTo2Digits(date.getSeconds()),
+      ].join(':')
+      + ' Uhr'
+    );
+  }
 
   return (
     <>
@@ -50,7 +74,7 @@ export default function Lieferungen({ lieferungen, orderArrived, arrived }: { li
                     </Box>
                   </TableCell>
                   <TableCell>{lieferung.lieferant}</TableCell>
-                  <TableCell>{arrived? lieferung.tats : lieferung.vsl}</TableCell>
+                  <TableCell>{arrived? formatDate(new Date(lieferung.tats)): formatDate(new Date(lieferung.vsl))}</TableCell>
                   {!arrived && (
                   <TableCell><IconButton 
                         color="primary" 

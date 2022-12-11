@@ -16,6 +16,13 @@ import TableBody from '@mui/material/TableBody'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import { Ware } from 'src/lib/interfaces'
+import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/de';
+import {useState} from 'react'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { TextField } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 export default function OrderDetailsDialog({
   isOpen,
@@ -38,6 +45,8 @@ export default function OrderDetailsDialog({
   }
 
   function bestellen(waren: Ware[], lieferant_id: number){
+    const date = Datum?.toDate()
+    date?.setHours(date.getHours() + 1)
     const bestellung = {
         lieferant: {id: lieferant_id},
         waren: waren?.map(ware =>{
@@ -47,7 +56,7 @@ export default function OrderDetailsDialog({
             menge: ware.menge
           }
         }),
-        vslLieferdatum: "2024-12-03T10:15:30"
+        vslLieferdatum: date
     }
     const requestOptions = {
         method: 'POST',
@@ -67,6 +76,17 @@ export default function OrderDetailsDialog({
     setIsDialogOpen(false)
 
   }
+
+  const [Datum, setDatum] = useState<Dayjs | null>(
+    dayjs(new Date())
+  );
+
+  const handleChange = (newValue: Dayjs | null) => {
+
+    const date = newValue?.toDate() as Date
+    setDatum(dayjs(date));
+    console.log(Datum?.toString())
+  };
   
   return (
     <Dialog fullScreen open={isOpen} onClose={handleClose}>
@@ -115,6 +135,16 @@ export default function OrderDetailsDialog({
                 </TableBody>
               </Table>
             </TableContainer>
+            <br />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                  label="Vsl. Lieferdatum"
+                  value={Datum}
+                  onChange={handleChange}
+                  renderInput={(params) => <TextField {...params} />}
+                  ampm={false}
+              />
+            </LocalizationProvider>
           </CardContent>
         </Card>
       </DialogContent>
