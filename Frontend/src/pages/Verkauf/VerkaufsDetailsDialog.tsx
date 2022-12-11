@@ -54,11 +54,9 @@ export default function VerkaufsDetailsDialog({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(verkauf)
       }
-      console.log(verkauf)
     
-      fetch('http://localhost:8080/verkauf', requestOptions).then(response => {
+      fetch('http://localhost:8080/verkauf', requestOptions).then(() => {
       
-      console.log(response)
       fetchVerkaeufe()
       deleteAllWaren()
       fetchAnzahl()

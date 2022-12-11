@@ -10,9 +10,11 @@ import TableRow from '@mui/material/TableRow'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
+import axios from 'axios'
+import VerkaufSummary, { IVerkaufOne } from './VerkaufSummary'
 
 export interface IVerkaufAll {
     Datum: string, 
@@ -26,9 +28,34 @@ export default function Verkaufsverlauf({verkaeufe, fetchVerkaeufe}:{verkaeufe:I
     fetchVerkaeufe()
   }, [])
 
-  
+  const [verkaufDialogOpen, setVerkaufDialogOpen] = useState(false)
+  const [verkauf, setVerkauf] = useState<IVerkaufOne>()
+
+  function onVerkaufDialogClose() {
+    setVerkaufDialogOpen(false)
+  }
+
+  async function fetchVerkauf(verkauf_id: number) {
+    await axios
+      .get('http://localhost:8080/verkauf/' + verkauf_id)
+      .then(response => {
+        const verkaufResponse = response.data as IVerkaufOne
+        setVerkauf(verkaufResponse)
+      })
+      .catch(() => {
+        alert('Es gibt keine Verbindung zur Datenbank')
+
+      })
+  }
+
+  async function onVerkaufDialogOpen(verkauf_id: number) {
+    await fetchVerkauf(verkauf_id)
+
+    setVerkaufDialogOpen(true)
+  }
 
   return (
+    <>
     <Card>
         <CardHeader title='Verkaufsverlauf' />
         <CardContent>
@@ -54,7 +81,7 @@ export default function Verkaufsverlauf({verkaeufe, fetchVerkaeufe}:{verkaeufe:I
                         size='small'
                         sx={{ p: 0, marginLeft: 1 }}
                         
-                        //onClick={() => orderArrived(anstehendeLiefererung.id)}
+                        onClick={() => onVerkaufDialogOpen(verkauf.id)}
                         >
                         <OpenInNewIcon fontSize='small' />
                         </IconButton>
@@ -68,5 +95,9 @@ export default function Verkaufsverlauf({verkaeufe, fetchVerkaeufe}:{verkaeufe:I
         </TableContainer> 
         </CardContent>
       </Card>
+      {verkauf && (
+      <VerkaufSummary handleClose={onVerkaufDialogClose} open={verkaufDialogOpen} verkauf={verkauf}/>
+      )}
+      </>
   )
 }
