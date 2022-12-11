@@ -30,7 +30,8 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                     amount:0,
                     ean: lagerProduct.ean,
                     name: lagerProduct.name,
-                    price: lagerProduct.price
+                    price: lagerProduct.price,
+                    menge: lagerProduct.menge
                 } as IOrderProductEntry
             })
           )})
@@ -135,8 +136,27 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        onChange={(e) => lagerProduct.amount = Number(e.target.value)}
-                        defaultValue={0}
+                        style = {{width: 75}}
+                        InputProps={{ inputProps: { min: 0, max: lagerProduct.menge } }}
+                        onChange={(e) => {
+                          if(Number(e.target.value) > lagerProduct.menge) {
+                            
+                            alert('Es gibt nur ' + lagerProduct.menge + ' Stück ' + lagerProduct.name + ' im Lager')
+                            lagerProduct.amount = lagerProduct.menge
+                            const s = document.getElementById(lagerProduct.ean + 'verkauf') as HTMLInputElement;
+                            
+                            s.value = String(lagerProduct.menge);
+
+                          } else if((Number(e.target.value)) < 0 ){
+                            alert('Die Menge soll positiv sein')
+                            lagerProduct.amount = 0
+                            const s = document.getElementById(lagerProduct.ean + 'verkauf') as HTMLInputElement;
+                
+                            s.value = '0';
+                          }
+                            lagerProduct.amount = Number(e.target.value)
+                        }}
+                        
                     />
 
                   </TableCell>

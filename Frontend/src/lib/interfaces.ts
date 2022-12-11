@@ -49,6 +49,7 @@ export interface IOrderProductEntry {
   ean: string
   price: number
   amount: number
+  menge: number
 }
 export interface ProductEAN {
   ean: string
