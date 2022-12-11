@@ -31,9 +31,9 @@ export default function MostPopularProducts() {
         const beliebsteLagerProductsResponse = response.data as IBeliebtesProdukt[]
         setBeliebsteLagerProducts(beliebsteLagerProductsResponse)
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        alert('Es gibt keine Verbindung zur Datenbank')
+
       })
   }
 

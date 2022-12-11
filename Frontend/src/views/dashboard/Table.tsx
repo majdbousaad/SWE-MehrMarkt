@@ -23,9 +23,9 @@ const DashboardTable = () => {
         const anstehendeLiefererungenResponse = response.data as ILieferungAll[]
         setAnstehendeLiefererungen(anstehendeLiefererungenResponse)
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        alert('Es gibt keine Verbindung zur Datenbank')
+
       })
   }
 

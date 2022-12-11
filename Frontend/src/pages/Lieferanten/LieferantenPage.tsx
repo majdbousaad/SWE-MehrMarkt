@@ -31,9 +31,9 @@ export default function LieferantenPage() {
           }))
         )
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        alert('Es gibt keine Verbindung zur Datenbank')
+
       })
   }
 

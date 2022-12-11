@@ -27,15 +27,13 @@ export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { 
     await axios
       .get('http://localhost:8080/lieferant/' + lieferant.id)
       .then(response => {
-        //TODO: Delete this console.log when done
-        console.log(response)
         const lieferantenResponse = response.data as ILieferantJsonResponseOne
         setProfielDialogLieferant(lieferantenResponse)
         setProfielDialogInitialLieferant(lieferantenResponse)
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        alert('Es gibt keine Verbindung zur Datenbank')
+
       })
   }
 

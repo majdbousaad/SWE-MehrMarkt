@@ -34,8 +34,6 @@ export default function LagerStatus() {
       return row.name
     }))
 
-    console.log(data)
-    console.log(categories)
   }, [statistik])
 
    function fetchStatistik() {
@@ -45,9 +43,9 @@ export default function LagerStatus() {
         const statistikResponse = response.data as ILagerStatistik[]
         setStatistik(statistikResponse)
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        alert('Es gibt keine Verbindung zur Datenbank')
+
       })
   }
   const series = [

@@ -29,9 +29,8 @@ export default function EinkaufPage() {
         const anstehendeLiefererungenResponse = response.data as ILieferungAll[]
         setAnstehendeLiefererungen(anstehendeLiefererungenResponse)
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        alert('Es gibt keine Verbindung zur Datenbank')
       })
   }
 
@@ -42,9 +41,9 @@ export default function EinkaufPage() {
         const gelieferteLiefererungenResponse = response.data as ILieferungAll[]
         setGelieferteLiefererungen(gelieferteLiefererungenResponse)
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        alert('Es gibt keine Verbindung zur Datenbank')
+
       })
   }
 

@@ -27,8 +27,7 @@ const Dashboard = () => {
         setAnzahl(anzahlResponse)
       })
       .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+        alert(error)
       })
   }
   

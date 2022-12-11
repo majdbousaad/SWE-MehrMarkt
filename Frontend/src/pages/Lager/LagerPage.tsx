@@ -30,9 +30,8 @@ export default function LagerPage() {
         const lagerProductsResponse = response.data as ILagerProduct[]
         setLagerProducts(lagerProductsResponse)
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        alert('Es gibt keine Verbindung zur Datenbank')
       })
   }
 

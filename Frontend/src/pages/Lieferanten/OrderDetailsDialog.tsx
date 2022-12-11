@@ -54,7 +54,6 @@ export default function OrderDetailsDialog({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bestellung)
       }
-      console.log(bestellung)
     
       fetch('http://localhost:8080/bestellung', requestOptions).then(response => {
       
@@ -63,7 +62,6 @@ export default function OrderDetailsDialog({
       } else {
         alert("Bestellung ist aufgegeben")
       }
-      console.log(response)
     })
     deleteAllWaren()
     setIsDialogOpen(false)

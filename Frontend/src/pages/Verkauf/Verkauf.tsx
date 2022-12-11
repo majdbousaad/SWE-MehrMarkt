@@ -34,9 +34,9 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                 } as IOrderProductEntry
             })
           )})
-        .catch(error => {
-          console.log('missing error handling')
-          console.log(error)
+        .catch(() => {
+          alert('Es gibt keine Verbindung zur Datenbank')
+
         })
     }
   
@@ -55,7 +55,6 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
     }
     if(!exists)
       waren.push({product: {ean: ean}, menge: menge, name:name})
-    console.log(waren)
   }
 
   function deleteFromWaren(ean: string){

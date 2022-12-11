@@ -39,14 +39,12 @@ export default function PlaceOrderDialog({
     await axios
       .get('http://localhost:8080/lieferant/' + id + '/products')
       .then(response => {
-        //TODO: Delete this console.log when done
-        console.log(response)
+        
         const products = response.data as IOrderProductEntry[]
         setRows(products)
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        alert('Es gibt keine Verbindung zur Datenbank')
       })
   }
 
@@ -78,7 +76,6 @@ export default function PlaceOrderDialog({
     }
     if(!exists)
       waren.push({product: {ean: ean}, menge: menge, name:name})
-    console.log(waren)
   }
 
   function deleteFromWaren(ean: string){

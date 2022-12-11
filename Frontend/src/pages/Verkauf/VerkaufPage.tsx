@@ -17,9 +17,9 @@ export default function VerkaufPage() {
         const verkaeufeResponse = response.data as IVerkaufAll[]
         setVerkaeufe(verkaeufeResponse)
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        alert('Es gibt keine Verbindung zur Datenbank')
+
       })
   }
 
@@ -37,9 +37,9 @@ export default function VerkaufPage() {
         const anzahlResponse = response.data as {anzahl: number}
         setAnzahl(anzahlResponse)
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        alert('Es gibt keine Verbindung zur Datenbank')
+
       })
   }
 
