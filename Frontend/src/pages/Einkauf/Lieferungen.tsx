@@ -13,34 +13,41 @@ import CardContent from '@mui/material/CardContent'
 import DownloadDoneIcon from '@mui/icons-material/DownloadDone';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { TableContainer } from '@mui/material'
+import EinkaufSummary, { IEinkaufOne } from './EinkaufSummary'
+import {useState} from 'react'
+import axios from 'axios'
+import {useSnackbar} from 'notistack'
+import { formatDate } from 'src/lib/functions'
 
 export default function Lieferungen({ lieferungen, orderArrived, arrived }: { lieferungen: ILieferungAll[], orderArrived: (lieferung_id: number) => void, arrived: boolean}) {
   
-  function padTo2Digits(num: number) {
-    return num.toString().padStart(2, '0');
-  }
-  
-  // 👇️ format as "YYYY-MM-DD hh:mm:ss"
-  // You can tweak formatting easily
-  function formatDate(date: Date) {
-    return (
-      'am ' + 
-      [
-        
-        padTo2Digits(date.getDate()),
-        padTo2Digits(date.getMonth() + 1),
-        date.getFullYear()
-      ].join('.') +
-      ' um ' +
-      [
-        padTo2Digits(date.getHours()),
-        padTo2Digits(date.getMinutes()),
-        padTo2Digits(date.getSeconds()),
-      ].join(':')
-      + ' Uhr'
-    );
+
+  async function fetchEinkauf(einkauf_id: number) {
+    await axios
+      .get('http://localhost:8080/bestellung/' + einkauf_id)
+      .then(response => {
+        const einkaufResponse = response.data as IEinkaufOne
+        setEinkauf(einkaufResponse)
+      })
+      .catch(() => {
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
+
+      })
   }
 
+  const [einkauf, setEinkauf] = useState<IEinkaufOne>()
+  const [einkaufDialogOpen, setEinkaufDialogOpen] = useState(false)
+  const {enqueueSnackbar} = useSnackbar()
+
+  function onEinkaufDialogClose() {
+    setEinkaufDialogOpen(false)
+  }
+  async function onEinkaufDialogOpen(einkauf_id: number) {
+    await fetchEinkauf(einkauf_id)
+
+    setEinkaufDialogOpen(true)
+  }
+  
   return (
     <>
       <Card>
@@ -67,7 +74,7 @@ export default function Lieferungen({ lieferungen, orderArrived, arrived }: { li
                         size='small'
                         sx={{ p: 0, marginLeft: 1 }}
                         
-                        //onClick={() => orderArrived(anstehendeLiefererung.id)}
+                        onClick={() => onEinkaufDialogOpen(lieferung.id)}
                       >
                         <OpenInNewIcon fontSize='small' />
                       </IconButton>
@@ -92,6 +99,9 @@ export default function Lieferungen({ lieferungen, orderArrived, arrived }: { li
         </TableContainer>
         </CardContent>
       </Card>
+      {einkauf && (
+      <EinkaufSummary handleClose={onEinkaufDialogClose} open={einkaufDialogOpen} einkauf={einkauf} arrived={arrived}/>
+      )}
     </>
   )
 }

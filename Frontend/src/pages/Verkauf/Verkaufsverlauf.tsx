@@ -16,6 +16,7 @@ import Paper from '@mui/material/Paper'
 import axios from 'axios'
 import VerkaufSummary, { IVerkaufOne } from './VerkaufSummary'
 import {useSnackbar} from 'notistack'
+import { formatDate } from 'src/lib/functions'
 
 export interface IVerkaufAll {
     Datum: string, 
@@ -74,7 +75,7 @@ export default function Verkaufsverlauf({verkaeufe, fetchVerkaeufe}:{verkaeufe:I
             <TableBody>
                 {verkaeufe?.map((verkauf: IVerkaufAll) => (
                 <TableRow hover key={verkauf.id} >
-                    <TableCell>{verkauf.Datum}</TableCell>
+                    <TableCell>{formatDate(new Date(verkauf.Datum))}</TableCell>
                     <TableCell>
                     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                         <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{verkauf.id}</Typography>
