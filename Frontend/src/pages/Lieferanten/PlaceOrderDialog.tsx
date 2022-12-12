@@ -149,7 +149,7 @@ export default function PlaceOrderDialog({
                       <TableCell component='th' scope='row'>
                         {row.name}
                       </TableCell>
-                      <TableCell align='right'>{row.price}</TableCell>
+                      <TableCell align='right'>{row.price}€</TableCell>
                       <TableCell align='right'>
                       <TextField
                           id={row.ean + 'bestellung'}

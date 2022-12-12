@@ -83,7 +83,7 @@ export default function VerkaufSummary({
                       <TableCell component='th' scope='row'>
                         {row?.name}
                       </TableCell>
-                      <TableCell align='right'>{row?.price}</TableCell>
+                      <TableCell align='right'>{row?.price}€</TableCell>
                       <TableCell align='right'>{row?.menge}</TableCell>
                     </TableRow>
                   ))}

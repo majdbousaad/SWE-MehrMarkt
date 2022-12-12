@@ -89,7 +89,7 @@ export default function Verkaufsverlauf({verkaeufe, fetchVerkaeufe}:{verkaeufe:I
                         </IconButton>
                     </Box>
                     </TableCell>
-                    <TableCell>{verkauf.gesamtPreis}</TableCell>
+                    <TableCell>{verkauf.gesamtPreis}€</TableCell>
                 </TableRow>
                 ))}
             </TableBody>
