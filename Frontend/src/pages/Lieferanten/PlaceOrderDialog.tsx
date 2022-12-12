@@ -2,6 +2,8 @@ import AppBar from '@mui/material/AppBar'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import IconButton from '@mui/material/IconButton'
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import CloseIcon from 'mdi-material-ui/Close'
@@ -15,28 +17,42 @@ import TableBody from '@mui/material/TableBody'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import TextField from '@mui/material/TextField'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { Ware } from 'src/lib/interfaces'
+import  OrderDetailsDialog  from './OrderDetailsDialog'
+import {useSnackbar} from 'notistack'
 
-export function PlaceOrderDialog({
+export default function PlaceOrderDialog({
   isOpen,
-  setIsDialogOpen
+  setIsDialogOpen,
+  id
 }: {
   isOpen: boolean
   setIsDialogOpen: (isOpen: boolean) => void
+  id: number
 }) {
   function handleClose() {
     setIsDialogOpen(false)
   }
-
-  function createData(
-    name: string,
-    ean: string,
-    price: number,
-    amount: number
-  ): { name: string; ean: string; price: number; amount: number } {
-    return { name, ean, price, amount }
+  const {enqueueSnackbar} = useSnackbar()
+  async function fetchProducts(id: number) {
+    await axios
+      .get('http://localhost:8080/lieferant/' + id + '/products')
+      .then(response => {
+        
+        const products = response.data as IOrderProductEntry[]
+        setRows(products)
+      })
+      .catch(() => {
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank')
+      })
   }
 
-  const rows: IOrderProductEntry[] = [createData('Cupcake', '313123', 3.7, 0), createData('Brot', '1432135', 1.42, 0)]
+  const [rows, setRows] = useState<IOrderProductEntry[]>([])
+  useEffect(()=>{
+    fetchProducts(id)
+  }, [id])
 
   interface IOrderProductEntry {
     name: string
@@ -45,6 +61,62 @@ export function PlaceOrderDialog({
     amount: number
   }
 
+
+  const [waren, setWaren] = useState<Ware[]>([])
+
+  function addToWaren(ean: string, menge: number, name:string){
+    if(menge == 0){
+      return
+    }
+    let exists = false;
+    for(let i = 0; i < waren.length; i++){
+      if(waren[i].product.ean == ean){
+        exists = true;
+        waren[i].menge = menge;
+      }
+    }
+    if(!exists)
+      waren.push({product: {ean: ean}, menge: menge, name:name})
+  }
+
+  function deleteFromWaren(ean: string){
+    for(let i = 0; i < waren.length; i++){
+      if(waren[i].product.ean == ean){
+        waren.splice(i, 1);
+        
+      }
+    }
+
+    setRows(rows.map(row => {
+      
+      if(row.ean === ean){
+
+        return {...row, amount: 0}
+      }
+
+      return row
+    }));
+
+    const s = document.getElementById(ean + 'bestellung') as HTMLInputElement;
+    s.value = String(0);
+    
+
+  }
+
+  function deleteAllWaren(){
+    setWaren([])
+    setRows(rows?.map(row => {
+
+        return {...row, amount: 0}
+  
+      }));
+
+    rows?.map(row =>{
+      const s = document.getElementById(row?.ean + 'bestellung') as HTMLInputElement;
+    s.value = String(0);
+    })
+  }
+  
   return (
     <Dialog fullScreen open={isOpen} onClose={handleClose}>
       <AppBar sx={{ position: 'relative' }}>
@@ -55,9 +127,7 @@ export function PlaceOrderDialog({
           <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
             Bestellung aufgeben
           </Typography>
-          <Button autoFocus color='success' variant='contained'>
-            Zur Bestellübersicht
-          </Button>
+          <OrderDetailsButton deleteAllWaren={deleteAllWaren} waren={waren}  deleteFromWaren={deleteFromWaren} lieferant_id={id} />
         </Toolbar>
       </AppBar>
       <DialogContent>
@@ -75,21 +145,41 @@ export function PlaceOrderDialog({
                 </TableHead>
                 <TableBody>
                   {rows.map(row => (
-                    <TableRow key={row.name}>
+                    <TableRow key={row.ean}>
                       <TableCell component='th' scope='row'>
                         {row.name}
                       </TableCell>
                       <TableCell align='right'>{row.price}</TableCell>
                       <TableCell align='right'>
-                        <TextField
-                          size='small'
-                          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                          defaultValue={row.amount}
-                        />
+                      <TextField
+                          id={row.ean + 'bestellung'}
+                          type="number"
+                          InputLabelProps={{
+                              shrink: true,
+                          }}
+                          onChange={(e) => row.amount = Number(e.target.value)}
+                          defaultValue={0}
+                      />
                       </TableCell>
                       <TableCell align='right'>
-                        <Button variant='outlined'>BESTELLEN</Button>
+                      <IconButton 
+                      color="primary" 
+                      aria-label="add to shopping cart"
+                      onClick={() => addToWaren(row.ean,row.amount, row.name)}
+                      >
+                      
+                      <ShoppingCartCheckoutIcon />
+                      </IconButton>
+
+                      <IconButton 
+                      color="primary" 
+                      aria-label="add to shopping cart"
+                      onClick={() => {deleteFromWaren(row.ean);}}
+                      >
+                      <DeleteIcon />
+                      </IconButton>
                       </TableCell>
+                        
                     </TableRow>
                   ))}
                 </TableBody>
@@ -99,5 +189,29 @@ export function PlaceOrderDialog({
         </Card>
       </DialogContent>
     </Dialog>
+  )
+}
+
+function OrderDetailsButton({ 
+  waren, 
+  lieferant_id,
+  deleteFromWaren,
+  deleteAllWaren
+}: 
+{ 
+  waren: Ware[], 
+  deleteFromWaren: (ean: string) => void
+  lieferant_id: number
+  deleteAllWaren: () => void
+}) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  return (
+    <>
+      <Button autoFocus color='success' variant='contained' onClick={() => setIsDialogOpen(true)}>
+            Zur Bestellübersicht
+          </Button>
+      <OrderDetailsDialog deleteAllWaren={deleteAllWaren} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren} lieferant_id={lieferant_id}/>
+    </>
   )
 }

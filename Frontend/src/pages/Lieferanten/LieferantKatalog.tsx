@@ -39,13 +39,13 @@ export default function LieferantKatalog({
   }
 
   const [rows, setRows] = useState<IRow[]>(
-    products.map(row => {
+    products?.map(row => {
       return createData(uuidv4(), row.name, row.ean, row.price, false)
     })
   )
 
   function updateProduct(id: string, name: string, ean: string, price: number) {
-    const newRows = rows.map(row => {
+    const newRows = rows?.map(row => {
       if (row.id === id) {
         return createData(id, name, ean, price, false)
       } else {
@@ -53,7 +53,7 @@ export default function LieferantKatalog({
       }
     })
     setRows(newRows)
-    const catalog = newRows.map(row => {
+    const catalog = newRows?.map(row => {
       return {
         name: row.name,
         ean: row.ean,
@@ -61,7 +61,7 @@ export default function LieferantKatalog({
       }
     })
 
-    const productsForLieferant = newRows.map(row => {
+    const productsForLieferant = newRows?.map((row) => {
       return {
         id: row.id,
         name: row.name,
@@ -143,7 +143,7 @@ function KatalogProdukt({
   const priceRef = useRef<any>(null)
 
   function onSave() {
-    updateProduct(id, nameRef.current.value, EANRef.current.value, parseFloat(priceRef.current.value))
+    updateProduct(id, nameRef.current.value, (forceEditing)? EANRef.current.value : ean, parseFloat(priceRef.current.value))
     setIsEditing2(false)
   }
 
@@ -180,6 +180,7 @@ function KatalogProdukt({
               size='small'
             />
           </TableCell>
+          {forceEditing && (
           <TableCell align='left'>
             <TextField
               inputRef={EANRef}
@@ -190,6 +191,9 @@ function KatalogProdukt({
               size='small'
             />
           </TableCell>
+          ) || (<TableCell align='left'>
+          <Typography>{ean}</Typography>
+        </TableCell>)}
           <TableCell align='left'>
             <TextField
               inputRef={priceRef}
@@ -201,7 +205,7 @@ function KatalogProdukt({
             />
           </TableCell>
           <TableCell align='center'>
-            <Button size='small' color='success' variant='outlined' onClick={() => onSave()}>
+            <Button size='small' color='success' variant='outlined' onClick={() => {onSave()}}>
               Speichern
             </Button>
           </TableCell>

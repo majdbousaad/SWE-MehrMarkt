@@ -1,3 +1,5 @@
 import LieferantenPage from './LieferantenPage'
 
-export default LieferantenPage
+export default function () {
+  return <LieferantenPage />
+}

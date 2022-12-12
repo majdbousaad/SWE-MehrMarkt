@@ -123,6 +123,11 @@ public class LagerProductController {
         return objectMapper.treeToValue(patched, LagerProdukt.class);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<Object> search(@RequestParam String text ){
+
+        return ResponseEntity.ok(lagerProduktService.searchLagerProdukte(text));
+    }
 
 
 

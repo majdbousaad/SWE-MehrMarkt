@@ -1,3 +1,5 @@
-import EinkaufPage from './LagerPage'
+import EinkaufPage from './EinkaufPage'
 
-export default EinkaufPage
+export default function () {
+  return <EinkaufPage />
+}

@@ -12,8 +12,10 @@ import LieferantKatalog from './LieferantKatalog'
 
 import { v4 as uuidv4 } from 'uuid'
 import { ICatalogProducts, ILieferantJsonResponseOne, ProductEntry } from '../../lib/interfaces'
-import { LieferantProfilSection } from './LieferantProfilSection'
-import { PlaceOrderDialog } from './PlaceOrderDialog'
+import  LieferantProfilSection from './LieferantProfilSection'
+import  PlaceOrderDialog from './PlaceOrderDialog'
+import {useSnackbar} from 'notistack'
+
 
 export default function LieferantenProfilDialog({
   lieferant,
@@ -33,6 +35,7 @@ export default function LieferantenProfilDialog({
   const [isDirty, setIsDirty] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
+  const {enqueueSnackbar} = useSnackbar()
   const catalogWithID = lieferant?.products?.map(row => {
     return {
       id: uuidv4(),
@@ -63,15 +66,19 @@ export default function LieferantenProfilDialog({
   }
   function handleSaveEditing() {
     setIsEditing(false)
-    setIsDirty(JSON.stringify(initialLieferant) !== JSON.stringify(lieferant))
-
-    console.log(initialLieferant)
-    console.log(lieferant)
+    const liefer = {...lieferant, products:products?.map(row => {
+      
+      return {
+        ean:row.ean,
+        price: row.preis,
+        name:row.name
+      }
+    })}
+    setIsDirty(JSON.stringify(initialLieferant) !== JSON.stringify(liefer))
   }
 
   function onProductsUpdate(pProducts: ProductEntry[]) {
     setProducts(pProducts)
-    console.log(pProducts)
   }
   async function updateLieferant() {
     const requestOptions = {
@@ -88,21 +95,13 @@ export default function LieferantenProfilDialog({
     }
 
     await fetch('http://localhost:8080/lieferant/' + lieferant.id, requestOptions)
-      .then(response => response.json())
-      .then(data => console.log(data))
+      .catch(() =>{
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
+      })
   }
 
   async function handleSave() {
-    console.log(
-      JSON.stringify({
-        id: lieferant.id,
-        adresse: lieferant.address,
-        contact: lieferant.contact,
-        products: products,
-        name: lieferant.name,
-        status: lieferant.status ? 'aktiv' : 'inaktiv'
-      })
-    )
+
     setIsDirty(false)
     await updateLieferant()
 
@@ -211,7 +210,7 @@ export function DisplayEditingControl({
   }
 }
 
-function PlaceOrderButton({ catalog, lieferant }: { catalog: ProductEntry[]; lieferant: ILieferantJsonResponseOne }) {
+function PlaceOrderButton({ lieferant }: { catalog: ProductEntry[]; lieferant: ILieferantJsonResponseOne }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   return (
@@ -219,7 +218,7 @@ function PlaceOrderButton({ catalog, lieferant }: { catalog: ProductEntry[]; lie
       <Button sx={{ marginLeft: 2 }} autoFocus color='info' variant='contained' onClick={() => setIsDialogOpen(true)}>
         Bestellung aufgeben
       </Button>
-      <PlaceOrderDialog isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
+      <PlaceOrderDialog isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} id={lieferant.id} />
     </>
   )
 }

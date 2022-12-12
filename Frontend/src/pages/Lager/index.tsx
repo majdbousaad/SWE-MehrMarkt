@@ -1,3 +1,5 @@
 import LagerPage from './LagerPage'
 
-export default LagerPage
+export default function () {
+  return <LagerPage />
+}

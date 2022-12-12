@@ -21,4 +21,6 @@ public interface LagerProduktService {
 
     Integer getAnstehendeMenge(String ean);
 
+    List<LagerProdukt> searchLagerProdukte(String text);
+
 }

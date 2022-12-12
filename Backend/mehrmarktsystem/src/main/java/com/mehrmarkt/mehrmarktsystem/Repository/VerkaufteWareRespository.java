@@ -15,11 +15,12 @@ public interface VerkaufteWareRespository extends JpaRepository<VerkaufteWare, I
             "WHERE verkauf.verkaufsdatum between ?1 AND ?2 ")
     Integer getAnzahlVerkaufe(LocalDateTime beginn, LocalDateTime end);
 
-    @Query("SELECT l.name as name, sum(v.menge) as verkaeufe, l.menge as verbleibend " +
-            "from VerkaufteWare v " +
-            "join LagerProdukt l " +
-            "on v.lagerProdukt.EAN = l.EAN " +
-            "group by l.name order by verkaeufe desc")
+    @Query(nativeQuery = true,
+            value = "SELECT l.name as name, sum(v.menge) as verkaeufe, l.amount as verbleibend " +
+            "from verkaufte_ware v " +
+            "join lager_produkt l " +
+            "on v.EAN = l.EAN " +
+            "group by l.name order by verkaeufe desc LIMIT 10")
     List<BeliebsteProdukt> getBeliebsteProdukte();
 
     interface BeliebsteProdukt {

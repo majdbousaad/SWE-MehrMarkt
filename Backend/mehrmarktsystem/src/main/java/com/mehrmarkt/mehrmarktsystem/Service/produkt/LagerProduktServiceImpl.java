@@ -49,4 +49,9 @@ public class LagerProduktServiceImpl implements LagerProduktService{
     public Integer getAnstehendeMenge(String ean) {
         return lagerProduktRepository.getAnstehendeMenge(ean);
     }
+
+    @Override
+    public List<LagerProdukt> searchLagerProdukte(String text) {
+        return lagerProduktRepository.findByEANContainingOrNameContainingIgnoreCase(text, text);
+    }
 }

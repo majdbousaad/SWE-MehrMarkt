@@ -19,20 +19,24 @@ import java.util.Map;
 
 public class ResponseHandler {
     public static ResponseEntity<Object> generateLagerStatistics(Object responseObj) {
-        Map<String, Object> map = new HashMap<String, Object>();
+
         List<Lager> lagers = (List<Lager>) responseObj;
 
+        List<Map<String, Object>> mapList = new ArrayList<>();
         int maxSize = 0;
         int maxMax = 0;
         for (Lager lager :
                 lagers) {
-            map.put(lager.getName(), lager.getSize() * 100/ lager.getMax());
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("name", lager.getName());
+            map.put("data", lager.getSize()*1.0 / lager.getMax());
             maxMax += lager.getMax();
             maxSize += lager.getSize();
+            mapList.add(map);
         }
-        map.put("total", maxSize * 100/maxMax);
+        mapList.add(new HashMap<>(Map.of("name", "total", "data" , maxSize*1.0/maxMax)));
 
-        return new ResponseEntity<Object>(map, HttpStatus.OK);
+        return new ResponseEntity<Object>(mapList, HttpStatus.OK);
     }
 
     public static ResponseEntity<Object> sendAllLieferanten(Object responseObj){

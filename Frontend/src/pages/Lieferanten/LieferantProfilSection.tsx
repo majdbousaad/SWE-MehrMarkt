@@ -6,9 +6,8 @@ import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { ILieferantJsonResponseOne } from '../../lib/interfaces'
 import { DisplayEditingControl } from './LieferantenProfilDialog'
-import { useState } from 'react'
 
-export function LieferantProfilSection({
+export default function LieferantProfilSection({
   lieferant,
   setLieferant,
   isEditing,
@@ -22,7 +21,7 @@ export function LieferantProfilSection({
   handleStartEditing: () => void
 }) {
   function onStatusChange() {
-    setLieferant({ ...lieferant, status: !lieferant.status })
+    setLieferant({ ...lieferant, status: !lieferant?.status })
   }
 
   return (
@@ -33,7 +32,7 @@ export function LieferantProfilSection({
       <Box className='p-5 flex flex-col gap-4'>
         <TextField
           placeholder='Name*'
-          defaultValue={lieferant.name}
+          defaultValue={lieferant?.name}
           disabled={!isEditing}
           onChange={e => setLieferant({ ...lieferant, name: e.target.value })}
           fullWidth
@@ -42,7 +41,7 @@ export function LieferantProfilSection({
         />
         <TextField
           placeholder='Anschrift*'
-          defaultValue={lieferant.address}
+          defaultValue={lieferant?.address}
           onChange={e => setLieferant({ ...lieferant, address: e.target.value })}
           disabled={!isEditing}
           fullWidth
@@ -51,7 +50,7 @@ export function LieferantProfilSection({
         />
         <TextField
           placeholder='Kontaktdaten*'
-          defaultValue={lieferant.contact}
+          defaultValue={lieferant?.contact}
           onChange={e => setLieferant({ ...lieferant, contact: e.target.value })}
           disabled={!isEditing}
           fullWidth
@@ -60,8 +59,8 @@ export function LieferantProfilSection({
         />
         <FormGroup>
           <FormControlLabel
-            control={<Switch checked={lieferant.status} onChange={onStatusChange} />}
-            label={lieferant.status ? 'Aktiv' : 'Inaktiv'}
+            control={<Switch checked={lieferant?.status} onChange={onStatusChange} />}
+            label={lieferant?.status ? 'Aktiv' : 'Inaktiv'}
             disabled={!isEditing}
           />
         </FormGroup>

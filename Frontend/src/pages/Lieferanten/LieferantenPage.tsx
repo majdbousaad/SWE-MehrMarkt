@@ -6,10 +6,12 @@ import LieferantenTabelle from './LieferantenTabelle'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Lieferant, ILieferantJsonResponseAll } from '../../lib/interfaces'
+import {useSnackbar} from 'notistack'
+
 
 export default function LieferantenPage() {
   const [lieferanten, setLieferanten] = useState<Lieferant[]>([])
-
+  const {enqueueSnackbar} = useSnackbar()
   useEffect(() => {
     fetchLieferanten()
   }, [])
@@ -27,13 +29,14 @@ export default function LieferantenPage() {
             contact: lieferant.contact,
             deliveryTime: lieferant.deliveryTime,
             status: lieferant.status ? 'aktiv' : 'inaktiv',
-            catalog: []
+            catalog: [],
+            reliable: lieferant.reliable
           }))
         )
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
+
       })
   }
 

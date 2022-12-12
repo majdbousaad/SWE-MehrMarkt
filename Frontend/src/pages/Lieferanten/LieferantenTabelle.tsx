@@ -13,12 +13,14 @@ import LieferantenProfilDialog from './LieferantenProfilDialog'
 import { useState } from 'react'
 import { Lieferant, ILieferantJsonResponseOne } from '../../lib/interfaces'
 import axios from 'axios'
+import {useSnackbar} from 'notistack'
 
 export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { lieferanten: Lieferant[], fetchLieferanten: () => void }) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false)
   const [profielDialogLieferant, setProfielDialogLieferant] = useState<ILieferantJsonResponseOne>()
   const [profielDialogInitialLieferant, setProfielDialogInitialLieferant] = useState<ILieferantJsonResponseOne>()
 
+  const {enqueueSnackbar} = useSnackbar()
   function onProfileDialogClose() {
     setProfileDialogOpen(false)
   }
@@ -27,15 +29,13 @@ export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { 
     await axios
       .get('http://localhost:8080/lieferant/' + lieferant.id)
       .then(response => {
-        //TODO: Delete this console.log when done
-        console.log(response)
         const lieferantenResponse = response.data as ILieferantJsonResponseOne
         setProfielDialogLieferant(lieferantenResponse)
         setProfielDialogInitialLieferant(lieferantenResponse)
       })
-      .catch(error => {
-        console.log('missing error handling')
-        console.log(error)
+      .catch(() => {
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
+
       })
   }
 
@@ -65,6 +65,7 @@ export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { 
                   <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                     <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{lieferant.name}</Typography>
                     <IconButton
+                      color="primary"
                       size='small'
                       sx={{ p: 0, marginLeft: 1 }}
                       onClick={() => onProfileDialogOpen(lieferant)}
@@ -83,6 +84,14 @@ export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { 
                     size='small'
                     sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}
                   />
+                  {!lieferant.reliable && (
+                  <Chip
+                    label={'unzuverlässig'}
+                    color={'secondary'}
+                    size='small'
+                    sx={{ fontWeight: 500, fontSize: '0.875rem !important', margin: '5px' }}
+                  />
+                  )}
                 </TableCell>
               </TableRow>
             ))}
