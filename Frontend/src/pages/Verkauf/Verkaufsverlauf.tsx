@@ -15,12 +15,14 @@ import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import axios from 'axios'
 import VerkaufSummary, { IVerkaufOne } from './VerkaufSummary'
+import {useSnackbar} from 'notistack'
 
 export interface IVerkaufAll {
     Datum: string, 
     id:number, 
     gesamtPreis: number
 }
+
 export default function Verkaufsverlauf({verkaeufe, fetchVerkaeufe}:{verkaeufe:IVerkaufAll[], fetchVerkaeufe: () => void}) {
 
 
@@ -30,7 +32,7 @@ export default function Verkaufsverlauf({verkaeufe, fetchVerkaeufe}:{verkaeufe:I
 
   const [verkaufDialogOpen, setVerkaufDialogOpen] = useState(false)
   const [verkauf, setVerkauf] = useState<IVerkaufOne>()
-
+  const {enqueueSnackbar} = useSnackbar()
   function onVerkaufDialogClose() {
     setVerkaufDialogOpen(false)
   }
@@ -43,7 +45,7 @@ export default function Verkaufsverlauf({verkaeufe, fetchVerkaeufe}:{verkaeufe:I
         setVerkauf(verkaufResponse)
       })
       .catch(() => {
-        alert('Es gibt keine Verbindung zur Datenbank')
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
 
       })
   }

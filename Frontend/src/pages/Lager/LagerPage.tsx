@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { CardHeader, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-
+import {useSnackbar} from 'notistack'
 
 
 export interface ILagerProduct{
@@ -18,7 +18,7 @@ export interface ILagerProduct{
 
 export default function LagerPage() {
   const [lagerProducts, setLagerProducts] = useState<ILagerProduct[]>([])
-
+  const {enqueueSnackbar} = useSnackbar()
   useEffect(() => {
     fetchLagerProducts()
   }, [])
@@ -31,7 +31,7 @@ export default function LagerPage() {
         setLagerProducts(lagerProductsResponse)
       })
       .catch(() => {
-        alert('Es gibt keine Verbindung zur Datenbank')
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant:'error'})
       })
   }
 

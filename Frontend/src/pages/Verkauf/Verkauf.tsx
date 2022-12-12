@@ -9,13 +9,13 @@ import { Typography, AppBar,Toolbar, Card, CardContent, IconButton, Table, Table
 import InputAdornment from '@mui/material/InputAdornment';
 import Magnify from 'mdi-material-ui/Magnify';
 import TableContainer from '@mui/material/TableContainer';
-
+import {useSnackbar} from 'notistack'
 
 
 export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: () => void, fetchAnzahl: () => void}) {
     const [lagerProducts, setLagerProducts] = useState<IOrderProductEntry[]>([])
     const [search, setSearch] = useState<string>('')
-
+    const {enqueueSnackbar} = useSnackbar()
     useEffect(() => {
       fetchLagerProducts(search)
     }, [search])
@@ -36,7 +36,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
             })
           )})
         .catch(() => {
-          alert('Es gibt keine Verbindung zur Datenbank')
+          enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
 
         })
     }

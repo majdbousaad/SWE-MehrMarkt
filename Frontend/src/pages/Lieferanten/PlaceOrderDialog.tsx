@@ -21,6 +21,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Ware } from 'src/lib/interfaces'
 import  OrderDetailsDialog  from './OrderDetailsDialog'
+import {useSnackbar} from 'notistack'
 
 export default function PlaceOrderDialog({
   isOpen,
@@ -34,7 +35,7 @@ export default function PlaceOrderDialog({
   function handleClose() {
     setIsDialogOpen(false)
   }
-
+  const {enqueueSnackbar} = useSnackbar()
   async function fetchProducts(id: number) {
     await axios
       .get('http://localhost:8080/lieferant/' + id + '/products')
@@ -44,7 +45,7 @@ export default function PlaceOrderDialog({
         setRows(products)
       })
       .catch(() => {
-        alert('Es gibt keine Verbindung zur Datenbank')
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank')
       })
   }
 

@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import {CardHeader} from '@mui/material'
 import Lieferungen from './Lieferungen'
+import {useSnackbar} from  'notistack'
 
 export interface ILieferungAll{
   tats: string,
@@ -16,7 +17,7 @@ export interface ILieferungAll{
 export default function EinkaufPage() {
   const [anstehendeLiefererungen, setAnstehendeLiefererungen] = useState<ILieferungAll[]>([])
   const [gelieferteLiefererungen, setGelieferteLiefererungen] = useState<ILieferungAll[]>([])
-
+  const {enqueueSnackbar} = useSnackbar()
   useEffect(() => {
     fetchAnstehendeLiefererungen()
     fetchGelieferteLiefererungen()
@@ -30,7 +31,7 @@ export default function EinkaufPage() {
         setAnstehendeLiefererungen(anstehendeLiefererungenResponse)
       })
       .catch(() => {
-        alert('Es gibt keine Verbindung zur Datenbank')
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
       })
   }
 
@@ -42,7 +43,7 @@ export default function EinkaufPage() {
         setGelieferteLiefererungen(gelieferteLiefererungenResponse)
       })
       .catch(() => {
-        alert('Es gibt keine Verbindung zur Datenbank')
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
 
       })
   }
@@ -56,6 +57,8 @@ export default function EinkaufPage() {
     fetch('http://localhost:8080/bestellung/' + orderId, requestOptions).then(() => {
       fetchAnstehendeLiefererungen()
       fetchGelieferteLiefererungen()
+    }) .catch(() => {
+      enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
     })
   }
 

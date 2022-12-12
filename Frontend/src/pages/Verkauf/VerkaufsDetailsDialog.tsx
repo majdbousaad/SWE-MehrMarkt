@@ -16,7 +16,7 @@ import TableBody from '@mui/material/TableBody'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import { Ware } from 'src/lib/interfaces'
-
+import {useSnackbar} from 'notistack'
 
 export default function VerkaufsDetailsDialog({
   isOpen,
@@ -39,7 +39,7 @@ export default function VerkaufsDetailsDialog({
   function handleClose() {
     setIsDialogOpen(false)
   }
-
+  const {enqueueSnackbar} = useSnackbar()
   function verkaufen(waren: Ware[]){
     const verkauf = {
         verkaufteWaren: waren?.map((ware: Ware) => {
@@ -60,6 +60,8 @@ export default function VerkaufsDetailsDialog({
       fetchVerkaeufe()
       deleteAllWaren()
       fetchAnzahl()
+    }).catch(() => {
+      enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
     })
     setIsDialogOpen(false)
 

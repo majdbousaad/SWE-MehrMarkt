@@ -5,11 +5,13 @@ import Verkaufsverlauf, { IVerkaufAll } from './Verkaufsverlauf'
 import Verkauf from './Verkauf'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
+import {useSnackbar} from 'notistack'
+
 
 export default function VerkaufPage() {
 
   const [verkaeufe, setVerkaeufe] = useState<IVerkaufAll[]>([])
-
+  const {enqueueSnackbar} = useSnackbar()
   function fetchVerkaeufe(): void {
     axios
       .get('http://localhost:8080/verkauf')
@@ -18,7 +20,7 @@ export default function VerkaufPage() {
         setVerkaeufe(verkaeufeResponse)
       })
       .catch(() => {
-        alert('Es gibt keine Verbindung zur Datenbank')
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
 
       })
   }
@@ -38,7 +40,7 @@ export default function VerkaufPage() {
         setAnzahl(anzahlResponse)
       })
       .catch(() => {
-        alert('Es gibt keine Verbindung zur Datenbank')
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
 
       })
   }
