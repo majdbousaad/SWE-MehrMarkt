@@ -60,6 +60,12 @@ export default function VerkaufsDetailsDialog({
       fetchVerkaeufe()
       deleteAllWaren()
       fetchAnzahl()
+      let gesamteMenge = 0; 
+      verkauf.verkaufteWaren.forEach(ware => {
+        gesamteMenge += ware.menge
+      })
+
+      enqueueSnackbar(gesamteMenge + ' Produkte wurden verkauft!', {variant: 'success'})
     }).catch(() => {
       enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
     })

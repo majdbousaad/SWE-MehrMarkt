@@ -4,42 +4,18 @@ import { ApexOptions } from 'apexcharts'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Card from '@mui/material/Card'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import {useSnackbar} from 'notistack'
-
-interface ILagerStatistik{
-  name: string,
-  data: number
-}
-
-export default function LagerStatus() {
-
-  const [statistik, setStatistik] = useState<ILagerStatistik[]>([])
-  const {enqueueSnackbar} = useSnackbar()
-
-  useEffect(() => {
-    fetchStatistik()
-
-  }, [])
+import { ILagerStatistik } from 'src/pages/Dashboard'
 
 
-   function fetchStatistik() {
-     axios
-      .get('http://localhost:8080/lager/statistik')
-      .then(response => {
-        const statistikResponse = response.data as ILagerStatistik[]
-        setStatistik(statistikResponse)
-      })
-      .catch(() => {
-        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
 
-      })
-  }
+export default function LagerStatus({statistik}:{statistik:ILagerStatistik[]}) {
+
+  
   const series = [
     {
       name: 'Lagerauslastung',
       data: statistik.map(row => {
+
         return {x: row.name, y: row.data*100}
       })
     }

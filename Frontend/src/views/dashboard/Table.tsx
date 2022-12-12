@@ -6,7 +6,7 @@ import {useSnackbar} from 'notistack'
 
 
 
-const DashboardTable = () => {
+const DashboardTable = ({fetchStatistik}:{fetchStatistik: () => void}) => {
 
   const [anstehendeLiefererungen, setAnstehendeLiefererungen] = useState<ILieferungAll[]>([])
   const { enqueueSnackbar } = useSnackbar();
@@ -36,6 +36,8 @@ const DashboardTable = () => {
     }
     fetch('http://localhost:8080/bestellung/' + orderId, requestOptions).then(() => {
       fetchAnstehendeLiefererungen()
+      fetchStatistik()
+      enqueueSnackbar('Bestellung mit Nummer ' + orderId + ' wurde als zugestellt markiert', {variant:'success'})
     }).catch(() => {
       enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
     })

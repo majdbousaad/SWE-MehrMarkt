@@ -22,6 +22,8 @@ export default function LieferantenHinzufuegenButton({ fetchLieferanten }: { fet
     fetch('http://localhost:8080/lieferant', requestOptions).then((response) => {
       if(response.status == 400){
         enqueueSnackbar('Mehrere Produkte mit gleicher EAN Nummer', {variant: 'warning'})
+      } else if(response.status == 200){
+        enqueueSnackbar('Lieferant ' + lieferant.name + ' wurde erfolgreich hinzugefügt!', {variant:'success'})
       }
       fetchLieferanten()
     }).catch(() => {

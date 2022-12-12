@@ -57,6 +57,7 @@ export default function EinkaufPage() {
     fetch('http://localhost:8080/bestellung/' + orderId, requestOptions).then(() => {
       fetchAnstehendeLiefererungen()
       fetchGelieferteLiefererungen()
+      enqueueSnackbar('Bestellung mit Nummer ' + orderId + ' wurde als zugestellt markiert', {variant:'success'})
     }) .catch(() => {
       enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
     })

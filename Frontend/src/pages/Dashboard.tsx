@@ -13,12 +13,19 @@ import Table from 'src/views/dashboard/Table'
 import TodaysSells from 'src/views/dashboard/TodaysSells'
 import {useSnackbar} from 'notistack'
 
+
+export interface ILagerStatistik{
+  name: string,
+  data: number
+}
+
 const Dashboard = () => {
   const [anzahl, setAnzahl] = useState<{anzahl: number}>({anzahl: 0})
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetchAnzahl()
+    fetchStatistik()
   }, [])
 
   function fetchAnzahl(): void {
@@ -32,6 +39,23 @@ const Dashboard = () => {
         enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
       })
   }
+
+  const [statistik, setStatistik] = useState<ILagerStatistik[]>([])
+
+
+
+   function fetchStatistik() {
+     axios
+      .get('http://localhost:8080/lager/statistik')
+      .then(response => {
+        const statistikResponse = response.data as ILagerStatistik[]
+        setStatistik(statistikResponse)
+      })
+      .catch(() => {
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
+
+      })
+  }
   
   return (
     <ApexChartWrapper>
@@ -43,10 +67,10 @@ const Dashboard = () => {
           <TodaysSells data={anzahl}/>
         </Grid>
         <Grid item xs={12}>
-          <Table />
+          <Table fetchStatistik={fetchStatistik} />
         </Grid>
         <Grid item xs={12}>
-          <LagerStatus />
+          <LagerStatus statistik={statistik}/>
         </Grid>
       </Grid>
     </ApexChartWrapper>
