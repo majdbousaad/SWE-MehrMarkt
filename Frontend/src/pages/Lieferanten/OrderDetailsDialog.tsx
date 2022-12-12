@@ -23,6 +23,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { TextField } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import {useSnackbar} from 'notistack'
+
 
 export default function OrderDetailsDialog({
   isOpen,
@@ -43,6 +45,7 @@ export default function OrderDetailsDialog({
   function handleClose() {
     setIsDialogOpen(false)
   }
+  const {enqueueSnackbar} = useSnackbar()
 
   function bestellen(waren: Ware[], lieferant_id: number){
     const date = Datum?.toDate()
@@ -67,9 +70,9 @@ export default function OrderDetailsDialog({
       fetch('http://localhost:8080/bestellung', requestOptions).then(response => {
       
       if(response.status == 400){
-        alert("Lager ist ausgelastet")
+        enqueueSnackbar("Lager ist ausgelastet", {variant: 'warning'})
       } else {
-        alert("Bestellung ist aufgegeben")
+        enqueueSnackbar("Bestellung ist aufgegeben", {variant: 'success'})
       }
     })
     deleteAllWaren()

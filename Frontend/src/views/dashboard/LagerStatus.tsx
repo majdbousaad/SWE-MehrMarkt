@@ -6,7 +6,7 @@ import CardHeader from '@mui/material/CardHeader'
 import Card from '@mui/material/Card'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-
+import {useSnackbar} from 'notistack'
 
 interface ILagerStatistik{
   name: string,
@@ -16,25 +16,13 @@ interface ILagerStatistik{
 export default function LagerStatus() {
 
   const [statistik, setStatistik] = useState<ILagerStatistik[]>([])
-
-  const [data, setData] = useState<number[]>([])
-  const [categories, setCategories] = useState<string[]>([])
+  const {enqueueSnackbar} = useSnackbar()
 
   useEffect(() => {
     fetchStatistik()
 
   }, [])
 
-  useEffect(() =>{
-    setData(statistik.map(row =>{
-      return row.data*100
-    }))
-
-    setCategories(statistik.map(row =>{
-      return row.name
-    }))
-
-  }, [statistik])
 
    function fetchStatistik() {
      axios
@@ -44,7 +32,7 @@ export default function LagerStatus() {
         setStatistik(statistikResponse)
       })
       .catch(() => {
-        alert('Es gibt keine Verbindung zur Datenbank')
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
 
       })
   }

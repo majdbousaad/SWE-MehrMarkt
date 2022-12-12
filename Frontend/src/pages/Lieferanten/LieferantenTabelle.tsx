@@ -13,12 +13,14 @@ import LieferantenProfilDialog from './LieferantenProfilDialog'
 import { useState } from 'react'
 import { Lieferant, ILieferantJsonResponseOne } from '../../lib/interfaces'
 import axios from 'axios'
+import {useSnackbar} from 'notistack'
 
 export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { lieferanten: Lieferant[], fetchLieferanten: () => void }) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false)
   const [profielDialogLieferant, setProfielDialogLieferant] = useState<ILieferantJsonResponseOne>()
   const [profielDialogInitialLieferant, setProfielDialogInitialLieferant] = useState<ILieferantJsonResponseOne>()
 
+  const {enqueueSnackbar} = useSnackbar()
   function onProfileDialogClose() {
     setProfileDialogOpen(false)
   }
@@ -32,7 +34,7 @@ export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { 
         setProfielDialogInitialLieferant(lieferantenResponse)
       })
       .catch(() => {
-        alert('Es gibt keine Verbindung zur Datenbank')
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
 
       })
   }

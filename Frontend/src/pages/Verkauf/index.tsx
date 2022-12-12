@@ -1,3 +1,15 @@
 import VerkaufPage from './VerkaufPage'
 
-export default VerkaufPage
+
+import { SnackbarProvider } from "notistack";
+
+export default function(){
+
+    return (
+        <SnackbarProvider maxSnack={1} preventDuplicate>
+            <VerkaufPage/>
+        </SnackbarProvider>
+    )
+}
+
+

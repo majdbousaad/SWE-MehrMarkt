@@ -14,6 +14,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { ICatalogProducts, ILieferantJsonResponseOne, ProductEntry } from '../../lib/interfaces'
 import  LieferantProfilSection from './LieferantProfilSection'
 import  PlaceOrderDialog from './PlaceOrderDialog'
+import {useSnackbar} from 'notistack'
+
 
 export default function LieferantenProfilDialog({
   lieferant,
@@ -33,6 +35,7 @@ export default function LieferantenProfilDialog({
   const [isDirty, setIsDirty] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
 
+  const {enqueueSnackbar} = useSnackbar()
   const catalogWithID = lieferant?.products?.map(row => {
     return {
       id: uuidv4(),
@@ -93,7 +96,7 @@ export default function LieferantenProfilDialog({
 
     await fetch('http://localhost:8080/lieferant/' + lieferant.id, requestOptions)
       .catch(() =>{
-        alert('Es gibt keine Verbindung zur Datenbank')
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
       })
   }
 

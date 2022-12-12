@@ -10,6 +10,7 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import {useSnackbar} from 'notistack'
 
 interface IBeliebtesProdukt{
   name: string,
@@ -19,6 +20,7 @@ interface IBeliebtesProdukt{
 export default function MostPopularProducts() {
 
   const [beliebsteLagerProducts, setBeliebsteLagerProducts] = useState<IBeliebtesProdukt[]>([])
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetchBeliebsteLagerProducts()
@@ -32,7 +34,7 @@ export default function MostPopularProducts() {
         setBeliebsteLagerProducts(beliebsteLagerProductsResponse)
       })
       .catch(() => {
-        alert('Es gibt keine Verbindung zur Datenbank')
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
 
       })
   }

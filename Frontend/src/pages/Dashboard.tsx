@@ -11,9 +11,11 @@ import MostPopularProducts from 'src/views/dashboard/MostPopularProducts'
 // ** Demo Components Imports
 import Table from 'src/views/dashboard/Table'
 import TodaysSells from 'src/views/dashboard/TodaysSells'
+import {useSnackbar} from 'notistack'
 
 const Dashboard = () => {
   const [anzahl, setAnzahl] = useState<{anzahl: number}>({anzahl: 0})
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetchAnzahl()
@@ -26,8 +28,8 @@ const Dashboard = () => {
         const anzahlResponse = response.data as {anzahl: number}
         setAnzahl(anzahlResponse)
       })
-      .catch(error => {
-        alert(error)
+      .catch(() => {
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
       })
   }
   

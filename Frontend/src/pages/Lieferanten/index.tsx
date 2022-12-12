@@ -1,3 +1,13 @@
 import LieferantenPage from './LieferantenPage'
 
-export default LieferantenPage
+import { SnackbarProvider } from "notistack";
+
+export default function(){
+
+    return (
+        <SnackbarProvider maxSnack={1} preventDuplicate>
+            <LieferantenPage/>
+        </SnackbarProvider>
+    )
+}
+

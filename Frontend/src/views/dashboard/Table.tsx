@@ -2,15 +2,14 @@ import axios from 'axios'
 import { ILieferungAll } from 'src/pages/Einkauf/EinkaufPage'
 import { useEffect, useState } from 'react'
 import Lieferungen from 'src/pages/Einkauf/Lieferungen'
+import {useSnackbar} from 'notistack'
 
-function createData(orderId: string, supplier: string, deliveryDate: string) {
-  return { orderId, supplier, deliveryDate }
-}
 
 
 const DashboardTable = () => {
 
   const [anstehendeLiefererungen, setAnstehendeLiefererungen] = useState<ILieferungAll[]>([])
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetchAnstehendeLiefererungen()
@@ -24,7 +23,7 @@ const DashboardTable = () => {
         setAnstehendeLiefererungen(anstehendeLiefererungenResponse)
       })
       .catch(() => {
-        alert('Es gibt keine Verbindung zur Datenbank')
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
 
       })
   }
@@ -37,6 +36,8 @@ const DashboardTable = () => {
     }
     fetch('http://localhost:8080/bestellung/' + orderId, requestOptions).then(() => {
       fetchAnstehendeLiefererungen()
+    }).catch(() => {
+      enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
     })
   }
   
