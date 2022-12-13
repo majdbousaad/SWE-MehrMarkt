@@ -6,9 +6,10 @@ services:
     ports:
       - 8080:8080
     environment:
-      DB_URL: jdbc:mysql://mysql-container-1/test_mehrmarkt
-      DB_USERNAME: root
-      DB_PASSWORD: root
+      - DB_URL=jdbc:mysql://mysql-container-1/test_mehrmarkt
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - TZ=Europe/Berlin
 
     depends_on:
       - mysql-container
@@ -18,15 +19,16 @@ services:
       dockerfile: Dockerfile
     ports:
       - 80:3000
-    depends_on:
-      - back-end
+    
   mysql-container:
     image: mysql
     volumes:
       - dbdata:/var/lib/mysql
     environment: 
-      MYSQL_DATABASE: test_mehrmarkt
-      MYSQL_ROOT_PASSWORD: root
+      - MYSQL_DATABASE=test_mehrmarkt
+      - MYSQL_ROOT_PASSWORD=root
+      - TZ=Europe/Berlin
+
 
 volumes:
   dbdata:
