@@ -70,7 +70,7 @@ public class Lager {
 
     public Lager(String lagerort) {
         setSize(0);
-        setMax(100);
+        setMax(1000);
         setName(lagerort);
         setLagerProdukts(new ArrayList<>());
     }

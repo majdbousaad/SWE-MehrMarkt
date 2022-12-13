@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +44,7 @@ public class LagerController {
 
         List<Lager> lagers = lagerService.getAllLager();
         if(lagers.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            lagers =new ArrayList<>(Arrays.asList(lagerService.createLager("Aachen")));
         }
         return ResponseHandler.generateLagerStatistics(lagers);
     }
