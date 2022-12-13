@@ -99,6 +99,7 @@ public class ResponseHandler {
         }
         bestellungMap.put("products", mapWaren);
 
+
         return new ResponseEntity<Object>(bestellungMap, HttpStatus.OK);
     }
 
@@ -169,6 +170,7 @@ public class ResponseHandler {
         map.put("lieferant", bestellung.getLieferant().getName());
         map.put("vsl", bestellung.getVslLieferdatum());
         map.put("tats", bestellung.getTatsLieferdatum());
+        map.put("status", bestellung.getBestellungsStatus());
         return map;
     }
 
