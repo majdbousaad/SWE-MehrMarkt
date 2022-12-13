@@ -10,6 +10,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Magnify from 'mdi-material-ui/Magnify';
 import TableContainer from '@mui/material/TableContainer';
 import {useSnackbar} from 'notistack'
+import DoneOutlined from '@mui/icons-material/DoneOutlined';
 
 
 export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: () => void, fetchAnzahl: () => void}) {
@@ -43,6 +44,8 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
   
     const [waren, setWaren] = useState<Ware[]>([])
 
+    const [, setRefrecsh] = useState<any>({})
+
   function addToWaren(ean: string, menge: number, name:string){
     if(menge == 0){
       return
@@ -56,6 +59,9 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
     }
     if(!exists)
       waren.push({product: {ean: ean}, menge: menge, name:name})
+
+      setRefrecsh({})
+
   }
 
   function deleteFromWaren(ean: string){
@@ -84,6 +90,9 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
   function deleteAllWaren(){
     setWaren([])
     setLagerProducts(lagerProducts.map(row => {
+
+      const s = document.getElementById(row.ean + 'verkauf') as HTMLInputElement;
+       s.value = String(0);
 
         return {...row, amount: 0}
   
@@ -114,8 +123,8 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
             )
           }}
         />
-        <TableContainer sx={{maxHeight: 500}}>
-          <Table sx={{ minWidth: 800 }}>
+        <TableContainer sx={{maxHeight: 300}}>
+          <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Produkt EAN</TableCell>
@@ -128,9 +137,10 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
               {lagerProducts?.map((lagerProduct: IOrderProductEntry) => (
                 <TableRow hover key={lagerProduct.ean}>
                   <TableCell>{lagerProduct.ean}</TableCell>
-                  <TableCell>{lagerProduct.name}</TableCell>
+                  <TableCell>{lagerProduct.name} {waren?.findIndex((ware) => lagerProduct.ean == ware.product.ean) > -1 && (<span><IconButton><DoneOutlined /></IconButton></span>)} </TableCell>
                   <TableCell>
                     <TextField
+                        defaultValue={0}
                         id={lagerProduct.ean + 'verkauf'}
                         type="number"
                         InputLabelProps={{
@@ -141,7 +151,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                         onChange={(e) => {
                           if(Number(e.target.value) > lagerProduct.menge) {
                             
-                            alert('Es gibt nur ' + lagerProduct.menge + ' Stück ' + lagerProduct.name + ' im Lager')
+                            enqueueSnackbar('Es gibt nur ' + lagerProduct.menge + ' Stück ' + lagerProduct.name + ' im Lager', {variant: 'info'})
                             lagerProduct.amount = lagerProduct.menge
                             const s = document.getElementById(lagerProduct.ean + 'verkauf') as HTMLInputElement;
                             
