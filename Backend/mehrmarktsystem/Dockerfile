@@ -1,5 +1,5 @@
 #### Stage 1: Build the application
-FROM openjdk:19-alpine as build
+FROM openjdk:19-slim-buster as build
 
 # Set the current working directory inside the image
 WORKDIR /app
@@ -25,7 +25,7 @@ RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 
 #### Stage 2: A minimal docker image with command to run the app
-FROM openjdk:19-alpine
+FROM openjdk:19-slim-buster
 
 ARG DEPENDENCY=/app/target/dependency
 
