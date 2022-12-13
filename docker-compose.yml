@@ -1,0 +1,32 @@
+services:
+  back-end:
+    build:
+      context: Backend/mehrmarktsystem
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      DB_URL: jdbc:mysql://mysql-container-1/test_mehrmarkt
+      DB_USERNAME: root
+      DB_PASSWORD: root
+
+    depends_on:
+      - mysql-container
+  front-end:
+    build:
+      context: Frontend
+      dockerfile: Dockerfile
+    ports:
+      - 80:3000
+    depends_on:
+      - back-end
+  mysql-container:
+    image: mysql
+    volumes:
+      - dbdata:/var/lib/mysql
+    environment: 
+      MYSQL_DATABASE: test_mehrmarkt
+      MYSQL_ROOT_PASSWORD: root
+
+volumes:
+  dbdata:
