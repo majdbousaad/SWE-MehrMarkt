@@ -23,8 +23,8 @@ public interface BestellungRepository extends JpaRepository<Bestellung, Integer>
 
     Integer countAllByLieferantIdAndTatsLieferdatumIsNotNull(int lieferant_id);
 
-    List<Bestellung> getAllByTatsLieferdatumIsNotNull();
-    List<Bestellung> getAllByTatsLieferdatumIsNull();
+    List<Bestellung> getAllByTatsLieferdatumIsNotNullOrderByTatsLieferdatumDesc();
+    List<Bestellung> getAllByTatsLieferdatumIsNullOrderByVslLieferdatumDesc();
 
     Optional<Bestellung> getByIdAndTatsLieferdatumIsNull(int id);
 }
