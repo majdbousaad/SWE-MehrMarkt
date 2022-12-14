@@ -55,7 +55,7 @@ export default function OrderDetailsDialog({
         waren: waren?.map(ware =>{
 
           return {
-            product: ware.product,
+            product: {ean: ware?.product?.ean},
             menge: ware.menge
           }
         }),

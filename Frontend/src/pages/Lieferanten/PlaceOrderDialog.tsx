@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react'
 import { Ware } from 'src/lib/interfaces'
 import  OrderDetailsDialog  from './OrderDetailsDialog'
 import {useSnackbar} from 'notistack'
+import DoneOutlined from '@mui/icons-material/DoneOutlined';
 
 export default function PlaceOrderDialog({
   isOpen,
@@ -60,11 +61,12 @@ export default function PlaceOrderDialog({
     price: number
     amount: number
   }
+  const [, setRefrecsh] = useState<any>({})
 
 
   const [waren, setWaren] = useState<Ware[]>([])
 
-  function addToWaren(ean: string, menge: number, name:string){
+  function addToWaren(ean: string, menge: number, name:string, price:number){
     if(menge == 0){
       return
     }
@@ -76,7 +78,9 @@ export default function PlaceOrderDialog({
       }
     }
     if(!exists)
-      waren.push({product: {ean: ean}, menge: menge, name:name})
+      waren.push({product: {ean: ean, price:price}, menge: menge, name:name})
+
+      setRefrecsh({})
   }
 
   function deleteFromWaren(ean: string){
@@ -147,7 +151,7 @@ export default function PlaceOrderDialog({
                   {rows.map(row => (
                     <TableRow key={row.ean}>
                       <TableCell component='th' scope='row'>
-                        {row.name}
+                        {row.name} {waren?.findIndex((ware) => row.ean == ware.product.ean) > -1 && (<span><IconButton><DoneOutlined /></IconButton></span>)}
                       </TableCell>
                       <TableCell align='right'>{row.price}€</TableCell>
                       <TableCell align='right'>
@@ -165,7 +169,7 @@ export default function PlaceOrderDialog({
                       <IconButton 
                       color="primary" 
                       aria-label="add to shopping cart"
-                      onClick={() => addToWaren(row.ean,row.amount, row.name)}
+                      onClick={() => addToWaren(row.ean,row.amount, row.name, row.price)}
                       >
                       
                       <ShoppingCartCheckoutIcon />

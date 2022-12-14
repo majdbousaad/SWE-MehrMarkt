@@ -25,7 +25,8 @@ export default function VerkaufsDetailsDialog({
   deleteFromWaren,
   fetchVerkaeufe,
   deleteAllWaren,
-  fetchAnzahl
+  fetchAnzahl,
+  summe
 }: {
   isOpen: boolean
   setIsDialogOpen: (isOpen: boolean) => void
@@ -33,7 +34,8 @@ export default function VerkaufsDetailsDialog({
   deleteFromWaren: (ean:string) => void
   fetchVerkaeufe: () => void,
   deleteAllWaren: () =>void,
-  fetchAnzahl: () => void
+  fetchAnzahl: () => void,
+  summe: number
 }) {
 
   function handleClose() {
@@ -44,7 +46,7 @@ export default function VerkaufsDetailsDialog({
     const verkauf = {
         verkaufteWaren: waren?.map((ware: Ware) => {
             return {
-                lagerProdukt: ware?.product,
+                lagerProdukt: {ean: ware?.product?.ean},
                 menge: ware?.menge
             }
         })
@@ -120,6 +122,7 @@ export default function VerkaufsDetailsDialog({
                 </TableBody>
               </Table>
             </TableContainer>
+            <Typography>Gesamtpreis: {summe}€</Typography>
           </CardContent>
         </Card>
       </DialogContent>

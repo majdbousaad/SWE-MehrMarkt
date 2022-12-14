@@ -31,7 +31,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                     amount:0,
                     ean: lagerProduct.ean,
                     name: lagerProduct.name,
-                    price: lagerProduct.price,
+                    preis: lagerProduct.preis,
                     menge: lagerProduct.menge
                 } as IOrderProductEntry
             })
@@ -46,7 +46,19 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
 
     const [, setRefrecsh] = useState<any>({})
 
-  function addToWaren(ean: string, menge: number, name:string){
+    const [summe, setSumme] = useState(0)
+  
+    function calculateSumme(){
+      let sum = 0
+      waren?.forEach(ware => {
+        sum += ware?.menge*ware?.product?.price;
+      })
+      setSumme(sum)
+    }
+    
+    useEffect(() => calculateSumme(), [waren]);
+
+  function addToWaren(ean: string, menge: number, name:string, price: number){
     if(menge == 0){
       return
     }
@@ -58,9 +70,11 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
       }
     }
     if(!exists)
-      waren.push({product: {ean: ean}, menge: menge, name:name})
+      waren.push({product: {ean: ean, price:price}, menge: menge, name:name})
 
+      calculateSumme()
       setRefrecsh({})
+      
 
   }
 
@@ -84,7 +98,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
     const s = document.getElementById(ean + 'verkauf') as HTMLInputElement;
     s.value = String(0);
     
-
+    calculateSumme()
   }
 
   function deleteAllWaren(){
@@ -106,7 +120,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
           <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
             Verkauf
           </Typography>
-          <SellDetailsButton fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} waren={waren} deleteFromWaren={deleteFromWaren}/>
+          <SellDetailsButton fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} waren={waren} deleteFromWaren={deleteFromWaren} summe={summe}/>
         </Toolbar>
       </AppBar>
       <Card>
@@ -175,7 +189,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                         color="primary" 
                         aria-label="add to shopping cart"
                         
-                        onClick={() => addToWaren(lagerProduct.ean, lagerProduct.amount, lagerProduct.name)}
+                        onClick={() => addToWaren(lagerProduct.ean, lagerProduct.amount, lagerProduct.name, lagerProduct.preis)}
                         >
                         <ShoppingCartCheckoutIcon />
                     </IconButton>
@@ -206,7 +220,8 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
     deleteFromWaren,
     fetchVerkaeufe,
     deleteAllWaren,
-    fetchAnzahl
+    fetchAnzahl,
+    summe
   }: 
   { 
     waren: Ware[], 
@@ -214,6 +229,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
     fetchVerkaeufe: () => void
     deleteAllWaren: () => void
     fetchAnzahl: () => void
+    summe: number
   }) {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
   
@@ -222,7 +238,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
         <Button autoFocus color='success' variant='contained' onClick={() => setIsDialogOpen(true)}>
               Zur Verkaufsübersicht
             </Button>
-        <VerkaufsDetailsDialog fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren}/>
+        <VerkaufsDetailsDialog fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren} summe={summe}/>
       </>
     )
   }
