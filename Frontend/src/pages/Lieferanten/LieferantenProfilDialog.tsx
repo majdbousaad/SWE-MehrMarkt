@@ -16,6 +16,7 @@ import  LieferantProfilSection from './LieferantProfilSection'
 import  PlaceOrderDialog from './PlaceOrderDialog'
 import {useSnackbar} from 'notistack'
 import ConfirmDialog from 'src/components/ConfirmDialog'
+import axios from 'axios'
 
 export default function LieferantenProfilDialog({
   lieferant,
@@ -44,6 +45,16 @@ export default function LieferantenProfilDialog({
     onConfirm: async () => {
       console.log('delete')
       setIsConfirmDeleteShowing(false)
+      await axios
+        .delete(`http://localhost:8080/lieferant/${lieferant.id}`)
+        .catch(() => {
+          enqueueSnackbar('Es ist ein Fehler aufgetreten', { variant: 'error' })
+        })
+        .then(() => {
+          fetchLieferanten()
+          enqueueSnackbar('Lieferant wurde gelöscht', { variant: 'success' })
+        })
+
       handleClose()
     },
     onDecline: () => {
