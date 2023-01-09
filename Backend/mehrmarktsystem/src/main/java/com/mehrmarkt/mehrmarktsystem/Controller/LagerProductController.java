@@ -60,6 +60,44 @@ public class LagerProductController {
         }
     }
 
+    @PutMapping("/{ean}")
+    public ResponseEntity<LagerProdukt> putLagerprodukt(@PathVariable String ean, @RequestBody LagerProdukt neuesProdukt){
+        try {
+
+            LagerProdukt altesProdukt = lagerProduktService.getByEAN(ean).orElseThrow(ProduktNotFoundException::new);
+            boolean lagerSollAktuallisiert =
+                    !altesProdukt.getLagerort().equals(neuesProdukt.getLagerort())
+                            ||
+                            altesProdukt.getMenge() != neuesProdukt.getMenge()
+                    ;
+            if (lagerSollAktuallisiert){
+                Integer anstehendeMenge = lagerProduktService.getAnstehendeMenge(ean);
+                if(anstehendeMenge == null){
+                    anstehendeMenge = 0;
+                }
+                Lager lagerA = lagerService.getLager(altesProdukt.getLagerort());
+                Lager lagerB = lagerService.getLager(neuesProdukt.getLagerort());
+                lagerA.setSize(lagerA.getSize() - altesProdukt.getMenge());
+                lagerA.setAnstehendeMenge(lagerA.getAnstehendeMenge() - anstehendeMenge);
+                int lagerBNewSize = lagerB.getSize() + neuesProdukt.getMenge();
+                if(lagerBNewSize > lagerB.getMax()){
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                }
+                lagerB.setSize(lagerB.getSize() + neuesProdukt.getMenge());
+                lagerB.setAnstehendeMenge(lagerB.getAnstehendeMenge() + anstehendeMenge);
+                lagerService.updateLager(lagerA);
+                lagerService.updateLager(lagerB);
+            }
+
+            lagerProduktService.saveProduct(neuesProdukt);
+            return ResponseEntity.ok(neuesProdukt);
+
+        } catch (ProduktNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+    }
+
     @PatchMapping(path = "/{ean}", consumes = {"application/json-patch+json", "application/json"})
     public ResponseEntity<LagerProdukt> updateLagerprodukt(@PathVariable String ean, @RequestBody JsonPatch patch){
         try {
