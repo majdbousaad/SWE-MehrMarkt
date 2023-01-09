@@ -45,17 +45,6 @@ const AppBarContent = (props: Props) => {
             <Menu />
           </IconButton>
         ) : null}
-        <TextField
-          size='small'
-          sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <Magnify fontSize='small' />
-              </InputAdornment>
-            )
-          }}
-        />
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         {hiddenSm ? null : (
@@ -66,9 +55,9 @@ const AppBarContent = (props: Props) => {
             sx={{ mr: 4, display: 'flex' }}
             href='https://github.com/Shaco74/SWE-MehrMarkt'
           >
-           <IconButton> 
-            <Github />
-           </IconButton>
+            <IconButton>
+              <Github />
+            </IconButton>
           </Box>
         )}
         <ModeToggler settings={settings} saveSettings={saveSettings} />

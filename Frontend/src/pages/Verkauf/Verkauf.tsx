@@ -114,104 +114,120 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
   }
   
     return (
-        <>
-      <AppBar sx={{ position: 'relative' }}>
-        <Toolbar>
-          <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
-            Verkauf
-          </Typography>
-          <SellDetailsButton fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} waren={waren} deleteFromWaren={deleteFromWaren} summe={summe}/>
-        </Toolbar>
-      </AppBar>
-      <Card>
-        <CardContent>
-        <TextField
-          onChange={(e) => setSearch(e.target.value)}
-          size='small'
-          sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <Magnify fontSize='small' />
-              </InputAdornment>
-            )
-          }}
-        />
-        <TableContainer sx={{maxHeight: 300}}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Produkt EAN</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Menge</TableCell>
-                <TableCell>Funktion</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {lagerProducts?.map((lagerProduct: IOrderProductEntry) => (
-                <TableRow hover key={lagerProduct.ean}>
-                  <TableCell>{lagerProduct.ean}</TableCell>
-                  <TableCell>{lagerProduct.name} {waren?.findIndex((ware) => lagerProduct.ean == ware.product.ean) > -1 && (<span><IconButton><DoneOutlined /></IconButton></span>)} </TableCell>
-                  <TableCell>
-                    <TextField
-                        defaultValue={0}
-                        id={lagerProduct.ean + 'verkauf'}
-                        type="number"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        style = {{width: 75}}
-                        InputProps={{ inputProps: { min: 0, max: lagerProduct.menge } }}
-                        onChange={(e) => {
-                          if(Number(e.target.value) > lagerProduct.menge) {
-                            
-                            enqueueSnackbar('Es gibt nur ' + lagerProduct.menge + ' Stück ' + lagerProduct.name + ' im Lager', {variant: 'info'})
-                            lagerProduct.amount = lagerProduct.menge
-                            const s = document.getElementById(lagerProduct.ean + 'verkauf') as HTMLInputElement;
-                            
-                            s.value = String(lagerProduct.menge);
+      <>
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar>
+            <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
+              Verkauf
+            </Typography>
+            <SellDetailsButton
+              fetchAnzahl={fetchAnzahl}
+              deleteAllWaren={deleteAllWaren}
+              fetchVerkaeufe={fetchVerkaeufe}
+              waren={waren}
+              deleteFromWaren={deleteFromWaren}
+              summe={summe}
+            />
+          </Toolbar>
+        </AppBar>
+        <Card>
+          <CardContent>
+            <TextField
+              onChange={e => setSearch(e.target.value)}
+              size='small'
+              sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <Magnify fontSize='small' />
+                  </InputAdornment>
+                )
+              }}
+            />
+            <TableContainer sx={{ maxHeight: 300 }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Produkt EAN</TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Menge</TableCell>
+                    <TableCell>Funktion</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {lagerProducts?.map((lagerProduct: IOrderProductEntry) => (
+                    <TableRow hover key={lagerProduct.ean}>
+                      <TableCell>{lagerProduct.ean}</TableCell>
+                      <TableCell>
+                        {lagerProduct.name}{' '}
+                        {waren?.findIndex(ware => lagerProduct.ean == ware.product.ean) > -1 && (
+                          <span>
+                            <IconButton>
+                              <DoneOutlined />
+                            </IconButton>
+                          </span>
+                        )}{' '}
+                      </TableCell>
+                      <TableCell>
+                        <div className='w-full flex gap-4 items-center'>
+                          <TextField
+                            defaultValue={0}
+                            id={lagerProduct.ean + 'verkauf'}
+                            type='number'
+                            InputLabelProps={{
+                              shrink: true
+                            }}
+                            style={{ width: 75 }}
+                            InputProps={{ inputProps: { min: 0, max: lagerProduct.menge } }}
+                            onChange={e => {
+                              if (Number(e.target.value) > lagerProduct.menge) {
+                                enqueueSnackbar(
+                                  'Es gibt nur ' + lagerProduct.menge + ' Stück ' + lagerProduct.name + ' im Lager',
+                                  { variant: 'info' }
+                                )
+                                lagerProduct.amount = lagerProduct.menge
+                                const s = document.getElementById(lagerProduct.ean + 'verkauf') as HTMLInputElement
 
-                          } else if((Number(e.target.value)) < 0 ){
-                            alert('Die Menge soll positiv sein')
-                            lagerProduct.amount = 0
-                            const s = document.getElementById(lagerProduct.ean + 'verkauf') as HTMLInputElement;
-                
-                            s.value = '0';
+                                s.value = String(lagerProduct.menge)
+                              } else if (Number(e.target.value) < 0) {
+                                alert('Die Menge soll positiv sein')
+                                lagerProduct.amount = 0
+                                const s = document.getElementById(lagerProduct.ean + 'verkauf') as HTMLInputElement
+
+                                s.value = '0'
+                              }
+                              lagerProduct.amount = Number(e.target.value)
+                            }}
+                          />
+                          <Typography variant='body2'>/ {lagerProduct.menge}</Typography>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <IconButton
+                          color='primary'
+                          aria-label='add to shopping cart'
+                          onClick={() =>
+                            addToWaren(lagerProduct.ean, lagerProduct.amount, lagerProduct.name, lagerProduct.preis)
                           }
-                            lagerProduct.amount = Number(e.target.value)
-                        }}
-                        
-                    />
-
-                  </TableCell>
-                  <TableCell>
-                    <IconButton 
-                        color="primary" 
-                        aria-label="add to shopping cart"
-                        
-                        onClick={() => addToWaren(lagerProduct.ean, lagerProduct.amount, lagerProduct.name, lagerProduct.preis)}
                         >
-                        <ShoppingCartCheckoutIcon />
-                    </IconButton>
-                    <IconButton 
-                        color="primary" 
-                        aria-label="add to shopping cart"
-                        
-                        onClick={() => deleteFromWaren(lagerProduct.ean)}
+                          <ShoppingCartCheckoutIcon />
+                        </IconButton>
+                        <IconButton
+                          color='primary'
+                          aria-label='add to shopping cart'
+                          onClick={() => deleteFromWaren(lagerProduct.ean)}
                         >
-                        <DeleteIcon />
-                    </IconButton>
-                    
-                    </TableCell>
-                  
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          </TableContainer>
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </CardContent>
         </Card>
-        </>
+      </>
     )
   }
 
