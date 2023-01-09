@@ -5,11 +5,9 @@ FROM openjdk:19-slim-buster as build
 WORKDIR /app
 
 # Copy maven executable to the image
-COPY mvnw .
-COPY .mvn .mvn
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
 
-# Copy the pom.xml file
-COPY pom.xml .
 
 # Build all the dependencies in preparation to go offline.
 # This is a separate step so the dependencies will be cached unless
@@ -17,7 +15,7 @@ COPY pom.xml .
 RUN ./mvnw dependency:go-offline -B
 
 # Copy the project source
-COPY src src
+COPY src ./src
 
 # Package the application
 RUN ./mvnw package -DskipTests
