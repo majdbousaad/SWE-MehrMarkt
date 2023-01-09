@@ -250,7 +250,8 @@ public class ResponseHandler {
         Map<String, Object> map = new HashMap<>();
         map.put("name", lager.getName());
         map.put("standard", lager.isStandard());
-
+        map.put("size", lager.getSize());
+        map.put("max", lager.getMax());
         return map;
     }
 
