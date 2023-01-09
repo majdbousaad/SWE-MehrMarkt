@@ -15,6 +15,10 @@ export default function LagerStatus({statistik}:{statistik:ILagerStatistik[]}) {
     {
       name: 'Lagerauslastung',
       data: statistik.map(row => {
+        if(row.name == "total"){
+
+          return {x: 'ganz', y: row.data*100}
+        }
 
         return {x: row.name, y: row.data*100}
       })
@@ -41,6 +45,7 @@ export default function LagerStatus({statistik}:{statistik:ILagerStatistik[]}) {
     dataLabels: {
       enabled: true,
       formatter: function (val: number) {
+        
         return val.toFixed(2) + "%";
       },
       offsetY: -20,
@@ -57,6 +62,7 @@ export default function LagerStatus({statistik}:{statistik:ILagerStatistik[]}) {
       labels: {
         show: true,
         formatter: function (val: number) {
+
           return val.toFixed(2) + "%";
         }
       }

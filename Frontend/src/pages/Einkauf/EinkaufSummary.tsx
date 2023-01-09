@@ -16,6 +16,7 @@ import CardContent from '@mui/material/CardContent'
 import { v4 as uuidv4 } from 'uuid'
 import { CardHeader } from '@mui/material'
 import { formatDate } from 'src/lib/functions'
+import Chip from '@mui/material/Chip'
 
 interface EinkaufProdukt {
     price: number,
@@ -29,6 +30,7 @@ export interface IEinkaufOne{
     id?: number,
     products?: EinkaufProdukt[],
     lieferant?: string
+    status: string
 }
 
 export default function EinkaufSummary({
@@ -43,6 +45,7 @@ export default function EinkaufSummary({
   arrived: boolean
 }) {
   
+  const status = (einkauf?.status == 'spaet')? "spät" : (einkauf?.status == 'puenktlich')? "pünktlich" : "ausstehend";
 
   function handleAbort() {
     handleClose()
@@ -69,6 +72,12 @@ export default function EinkaufSummary({
             <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
                Lieferungsdetailansicht Nummer {einkauf?.id} 
             </Typography>
+            <Chip
+                    label={status}
+                    color={(status == 'pünktlich') ? 'success' : 'secondary'}
+                    size='small'
+                    sx={{ fontWeight: 500, fontSize: '0.875rem !important'}}
+                  />
           </Toolbar>
           <Card>
           <CardHeader title={'Lieferant: ' + einkauf?.lieferant} />

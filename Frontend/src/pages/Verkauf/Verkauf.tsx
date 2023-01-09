@@ -10,6 +10,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Magnify from 'mdi-material-ui/Magnify';
 import TableContainer from '@mui/material/TableContainer';
 import {useSnackbar} from 'notistack'
+import DoneOutlined from '@mui/icons-material/DoneOutlined';
 
 
 export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: () => void, fetchAnzahl: () => void}) {
@@ -30,7 +31,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                     amount:0,
                     ean: lagerProduct.ean,
                     name: lagerProduct.name,
-                    price: lagerProduct.price,
+                    preis: lagerProduct.preis,
                     menge: lagerProduct.menge
                 } as IOrderProductEntry
             })
@@ -43,7 +44,21 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
   
     const [waren, setWaren] = useState<Ware[]>([])
 
-  function addToWaren(ean: string, menge: number, name:string){
+    const [, setRefrecsh] = useState<any>({})
+
+    const [summe, setSumme] = useState(0)
+  
+    function calculateSumme(){
+      let sum = 0
+      waren?.forEach(ware => {
+        sum += ware?.menge*ware?.product?.price;
+      })
+      setSumme(sum)
+    }
+    
+    useEffect(() => calculateSumme(), [waren]);
+
+  function addToWaren(ean: string, menge: number, name:string, price: number){
     if(menge == 0){
       return
     }
@@ -55,7 +70,12 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
       }
     }
     if(!exists)
-      waren.push({product: {ean: ean}, menge: menge, name:name})
+      waren.push({product: {ean: ean, price:price}, menge: menge, name:name})
+
+      calculateSumme()
+      setRefrecsh({})
+      
+
   }
 
   function deleteFromWaren(ean: string){
@@ -78,12 +98,15 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
     const s = document.getElementById(ean + 'verkauf') as HTMLInputElement;
     s.value = String(0);
     
-
+    calculateSumme()
   }
 
   function deleteAllWaren(){
     setWaren([])
     setLagerProducts(lagerProducts.map(row => {
+
+      const s = document.getElementById(row.ean + 'verkauf') as HTMLInputElement;
+       s.value = String(0);
 
         return {...row, amount: 0}
   
@@ -97,7 +120,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
           <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
             Verkauf
           </Typography>
-          <SellDetailsButton fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} waren={waren} deleteFromWaren={deleteFromWaren}/>
+          <SellDetailsButton fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} waren={waren} deleteFromWaren={deleteFromWaren} summe={summe}/>
         </Toolbar>
       </AppBar>
       <Card>
@@ -114,8 +137,8 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
             )
           }}
         />
-        <TableContainer sx={{maxHeight: 500}}>
-          <Table sx={{ minWidth: 800 }}>
+        <TableContainer sx={{maxHeight: 300}}>
+          <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Produkt EAN</TableCell>
@@ -128,9 +151,10 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
               {lagerProducts?.map((lagerProduct: IOrderProductEntry) => (
                 <TableRow hover key={lagerProduct.ean}>
                   <TableCell>{lagerProduct.ean}</TableCell>
-                  <TableCell>{lagerProduct.name}</TableCell>
+                  <TableCell>{lagerProduct.name} {waren?.findIndex((ware) => lagerProduct.ean == ware.product.ean) > -1 && (<span><IconButton><DoneOutlined /></IconButton></span>)} </TableCell>
                   <TableCell>
                     <TextField
+                        defaultValue={0}
                         id={lagerProduct.ean + 'verkauf'}
                         type="number"
                         InputLabelProps={{
@@ -141,7 +165,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                         onChange={(e) => {
                           if(Number(e.target.value) > lagerProduct.menge) {
                             
-                            alert('Es gibt nur ' + lagerProduct.menge + ' Stück ' + lagerProduct.name + ' im Lager')
+                            enqueueSnackbar('Es gibt nur ' + lagerProduct.menge + ' Stück ' + lagerProduct.name + ' im Lager', {variant: 'info'})
                             lagerProduct.amount = lagerProduct.menge
                             const s = document.getElementById(lagerProduct.ean + 'verkauf') as HTMLInputElement;
                             
@@ -165,7 +189,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                         color="primary" 
                         aria-label="add to shopping cart"
                         
-                        onClick={() => addToWaren(lagerProduct.ean, lagerProduct.amount, lagerProduct.name)}
+                        onClick={() => addToWaren(lagerProduct.ean, lagerProduct.amount, lagerProduct.name, lagerProduct.preis)}
                         >
                         <ShoppingCartCheckoutIcon />
                     </IconButton>
@@ -196,7 +220,8 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
     deleteFromWaren,
     fetchVerkaeufe,
     deleteAllWaren,
-    fetchAnzahl
+    fetchAnzahl,
+    summe
   }: 
   { 
     waren: Ware[], 
@@ -204,6 +229,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
     fetchVerkaeufe: () => void
     deleteAllWaren: () => void
     fetchAnzahl: () => void
+    summe: number
   }) {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
   
@@ -212,7 +238,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
         <Button autoFocus color='success' variant='contained' onClick={() => setIsDialogOpen(true)}>
               Zur Verkaufsübersicht
             </Button>
-        <VerkaufsDetailsDialog fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren}/>
+        <VerkaufsDetailsDialog fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren} summe={summe}/>
       </>
     )
   }
