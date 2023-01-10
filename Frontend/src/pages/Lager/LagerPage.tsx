@@ -18,12 +18,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField
+  TextField,
+  Typography
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import Pencil from 'mdi-material-ui/Pencil'
 import Dialog from '@mui/material/Dialog'
 import ProductDetailDialog from './ProductDetailDialog'
+import { StoragesDisplay } from './StoragesDisplay'
 
 export interface ILagerProduct {
   name: string
@@ -56,55 +58,58 @@ export default function LagerPage() {
   }
 
   return (
-    <Card>
-      <CardHeader title='Lager' />
-      <CardContent>
-        <TableContainer sx={{ maxHeight: 400 }}>
-          <Table className='w-full'>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Menge</TableCell>
-                <TableCell>Lagerort</TableCell>
-                <TableCell>Preis</TableCell>
-                <TableCell align='center'>Detailansicht</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {lagerProducts?.map((lagerProduct: ILagerProduct) => (
-                <TableRow hover key={lagerProduct.ean}>
-                  <TableCell>{lagerProduct.name}</TableCell>
-                  <TableCell>{lagerProduct.menge}</TableCell>
-                  <TableCell>
-                    <EditLagerButton Product={lagerProduct} fetchLagerProducts={fetchLagerProducts} />
-                    {lagerProduct.lagerort}
-                  </TableCell>
-                  <TableCell>{lagerProduct.preis}</TableCell>
-                  <TableCell align='center'>
-                    <IconButton
-                      color='primary'
-                      aria-label='add to shopping cart'
-                      onClick={() => {
-                        setIsProductDetailsOpen(true)
-                        setDialogProduct(lagerProduct)
-                      }}
-                    >
-                      <InfoIcon />
-                    </IconButton>
-                  </TableCell>
+    <>
+      <Card>
+        <CardHeader title='Lager' />
+        <CardContent>
+          <TableContainer sx={{ maxHeight: 400 }}>
+            <Table className='w-full'>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Menge</TableCell>
+                  <TableCell>Lagerort</TableCell>
+                  <TableCell>Preis</TableCell>
+                  <TableCell align='center'>Detailansicht</TableCell>
                 </TableRow>
-              ))}
-              <ProductDetailDialog
-                initialProduct={dialogProduct}
-                open={isProductDetailsOpen}
-                setOpen={setIsProductDetailsOpen}
-                fetchLagerProducts={fetchLagerProducts}
-              />
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </CardContent>
-    </Card>
+              </TableHead>
+              <TableBody>
+                {lagerProducts?.map((lagerProduct: ILagerProduct) => (
+                  <TableRow hover key={lagerProduct.ean}>
+                    <TableCell>{lagerProduct.name}</TableCell>
+                    <TableCell>{lagerProduct.menge}</TableCell>
+                    <TableCell>
+                      <EditLagerButton Product={lagerProduct} fetchLagerProducts={fetchLagerProducts} />
+                      {lagerProduct.lagerort}
+                    </TableCell>
+                    <TableCell>{lagerProduct.preis}</TableCell>
+                    <TableCell align='center'>
+                      <IconButton
+                        color='primary'
+                        aria-label='add to shopping cart'
+                        onClick={() => {
+                          setIsProductDetailsOpen(true)
+                          setDialogProduct(lagerProduct)
+                        }}
+                      >
+                        <InfoIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                <ProductDetailDialog
+                  initialProduct={dialogProduct}
+                  open={isProductDetailsOpen}
+                  setOpen={setIsProductDetailsOpen}
+                  fetchLagerProducts={fetchLagerProducts}
+                />
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </CardContent>
+      </Card>
+      <StoragesDisplay />
+    </>
   )
 }
 
