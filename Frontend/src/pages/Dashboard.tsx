@@ -12,16 +12,18 @@ import MostPopularProducts from 'src/views/dashboard/MostPopularProducts'
 import Table from 'src/views/dashboard/Table'
 import TodaysSells from 'src/views/dashboard/TodaysSells'
 import {useSnackbar} from 'notistack'
+import LagerStatusAmount from 'src/views/dashboard/LagerStatusAmount'
 
-
-export interface ILagerStatistik{
-  name: string,
-  data: number
+export interface ILagerStatistik {
+  name: string
+  capacity: number
+  load: number
+  loadPercent: number
 }
 
 const Dashboard = () => {
-  const [anzahl, setAnzahl] = useState<{anzahl: number}>({anzahl: 0})
-  const { enqueueSnackbar } = useSnackbar();
+  const [anzahl, setAnzahl] = useState<{ anzahl: number }>({ anzahl: 0 })
+  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
     fetchAnzahl()
@@ -32,31 +34,50 @@ const Dashboard = () => {
     axios
       .get('http://localhost:8080/verkauf/anzahlverkaeufe')
       .then(response => {
-        const anzahlResponse = response.data as {anzahl: number}
+        const anzahlResponse = response.data as { anzahl: number }
         setAnzahl(anzahlResponse)
       })
       .catch(() => {
-        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', { variant: 'error' })
       })
   }
 
   const [statistik, setStatistik] = useState<ILagerStatistik[]>([])
 
+  function fetchStatistik() {
+    const newStatistik: ILagerStatistik[] = []
 
-
-   function fetchStatistik() {
-     axios
+    axios
       .get('http://localhost:8080/lager/statistik')
       .then(response => {
-        const statistikResponse = response.data as ILagerStatistik[]
-        setStatistik(statistikResponse)
+        const statistikResponse = response.data as { name: string; data: number }[]
+        statistikResponse.forEach(row => {
+          newStatistik.push({
+            name: row.name,
+            loadPercent: row.data,
+            load: 0,
+            capacity: 0
+          })
+        })
+      })
+      .then(() => {
+        axios.get('http://localhost:8080/lager/namen').then(response => {
+          const statistikResponse = response.data as { standard: boolean; size: number; max: number; name: string }[]
+          statistikResponse.forEach(row => {
+            const index = newStatistik.findIndex(stat => stat.name === row.name)
+            newStatistik[index].capacity = row.max
+            newStatistik[index].load = row.size
+          })
+        })
       })
       .catch(() => {
-        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
-
+        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', { variant: 'error' })
+      })
+      .finally(() => {
+        setStatistik(newStatistik)
       })
   }
-  
+
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
@@ -64,13 +85,16 @@ const Dashboard = () => {
           <MostPopularProducts />
         </Grid>
         <Grid item xs={12} md={4}>
-          <TodaysSells data={anzahl}/>
+          <TodaysSells data={anzahl} />
         </Grid>
         <Grid item xs={12}>
           <Table fetchStatistik={fetchStatistik} />
         </Grid>
         <Grid item xs={12}>
-          <LagerStatus statistik={statistik}/>
+          <LagerStatus statistik={statistik} />
+        </Grid>
+        <Grid item xs={12}>
+          <LagerStatusAmount statistik={statistik} />
         </Grid>
       </Grid>
     </ApexChartWrapper>
