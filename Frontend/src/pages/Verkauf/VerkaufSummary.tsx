@@ -2,6 +2,7 @@ import AppBar from '@mui/material/AppBar'
 
 import Dialog from '@mui/material/Dialog'
 import IconButton from '@mui/material/IconButton'
+import DownloadIcon from '@mui/icons-material/Download';
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import CloseIcon from 'mdi-material-ui/Close'
@@ -16,6 +17,10 @@ import CardContent from '@mui/material/CardContent'
 import { v4 as uuidv4 } from 'uuid'
 import { CardHeader } from '@mui/material'
 import { formatDate } from 'src/lib/functions'
+import React from 'react';
+import { Rechnung } from '../PDFs/Rechnung'
+import { PDFDownloadLink } from '@react-pdf/renderer'
+
 
 interface VerkaufProdukt {
     price: number,
@@ -37,8 +42,7 @@ export default function VerkaufSummary({
   verkauf: IVerkaufOne
   open: boolean
   handleClose: () => void
-}) {
-  
+}) {  
 
   function handleAbort() {
     handleClose()
@@ -98,7 +102,20 @@ export default function VerkaufSummary({
               <strong>Gesamtpreis:</strong> {verkauf?.gesamtPreis}€
               </Typography>
               
-            </TableContainer>
+              
+            </TableContainer>            
+              <PDFDownloadLink document={<Rechnung verkauf={verkauf}/>} fileName={"Rechnung-" + verkauf.id + ".pdf"}>
+                {() => (
+                  
+                  <IconButton id="download"
+                  edge='start' 
+                  color='inherit' 
+                  aria-label='close'>
+                    <DownloadIcon />
+                  </IconButton>
+                  
+                  )}
+              </PDFDownloadLink>
           </CardContent>
         </Card>   
         </AppBar>
