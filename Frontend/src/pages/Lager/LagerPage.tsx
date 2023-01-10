@@ -1,7 +1,7 @@
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import axios from 'axios'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import InfoIcon from '@mui/icons-material/Info'
 import {
   Button,
@@ -21,7 +21,6 @@ import {
   TextField
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import Pen from 'mdi-material-ui/Pen'
 import Pencil from 'mdi-material-ui/Pencil'
 import Dialog from '@mui/material/Dialog'
 import ProductDetailDialog from './ProductDetailDialog'
@@ -99,6 +98,7 @@ export default function LagerPage() {
                 initialProduct={dialogProduct}
                 open={isProductDetailsOpen}
                 setOpen={setIsProductDetailsOpen}
+                fetchLagerProducts={fetchLagerProducts}
               />
             </TableBody>
           </Table>
@@ -127,7 +127,7 @@ function EditLagerButton({ Product, fetchLagerProducts }: { Product: ILagerProdu
 
   const { enqueueSnackbar } = useSnackbar()
 
-  function handleClose(event: any): void {
+  function handleClose(): void {
     setNewLocation('')
     setSelectValue(Product.lagerort.toLowerCase())
     setIsOpen(false)
@@ -158,7 +158,7 @@ function EditLagerButton({ Product, fetchLagerProducts }: { Product: ILagerProdu
     })
   }, [])
 
-  function handleConfirm(event: any): void {
+  function handleConfirm(): void {
     let result = ''
 
     if (newLocation === '') {
@@ -176,16 +176,14 @@ function EditLagerButton({ Product, fetchLagerProducts }: { Product: ILagerProdu
         }
       ])
 
-      .then(() => {
+      .then((response) => {
+        console.log(response.data)
         enqueueSnackbar('Standort wurde geändert', { variant: 'success' })
         setNewLocation(result)
         fetchLagerProducts()
       })
       .catch((e: any) => {
-        console.log(Product)
-        console.log(result)
-        console.log(e)
-        enqueueSnackbar('Standort konnte nicht geändert werden', { variant: 'error' })
+        enqueueSnackbar(e.response.data, { variant: 'error' })
       })
 
     setIsOpen(false)
