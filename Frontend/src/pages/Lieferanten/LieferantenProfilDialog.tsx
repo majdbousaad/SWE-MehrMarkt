@@ -217,7 +217,7 @@ function PlaceOrderButton({ lieferant }: { catalog: ProductEntry[]; lieferant: I
       >
         Bestellung aufgeben
       </Button>
-      <PlaceOrderDialog isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} id={lieferant.id} />
+      <PlaceOrderDialog lieferzeit={lieferant.deliveryTime} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} id={lieferant.id} />
     </>
   )
 }

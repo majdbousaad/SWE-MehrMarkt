@@ -27,11 +27,13 @@ import DoneOutlined from '@mui/icons-material/DoneOutlined';
 export default function PlaceOrderDialog({
   isOpen,
   setIsDialogOpen,
-  id
+  id,
+  lieferzeit
 }: {
   isOpen: boolean
   setIsDialogOpen: (isOpen: boolean) => void
   id: number
+  lieferzeit:string
 }) {
   function handleClose() {
     setIsDialogOpen(false)
@@ -132,7 +134,7 @@ export default function PlaceOrderDialog({
           <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
             Bestellung aufgeben
           </Typography>
-          <OrderDetailsButton deleteAllWaren={deleteAllWaren} waren={waren}  deleteFromWaren={deleteFromWaren} lieferant_id={id} />
+          <OrderDetailsButton lieferzeit={lieferzeit} deleteAllWaren={deleteAllWaren} waren={waren}  deleteFromWaren={deleteFromWaren} lieferant_id={id} />
         </Toolbar>
       </AppBar>
       <DialogContent>
@@ -201,13 +203,15 @@ function OrderDetailsButton({
   waren, 
   lieferant_id,
   deleteFromWaren,
-  deleteAllWaren
+  deleteAllWaren,
+  lieferzeit
 }: 
 { 
   waren: Ware[], 
   deleteFromWaren: (ean: string) => void
   lieferant_id: number
   deleteAllWaren: () => void
+  lieferzeit:string
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -216,7 +220,7 @@ function OrderDetailsButton({
       <Button autoFocus color='success' variant='contained' onClick={() => setIsDialogOpen(true)}>
             Zur Bestellübersicht
           </Button>
-      <OrderDetailsDialog deleteAllWaren={deleteAllWaren} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren} lieferant_id={lieferant_id}/>
+      <OrderDetailsDialog lieferzeit={lieferzeit} deleteAllWaren={deleteAllWaren} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren} lieferant_id={lieferant_id}/>
     </>
   )
 }

@@ -32,7 +32,8 @@ export default function OrderDetailsDialog({
   waren,
   deleteFromWaren,
   lieferant_id,
-  deleteAllWaren
+  deleteAllWaren,
+  lieferzeit
 }: {
   isOpen: boolean
   setIsDialogOpen: (isOpen: boolean) => void
@@ -40,6 +41,7 @@ export default function OrderDetailsDialog({
   deleteFromWaren: (ean:string) => void
   lieferant_id: number
   deleteAllWaren: () => void
+  lieferzeit:string
 }) {
 
   function handleClose() {
@@ -81,7 +83,29 @@ export default function OrderDetailsDialog({
 
   }
 
-  const [Datum, setDatum] = useState<Dayjs | null>(dayjs(new Date()).add(1, 'day'))
+  let days = 0, hours = 0, mins = 0;
+
+  const units = lieferzeit.split(' ');
+
+  units.forEach(element => {
+    var num = element.match(/\d+/g);
+
+    var letr =  element.match(/[a-zA-Z]+/g);
+
+    if(letr != null && num != null){
+      if(letr[0] == "St"){
+        hours = parseInt(num[0])
+      }else if(letr[0] == "T"){
+        days = parseInt(num[0])
+      } else if(letr[0] == "M"){
+        mins = parseInt(num[0])
+      }
+    }
+    });
+
+  const [Datum, setDatum] = useState<Dayjs | null>(
+    dayjs(new Date()).add(3 + days, 'day').add(hours, 'hour').add(mins, 'minute')
+    )
 
   const handleChange = (newValue: Dayjs | null) => {
 
