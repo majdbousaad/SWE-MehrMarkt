@@ -81,9 +81,7 @@ export default function OrderDetailsDialog({
 
   }
 
-  const [Datum, setDatum] = useState<Dayjs | null>(
-    dayjs(new Date())
-  );
+  const [Datum, setDatum] = useState<Dayjs | null>(dayjs(new Date()).add(1, 'day'))
 
   const handleChange = (newValue: Dayjs | null) => {
 

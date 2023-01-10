@@ -18,14 +18,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
-  Typography
+  TextField
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import Pencil from 'mdi-material-ui/Pencil'
 import Dialog from '@mui/material/Dialog'
 import ProductDetailDialog from './ProductDetailDialog'
-import { StoragesDisplay } from './StoragesDisplay'
+import StoragesDisplay from './StoragesDisplay'
 
 export interface ILagerProduct {
   name: string

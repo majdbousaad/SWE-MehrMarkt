@@ -1,5 +1,4 @@
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
+import CloseIcon from '@mui/icons-material/Close'
 import {
   AppBar,
   Box,
@@ -16,13 +15,13 @@ import {
   TableRow,
   TextField,
   Toolbar,
-  Tooltip,
   Typography
 } from '@mui/material'
-import { useEffect, useState } from 'react'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
 import axios from 'axios'
 import { useSnackbar } from 'notistack'
-import CloseIcon from '@mui/icons-material/Close'
+import { useEffect, useState } from 'react'
 
 interface ILager {
   standard: boolean
@@ -31,7 +30,7 @@ interface ILager {
   name: string
 }
 
-export function StoragesDisplay() {
+export default function StoragesDisplay() {
   const [storages, setStorages] = useState<ILager[]>([])
 
   useEffect(() => {
@@ -85,12 +84,12 @@ function StorageDetailButton({ lager, fetchStorages }: { lager: ILager; fetchSto
   function onSubmit(newLagerSize: number): void {
     axios
       .patch(`http://localhost:8080/lager/updateSize/${lager.name}/${newLagerSize}`)
-      .then(response => {
+      .then(() => {
         enqueueSnackbar('Änderungen gespeichert', { variant: 'success' })
         fetchStorages()
         setOpen(false)
       })
-      .catch(error => {
+      .catch(() => {
         enqueueSnackbar('Änderungen konnten nicht gespeichert werden', { variant: 'error' })
         setOpen(false)
       })
