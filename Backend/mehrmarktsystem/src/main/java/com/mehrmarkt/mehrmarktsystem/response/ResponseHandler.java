@@ -52,7 +52,7 @@ public class ResponseHandler {
         return new ResponseEntity<Object>(listMap, HttpStatus.OK);
     }
 
-    public static ResponseEntity<Object> sendAllProdukteBeiLieferant(Object responseObj){
+    public static ResponseEntity<Object> sendAllProdukteBeiLieferant(Object responseObj, Map<String, String> lagerproduktnameMAP){
         List<Map<String, Object>> listMap = new ArrayList<>();
         List<Product> products = (List<Product>) responseObj;
 
@@ -64,21 +64,22 @@ public class ResponseHandler {
                     "name", product.getName(),
                     "ean", product.getEAN(),
                     "price", product.getPreis(),
-                    "amount", 0
+                    "amount", 0,
+                    "lagerproductname", lagerproduktnameMAP.get(product.getEAN())
             )));
         }
 
         return new ResponseEntity<Object>(listMap, HttpStatus.OK);
     }
 
-    public static ResponseEntity<Object> sendLieferant(Object responseObj){
+    public static ResponseEntity<Object> sendLieferant(Object responseObj, Map<String, String> lagerproduktnamenMAP){
 
         Lieferant lieferant = (Lieferant) responseObj;
         Map<String, Object> lieferantMap = parseLieferant(lieferant);
         List<Map<String, Object>> productMap = new ArrayList<>();
         for (Product product :
                lieferant.getProducts()) {
-            productMap.add(parseProdukt(product));
+            productMap.add(parseProdukt(product, lagerproduktnamenMAP));
         }
         lieferantMap.put("products", productMap);
 
@@ -135,11 +136,12 @@ public class ResponseHandler {
         return map;
     }
 
-    private static Map<String, Object> parseProdukt(Product product){
+    private static Map<String, Object> parseProdukt(Product product, Map<String, String> lagerproduktnamenMAP){
         Map<String, Object> map=new HashMap<>();
         map.put("ean", product.getEAN());
         map.put("name", product.getName());
         map.put("price", product.getPreis());
+        map.put("lagerproductname", lagerproduktnamenMAP.get(product.getEAN()));
 
         return map;
     }
@@ -250,7 +252,8 @@ public class ResponseHandler {
         Map<String, Object> map = new HashMap<>();
         map.put("name", lager.getName());
         map.put("standard", lager.isStandard());
-
+        map.put("size", lager.getSize());
+        map.put("max", lager.getMax());
         return map;
     }
 

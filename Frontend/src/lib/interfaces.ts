@@ -64,6 +64,7 @@ export interface Ware {
   name: string
   product: ProductEAN
   menge:number
+  lagerproductname?:string
 }
 export interface Bestellung {
   waren: Ware[]
