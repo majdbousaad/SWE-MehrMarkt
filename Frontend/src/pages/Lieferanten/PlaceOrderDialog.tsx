@@ -60,13 +60,14 @@ export default function PlaceOrderDialog({
     ean: string
     price: number
     amount: number
+    lagerproductname: string
   }
   const [, setRefrecsh] = useState<any>({})
 
 
   const [waren, setWaren] = useState<Ware[]>([])
 
-  function addToWaren(ean: string, menge: number, name:string, price:number){
+  function addToWaren(ean: string, menge: number, name:string, price:number, lagerproductname:string){
     if(menge == 0){
       return
     }
@@ -78,7 +79,7 @@ export default function PlaceOrderDialog({
       }
     }
     if(!exists)
-      waren.push({product: {ean: ean, price:price}, menge: menge, name:name})
+      waren.push({product: {ean: ean, price:price}, menge: menge, name:name, lagerproductname:lagerproductname})
 
       setRefrecsh({})
   }
@@ -151,7 +152,7 @@ export default function PlaceOrderDialog({
                   {rows.map(row => (
                     <TableRow key={row.ean}>
                       <TableCell component='th' scope='row'>
-                        {row.name} {waren?.findIndex((ware) => row.ean == ware.product.ean) > -1 && (<span><IconButton><DoneOutlined /></IconButton></span>)}
+                        {row.name} {row.lagerproductname !== row.name && <p>{'('+ row.lagerproductname +')'}</p>} {waren?.findIndex((ware) => row.ean == ware.product.ean) > -1 && (<span><IconButton><DoneOutlined /></IconButton></span>)} 
                       </TableCell>
                       <TableCell align='right'>{row.price}€</TableCell>
                       <TableCell align='right'>
@@ -169,7 +170,7 @@ export default function PlaceOrderDialog({
                       <IconButton 
                       color="primary" 
                       aria-label="add to shopping cart"
-                      onClick={() => addToWaren(row.ean,row.amount, row.name, row.price)}
+                      onClick={() => addToWaren(row.ean,row.amount, row.name, row.price, row.lagerproductname)}
                       >
                       
                       <ShoppingCartCheckoutIcon />

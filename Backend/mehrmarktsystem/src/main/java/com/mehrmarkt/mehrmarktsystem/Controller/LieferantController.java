@@ -9,9 +9,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.mehrmarkt.mehrmarktsystem.Service.lieferant.LieferantService;
+import com.mehrmarkt.mehrmarktsystem.Service.produkt.LagerProduktService;
 import com.mehrmarkt.mehrmarktsystem.Service.produkt.ProductService;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantNotFoundException;
+import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
 import com.mehrmarkt.mehrmarktsystem.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityExistsException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/lieferant")
@@ -32,6 +32,9 @@ public class LieferantController {
     ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private LieferantService lieferantService;
+
+    @Autowired
+    private LagerProduktService lagerProduktService;
 
     @Autowired
     private ProductService productService;
@@ -59,7 +62,7 @@ public class LieferantController {
         }
 
 
-        return ResponseHandler.sendLieferant(lieferant);
+        return ResponseHandler.sendLieferant(lieferant, Map.of());
     }
 
     @GetMapping
@@ -72,7 +75,20 @@ public class LieferantController {
     public ResponseEntity<Object> getLieferant(@PathVariable int id){
         try {
             Lieferant lieferant = lieferantService.getById(id).orElseThrow(LieferantNotFoundException::new);
-            return ResponseHandler.sendLieferant(lieferant);
+            Map<String, String> lagerproduktnameMAP = new HashMap<>();
+            for (Product pro :
+                    lieferant.getProducts()) {
+                String lagerproduktname = "";
+                try {
+                    LagerProdukt lagerProdukt = lagerProduktService.getByEAN(pro.getEAN()).orElseThrow(Exception::new);
+                    lagerproduktname = lagerProdukt.getName();
+                }catch (Exception ignored){
+
+                }
+                lagerproduktnameMAP.put(pro.getEAN(), lagerproduktname);
+
+            }
+            return ResponseHandler.sendLieferant(lieferant, lagerproduktnameMAP);
 
         } catch (LieferantNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lieferant mit ID " + id + " existiert nicht");
@@ -86,7 +102,20 @@ public class LieferantController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lieferant mit ID " + id + " existiert nicht");
 
         }
-        return ResponseHandler.sendAllProdukteBeiLieferant(produkte);
+        Map<String, String> lagerproduktnameMAP = new HashMap<>();
+        for (Product pro :
+                produkte) {
+            String lagerproduktname = "";
+            try {
+                LagerProdukt lagerProdukt = lagerProduktService.getByEAN(pro.getEAN()).orElseThrow(Exception::new);
+                lagerproduktname = lagerProdukt.getName();
+            }catch (Exception ignored){
+
+            }
+            lagerproduktnameMAP.put(pro.getEAN(), lagerproduktname);
+
+        }
+        return ResponseHandler.sendAllProdukteBeiLieferant(produkte, lagerproduktnameMAP);
 
 
     }

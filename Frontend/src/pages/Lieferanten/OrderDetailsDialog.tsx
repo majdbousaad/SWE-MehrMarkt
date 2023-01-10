@@ -70,7 +70,8 @@ export default function OrderDetailsDialog({
       fetch('http://localhost:8080/bestellung', requestOptions).then(response => {
       
       if(response.status == 400){
-        enqueueSnackbar("Lager ist ausgelastet", {variant: 'warning'})
+        response.text().then(msg => enqueueSnackbar(msg, {variant: 'warning'}));
+        
       } else {
         enqueueSnackbar("Bestellung ist aufgegeben", {variant: 'success'})
       }
@@ -122,7 +123,7 @@ export default function OrderDetailsDialog({
                   {waren?.map(row => (
                     <TableRow key={row.product.ean}>
                       <TableCell component='th' scope='row'>
-                        {row?.name}
+                        {row?.name} {row?.lagerproductname !== row.name && <p>{'('+ row?.lagerproductname +')'}</p>}
                       </TableCell>
                       <TableCell align='right'>{row.menge}</TableCell>
                       <TableCell align='right'><IconButton 
