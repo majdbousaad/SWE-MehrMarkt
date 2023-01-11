@@ -24,7 +24,7 @@ export default function LagerStatusAmount({ statistik }: { statistik: ILagerStat
       total += row.load
     })
 
-    return total
+    return Math.round(total)
   }
 
   function maxLoad() {
@@ -35,7 +35,7 @@ export default function LagerStatusAmount({ statistik }: { statistik: ILagerStat
         maxCapacity += row.capacity
       })
 
-    return maxCapacity
+    return Math.round(maxCapacity) - 1
   }
 
   const maxLoadval = maxLoad()

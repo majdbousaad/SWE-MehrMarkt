@@ -36,7 +36,7 @@ export default function Verkaufsverlauf({
   }, [])
 
   const [verkaufDialogOpen, setVerkaufDialogOpen] = useState(false)
-  const [verkauf, setVerkauf] = useState<IVerkaufOne>()
+  const [verkauf, setVerkauf] = useState<IVerkaufOne | null>(null)
   const { enqueueSnackbar } = useSnackbar()
   function onVerkaufDialogClose() {
     setVerkaufDialogOpen(false)
@@ -48,6 +48,8 @@ export default function Verkaufsverlauf({
       .then(response => {
         const verkaufResponse = response.data as IVerkaufOne
         setVerkauf(verkaufResponse)
+        console.log(verkaufResponse)
+        console.log('verkaufResponse')
       })
       .catch(() => {
         enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', { variant: 'error' })

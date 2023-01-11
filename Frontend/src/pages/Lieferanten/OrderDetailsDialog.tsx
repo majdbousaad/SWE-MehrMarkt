@@ -38,82 +38,86 @@ export default function OrderDetailsDialog({
   isOpen: boolean
   setIsDialogOpen: (isOpen: boolean) => void
   waren: Ware[]
-  deleteFromWaren: (ean:string) => void
+  deleteFromWaren: (ean: string) => void
   lieferant_id: number
   deleteAllWaren: () => void
-  lieferzeit:string
+  lieferzeit: string
 }) {
-
   function handleClose() {
     setIsDialogOpen(false)
   }
-  const {enqueueSnackbar} = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
 
-  function bestellen(waren: Ware[], lieferant_id: number){
+  function bestellen(waren: Ware[], lieferant_id: number) {
     const date = Datum?.toDate()
     date?.setHours(date.getHours() + 1)
     const bestellung = {
-        lieferant: {id: lieferant_id},
-        waren: waren?.map(ware =>{
-
-          return {
-            product: {ean: ware?.product?.ean},
-            menge: ware.menge
-          }
-        }),
-        vslLieferdatum: date
+      lieferant: { id: lieferant_id },
+      waren: waren?.map(ware => {
+        return {
+          product: { ean: ware?.product?.ean },
+          menge: ware.menge
+        }
+      }),
+      vslLieferdatum: date
     }
     const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bestellung)
-      }
-    
-      fetch('http://localhost:8080/bestellung', requestOptions).then(response => {
-      
-      if(response.status == 400){
-        response.text().then(msg => enqueueSnackbar(msg, {variant: 'warning'}));
-        
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bestellung)
+    }
+
+    fetch('http://localhost:8080/bestellung', requestOptions).then(response => {
+      if (response.status == 400) {
+        response.text().then(msg => enqueueSnackbar(msg, { variant: 'warning' }))
       } else {
-        enqueueSnackbar("Bestellung ist aufgegeben", {variant: 'success'})
+        enqueueSnackbar('Bestellung ist aufgegeben', { variant: 'success' })
       }
     })
     deleteAllWaren()
     setIsDialogOpen(false)
-
   }
 
-  let days = 0, hours = 0, mins = 0;
+  let days = 0,
+    hours = 0,
+    mins = 0
 
-  const units = lieferzeit.split(' ');
+  let units: string[] = []
+  if (lieferzeit == null) {
+    units.push('22S')
+  } else {
+    units = lieferzeit.split(' ')
+  }
 
   units.forEach(element => {
-    var num = element.match(/\d+/g);
+    const num = element.match(/\d+/g)
 
-    var letr =  element.match(/[a-zA-Z]+/g);
+    const letr = element.match(/[a-zA-Z]+/g)
 
-    if(letr != null && num != null){
-      if(letr[0] == "St"){
+    if (letr != null && num != null) {
+      if (letr[0] == 'St') {
         hours = parseInt(num[0])
-      }else if(letr[0] == "T"){
+      } else if (letr[0] == 'T') {
         days = parseInt(num[0])
-      } else if(letr[0] == "M"){
+      } else if (letr[0] == 'M') {
         mins = parseInt(num[0])
       }
     }
-    });
+  })
 
   const [Datum, setDatum] = useState<Dayjs | null>(
-    dayjs(new Date()).add(3 + days, 'day').add(hours, 'hour').add(mins, 'minute')
-    )
+    dayjs(new Date())
+      .add(3 + days, 'day')
+      .add(hours, 'hour')
+      .add(mins, 'minute')
+  )
 
   const handleChange = (newValue: Dayjs | null) => {
-
     const date = newValue?.toDate() as Date
-    setDatum(dayjs(date));
+    setDatum(dayjs(date))
     console.log(Datum?.toString())
-  };
-  
+  }
+
   return (
     <Dialog fullScreen open={isOpen} onClose={handleClose}>
       <AppBar sx={{ position: 'relative' }}>
@@ -124,7 +128,13 @@ export default function OrderDetailsDialog({
           <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
             Bestellübersicht
           </Typography>
-          <Button disabled={waren?.length == 0} autoFocus color='success' variant='contained' onClick={() => bestellen(waren, lieferant_id)}>
+          <Button
+            disabled={waren?.length == 0}
+            autoFocus
+            color='success'
+            variant='contained'
+            onClick={() => bestellen(waren, lieferant_id)}
+          >
             Betstellen!
           </Button>
         </Toolbar>
@@ -145,17 +155,20 @@ export default function OrderDetailsDialog({
                   {waren?.map(row => (
                     <TableRow key={row.product.ean}>
                       <TableCell component='th' scope='row'>
-                        {row?.name} {row?.lagerproductname !== row.name && <p>{'('+ row?.lagerproductname +')'}</p>}
+                        {row?.name} {row?.lagerproductname !== row.name && <p>{'(' + row?.lagerproductname + ')'}</p>}
                       </TableCell>
                       <TableCell align='right'>{row.menge}</TableCell>
-                      <TableCell align='right'><IconButton 
-                      color="primary" 
-                      aria-label="add to shopping cart"
-                      onClick={() => {deleteFromWaren(row.product.ean);}}
-                      >
-                      <DeleteIcon />
-                      </IconButton></TableCell>
-                        
+                      <TableCell align='right'>
+                        <IconButton
+                          color='primary'
+                          aria-label='add to shopping cart'
+                          onClick={() => {
+                            deleteFromWaren(row.product.ean)
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -164,11 +177,11 @@ export default function OrderDetailsDialog({
             <br />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
-                  label="Vsl. Lieferdatum"
-                  value={Datum}
-                  onChange={handleChange}
-                  renderInput={(params) => <TextField {...params} />}
-                  ampm={false}
+                label='Vsl. Lieferdatum'
+                value={Datum}
+                onChange={handleChange}
+                renderInput={params => <TextField {...params} />}
+                ampm={false}
               />
             </LocalizationProvider>
           </CardContent>

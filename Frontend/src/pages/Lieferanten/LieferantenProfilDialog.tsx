@@ -212,12 +212,23 @@ function PlaceOrderButton({ lieferant }: { catalog: ProductEntry[]; lieferant: I
         autoFocus
         color='info'
         variant='contained'
-        onClick={() => setIsDialogOpen(true)}
+        onClick={() => {
+          setIsDialogOpen(true)
+          console.log(lieferant)
+          console.log(lieferant.deliveryTime)
+        }}
         disabled={!lieferant.status}
       >
         Bestellung aufgeben
       </Button>
-      <PlaceOrderDialog lieferzeit={lieferant.deliveryTime} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} id={lieferant.id} />
+      {lieferant && (
+        <PlaceOrderDialog
+          lieferzeit={lieferant.deliveryTime}
+          isOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
+          id={lieferant.id}
+        />
+      )}
     </>
   )
 }
