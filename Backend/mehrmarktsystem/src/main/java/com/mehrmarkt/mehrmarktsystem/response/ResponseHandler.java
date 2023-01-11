@@ -202,8 +202,12 @@ public class ResponseHandler {
             index++;
         }
 
+        if(index == 0){
+            map.put("price", verkaufteWare.getLagerProdukt().getPreis());
+        } else {
+            map.put("price", pdpList.get(index - 1).getPrice());
 
-        map.put("price", pdpList.get(index - 1).getPrice());
+        }
         map.put("menge", verkaufteWare.getMenge());
 
         return map;
