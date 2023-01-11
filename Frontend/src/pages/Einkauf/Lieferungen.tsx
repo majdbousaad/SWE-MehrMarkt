@@ -108,16 +108,18 @@ export default function Lieferungen({
                               <DownloadDoneIcon />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title='Diese Bestellung stornieren'>
-                            <IconButton
-                              color='primary'
-                              onClick={() => {
-                                if (orderCanceled) orderCanceled(lieferung.id)
-                              }}
-                            >
-                              <DeleteOutlineIcon />
-                            </IconButton>
-                          </Tooltip>
+                          {orderCanceled && (
+                            <Tooltip title='Diese Bestellung stornieren'>
+                              <IconButton
+                                color='primary'
+                                onClick={() => {
+                                  if (orderCanceled) orderCanceled(lieferung.id)
+                                }}
+                              >
+                                <DeleteOutlineIcon />
+                              </IconButton>
+                            </Tooltip>
+                          )}
                         </>
                       )}
                     </TableCell>
