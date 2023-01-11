@@ -127,6 +127,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
               waren={waren}
               deleteFromWaren={deleteFromWaren}
               summe={summe}
+              fetchLagerProducts={fetchLagerProducts}
             />
           </Toolbar>
         </AppBar>
@@ -237,7 +238,8 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
     fetchVerkaeufe,
     deleteAllWaren,
     fetchAnzahl,
-    summe
+    summe,
+    fetchLagerProducts
   }: 
   { 
     waren: Ware[], 
@@ -246,6 +248,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
     deleteAllWaren: () => void
     fetchAnzahl: () => void
     summe: number
+    fetchLagerProducts: (search:string) => void
   }) {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
   
@@ -254,7 +257,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
         <Button autoFocus color='success' variant='contained' onClick={() => setIsDialogOpen(true)}>
               Zur Verkaufsübersicht
             </Button>
-        <VerkaufsDetailsDialog fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren} summe={summe}/>
+        <VerkaufsDetailsDialog  fetchLagerProducts={fetchLagerProducts} fetchAnzahl={fetchAnzahl} deleteAllWaren={deleteAllWaren} fetchVerkaeufe={fetchVerkaeufe} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren} summe={summe}/>
       </>
     )
   }

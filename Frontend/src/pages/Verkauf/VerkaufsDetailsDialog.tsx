@@ -26,7 +26,8 @@ export default function VerkaufsDetailsDialog({
   fetchVerkaeufe,
   deleteAllWaren,
   fetchAnzahl,
-  summe
+  summe,
+  fetchLagerProducts
 }: {
   isOpen: boolean
   setIsDialogOpen: (isOpen: boolean) => void
@@ -36,6 +37,7 @@ export default function VerkaufsDetailsDialog({
   deleteAllWaren: () =>void,
   fetchAnzahl: () => void,
   summe: number
+  fetchLagerProducts: (search:string) => void
 }) {
 
   function handleClose() {
@@ -62,6 +64,9 @@ export default function VerkaufsDetailsDialog({
       fetchVerkaeufe()
       deleteAllWaren()
       fetchAnzahl()
+
+      fetchLagerProducts("")
+      
       let gesamteMenge = 0; 
       verkauf.verkaufteWaren.forEach(ware => {
         gesamteMenge += ware.menge
