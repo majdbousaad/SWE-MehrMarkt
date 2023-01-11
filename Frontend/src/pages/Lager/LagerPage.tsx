@@ -192,6 +192,7 @@ function EditLagerButton({ Product, fetchLagerProducts }: { Product: ILagerProdu
       })
       .catch((e: any) => {
         enqueueSnackbar(e.response.data, { variant: 'error' })
+        enqueueSnackbar('Ein Fehler ist unterlaufen', { variant: 'error' })
       })
 
     setIsOpen(false)
