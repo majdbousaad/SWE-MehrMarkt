@@ -25,6 +25,7 @@ import Pencil from 'mdi-material-ui/Pencil'
 import Dialog from '@mui/material/Dialog'
 import ProductDetailDialog from './ProductDetailDialog'
 import StoragesDisplay from './StoragesDisplay'
+import Tooltip from '@mui/material/Tooltip'
 
 export interface ILagerProduct {
   name: string
@@ -83,6 +84,8 @@ export default function LagerPage() {
                     </TableCell>
                     <TableCell>{lagerProduct.preis}</TableCell>
                     <TableCell align='center'>
+                    <Tooltip title='Produkt bearbeiten'>
+
                       <IconButton
                         color='primary'
                         aria-label='add to shopping cart'
@@ -93,6 +96,7 @@ export default function LagerPage() {
                       >
                         <InfoIcon />
                       </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -195,9 +199,12 @@ function EditLagerButton({ Product, fetchLagerProducts }: { Product: ILagerProdu
 
   return (
     <>
+      <Tooltip title='Standard Lagerort ändern oder einen neuen erstellen'>
+
       <IconButton size='small' onClick={() => setIsOpen(true)}>
         <Pencil />
       </IconButton>
+      </Tooltip>
       <Dialog open={isOpen}>
         <DialogTitle>Standort ändern</DialogTitle>
         <DialogContent>

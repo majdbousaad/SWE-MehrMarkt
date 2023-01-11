@@ -40,6 +40,9 @@ const styles = StyleSheet.create({
   },
   center: {
     textAlign: "center"
+  },
+  small: {
+    fontSize: "7px"
   }
   
 });
@@ -61,7 +64,7 @@ export const Rechnung =
   <Document>
     <Page size="A7" style={styles.page}>
       <View>
-      <Text style={styles.center}>Warenkorb: {verkauf.id}</Text>
+      <Text style={styles.small}>Warenkorb: {verkauf.id}</Text>
         <View style={styles.table}>
             <View style={styles.row}>
                 <View style={styles.row1}><Text style={styles.bold}>Produkt Bezeichnung</Text></View>
@@ -80,7 +83,7 @@ export const Rechnung =
                 <View style={styles.row2}><Text></Text></View>
                 <View style={styles.row1}><Text>{verkauf.gesamtPreis}$</Text></View>
             </View>
-            <Text>Verkaufsdatum: {verkauf.Datum}</Text>
+            <Text style={styles.small}>Verkaufsdatum: {verkauf.Datum}</Text>
         </View>
       </View>
       

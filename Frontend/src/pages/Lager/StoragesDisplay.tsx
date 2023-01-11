@@ -19,6 +19,7 @@ import {
 } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
+import Tooltip from '@mui/material/Tooltip'
 import axios from 'axios'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
@@ -101,9 +102,12 @@ function StorageDetailButton({ lager, fetchStorages }: { lager: ILager; fetchSto
 
   return (
     <>
+      <Tooltip title='Kapazität ändern'>
+
       <Button variant='outlined' color='info' onClick={() => setOpen(true)}>
         Details
       </Button>
+      </Tooltip>
       <StorageDetailDialog open={open} onSubmit={onSubmit} lager={lager} handleAbort={handleAbort} />
     </>
   )

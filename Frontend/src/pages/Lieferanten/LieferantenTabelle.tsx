@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { Lieferant, ILieferantJsonResponseOne } from '../../lib/interfaces'
 import axios from 'axios'
 import {useSnackbar} from 'notistack'
+import Tooltip from '@mui/material/Tooltip'
 
 export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { lieferanten: Lieferant[], fetchLieferanten: () => void }) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false)
@@ -64,6 +65,7 @@ export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { 
                 <TableCell>
                   <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                     <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>{lieferant.name}</Typography>
+                    <Tooltip title='Detailansicht dieses Lieferanten + Bestellung aufgeben'>
                     <IconButton
                       color="primary"
                       size='small'
@@ -72,6 +74,7 @@ export default function LieferantenTabelle({ lieferanten, fetchLieferanten }: { 
                     >
                       <OpenInNew fontSize='small' />
                     </IconButton>
+                    </Tooltip>
                   </Box>
                 </TableCell>
                 <TableCell>{lieferant.address}</TableCell>

@@ -11,6 +11,7 @@ import Magnify from 'mdi-material-ui/Magnify';
 import TableContainer from '@mui/material/TableContainer';
 import {useSnackbar} from 'notistack'
 import DoneOutlined from '@mui/icons-material/DoneOutlined';
+import Tooltip from '@mui/material/Tooltip';
 
 
 export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: () => void, fetchAnzahl: () => void}) {
@@ -204,6 +205,8 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                         </div>
                       </TableCell>
                       <TableCell>
+                      <Tooltip title='Zum Warenkorb hinzufügen'>
+
                         <IconButton
                           color='primary'
                           aria-label='add to shopping cart'
@@ -213,6 +216,9 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                         >
                           <ShoppingCartCheckoutIcon />
                         </IconButton>
+                        </Tooltip>
+                        <Tooltip title='Vom Warenkorb löschen und Menge auf 0 setzen'>
+
                         <IconButton
                           color='primary'
                           aria-label='add to shopping cart'
@@ -220,6 +226,7 @@ export default function Verkauf({fetchVerkaeufe, fetchAnzahl}:{fetchVerkaeufe: (
                         >
                           <DeleteIcon />
                         </IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   ))}

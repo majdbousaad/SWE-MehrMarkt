@@ -23,6 +23,7 @@ import { Ware } from 'src/lib/interfaces'
 import  OrderDetailsDialog  from './OrderDetailsDialog'
 import {useSnackbar} from 'notistack'
 import DoneOutlined from '@mui/icons-material/DoneOutlined';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function PlaceOrderDialog({
   isOpen,
@@ -169,6 +170,8 @@ export default function PlaceOrderDialog({
                       />
                       </TableCell>
                       <TableCell align='right'>
+                      <Tooltip title='Zum Warenkorb hinzufügen'>
+
                       <IconButton 
                       color="primary" 
                       aria-label="add to shopping cart"
@@ -177,7 +180,8 @@ export default function PlaceOrderDialog({
                       
                       <ShoppingCartCheckoutIcon />
                       </IconButton>
-
+                      </Tooltip>
+                      <Tooltip title='Menge auf 0 setzen und vom Warenkorb löschen'>
                       <IconButton 
                       color="primary" 
                       aria-label="add to shopping cart"
@@ -185,6 +189,7 @@ export default function PlaceOrderDialog({
                       >
                       <DeleteIcon />
                       </IconButton>
+                      </Tooltip>
                       </TableCell>
                         
                     </TableRow>
