@@ -11,8 +11,7 @@ import MostPopularProducts from 'src/views/dashboard/MostPopularProducts'
 // ** Demo Components Imports
 import Table from 'src/views/dashboard/Table'
 import TodaysSells from 'src/views/dashboard/TodaysSells'
-import {useSnackbar} from 'notistack'
-import LagerStatusAmount from 'src/views/dashboard/LagerStatusAmount'
+import { useSnackbar } from 'notistack'
 
 export interface ILagerStatistik {
   name: string

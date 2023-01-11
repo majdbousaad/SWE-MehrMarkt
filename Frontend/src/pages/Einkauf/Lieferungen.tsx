@@ -56,6 +56,12 @@ export default function Lieferungen({
     setEinkaufDialogOpen(true)
   }
 
+  if (!lieferungen) {
+    return <></>
+  } else if (!lieferungen.length) {
+    return <></>
+  }
+
   return (
     <>
       <Card>
