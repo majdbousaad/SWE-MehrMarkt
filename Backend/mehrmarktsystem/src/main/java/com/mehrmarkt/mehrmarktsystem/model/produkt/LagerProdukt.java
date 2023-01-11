@@ -1,11 +1,7 @@
 package com.mehrmarkt.mehrmarktsystem.model.produkt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
+import com.mehrmarkt.mehrmarktsystem.model.PriceHistory;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.ware.VerkaufteWare;
 
@@ -40,6 +36,17 @@ public class LagerProdukt{
 
     @Column(name ="amount")
     private int menge;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private PriceHistory priceHistory;
+
+    public PriceHistory getPriceHistory() {
+        return priceHistory;
+    }
+
+    public void setPriceHistory(PriceHistory priceHistory) {
+        this.priceHistory = priceHistory;
+    }
 
     private String name;
 

@@ -10,6 +10,7 @@ import com.mehrmarkt.mehrmarktsystem.Service.lager.LagerService;
 import com.mehrmarkt.mehrmarktsystem.Service.produkt.LagerProduktService;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.lager.LagerNotFoundException;
+import com.mehrmarkt.mehrmarktsystem.model.priceDatePair;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.ProduktNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,6 +91,11 @@ public class LagerProductController {
                 lagerService.updateLager(lagerB);
             }
 
+            if(neuesProdukt.getPreis() != altesProdukt.getPreis()){
+                altesProdukt.getPriceHistory().getPricehistory().add(
+                        new priceDatePair(neuesProdukt.getPreis(), LocalDateTime.now()));
+                neuesProdukt.setPriceHistory(altesProdukt.getPriceHistory());
+            }
             lagerProduktService.saveProduct(neuesProdukt);
             return ResponseEntity.ok(neuesProdukt);
 

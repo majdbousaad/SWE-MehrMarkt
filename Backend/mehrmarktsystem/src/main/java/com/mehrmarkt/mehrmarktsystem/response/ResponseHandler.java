@@ -4,6 +4,7 @@ import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantenStatus;
+import com.mehrmarkt.mehrmarktsystem.model.priceDatePair;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
 import com.mehrmarkt.mehrmarktsystem.model.verkauf.Verkauf;
 import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -190,7 +192,18 @@ public class ResponseHandler {
         Map<String, Object> map=new HashMap<>();
 
         map.put("name", verkaufteWare.getLagerProdukt().getName());
-        map.put("price", verkaufteWare.getLagerProdukt().getPreis());
+        double price = verkaufteWare.getLagerProdukt().getPreis();
+        LocalDateTime timeOfVerkauf = verkaufteWare.getVerkauf().getVerkaufsdatum();
+
+        int index = 0;
+        List<priceDatePair> pdpList = verkaufteWare.getLagerProdukt()
+                .getPriceHistory().getPricehistory();
+        while (index < pdpList.size() && timeOfVerkauf.isAfter(pdpList.get(index).getDate())){
+            index++;
+        }
+
+
+        map.put("price", pdpList.get(index - 1).getPrice());
         map.put("menge", verkaufteWare.getMenge());
 
         return map;
