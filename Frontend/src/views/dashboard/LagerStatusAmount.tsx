@@ -24,7 +24,7 @@ export default function LagerStatusAmount({ statistik }: { statistik: ILagerStat
       total += row.load
     })
 
-    return Math.round(total)
+    return total.toFixed(2)
   }
 
   function maxLoad() {

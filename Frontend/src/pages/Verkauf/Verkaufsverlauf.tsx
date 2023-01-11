@@ -93,7 +93,7 @@ export default function Verkaufsverlauf({
                         </IconButton>
                       </Box>
                     </TableCell>
-                    <TableCell>{verkauf.gesamtPreis}€</TableCell>
+                    <TableCell>{verkauf.gesamtPreis.toFixed(2)}€</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

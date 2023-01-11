@@ -93,9 +93,11 @@ const Dashboard = () => {
         <Grid item xs={12}>
           <LagerStatus statistik={statistik} />
         </Grid>
-        <Grid item xs={12}>
+        {/*
+          <Grid item xs={12}>
           <LagerStatusAmount statistik={statistik} />
         </Grid>
+        */}
       </Grid>
     </ApexChartWrapper>
   )
