@@ -4,6 +4,7 @@ package com.mehrmarkt.mehrmarktsystem.Controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.mehrmarkt.mehrmarktsystem.Service.lager.LagerService;
@@ -164,6 +165,8 @@ public class LagerProductController {
     private LagerProdukt applyPatchToLagerProdukt(
             JsonPatch patch, LagerProdukt targetLagerProdukt)
             throws JsonPatchException, JsonProcessingException {
+        objectMapper.registerModule(new JavaTimeModule());
+
         JsonNode patched = patch.apply(objectMapper.convertValue(targetLagerProdukt, JsonNode.class));
         return objectMapper.treeToValue(patched, LagerProdukt.class);
     }
