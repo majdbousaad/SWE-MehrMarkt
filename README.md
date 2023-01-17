@@ -22,6 +22,7 @@ docker --version
 docker compose up --build
 
 ```
+4. Das System läuft auf localhost
 
 # Mögliche Probleme beim Compilieren:
 Leider könnte man ein paar Probleme beim Ausführen begegnen, da das System nicht auf der Cloud läuft und daher gibt's keine einheitliche Einrichtung 
