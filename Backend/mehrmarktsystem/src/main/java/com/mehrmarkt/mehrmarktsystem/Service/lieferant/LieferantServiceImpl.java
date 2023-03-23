@@ -27,7 +27,7 @@ public class LieferantServiceImpl implements LieferantService {
 
     @Override
     public List<Lieferant> getAllLieferanten() {
-        return lieferantRepository.findAll();
+        return lieferantRepository.getAllByIdIsNotNullOrderByStatus();
     }
 
     @Override

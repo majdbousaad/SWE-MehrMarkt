@@ -1,11 +1,15 @@
 package com.mehrmarkt.mehrmarktsystem.model.lager;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mehrmarkt.mehrmarktsystem.model.PriceHistory;
+import com.mehrmarkt.mehrmarktsystem.model.priceDatePair;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.LagerProdukt;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -84,7 +88,11 @@ public class Lager {
             lagerProdukt.setMenge(lagerProdukt.getMenge() + menge);
 
         } else {
-            lagerProdukts.add(new LagerProdukt(lieferantProdukt, menge, lager));
+             lagerProdukt = new LagerProdukt(lieferantProdukt, menge, lager);
+            PriceHistory priceHistory = new PriceHistory();
+            priceHistory.setPricehistory(Arrays.asList(new priceDatePair(lagerProdukt.getPreis(), LocalDateTime.now())));
+            lagerProdukt.setPriceHistory(priceHistory);
+            lagerProdukts.add(lagerProdukt);
         }
 
 

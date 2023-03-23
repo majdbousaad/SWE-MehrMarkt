@@ -48,12 +48,13 @@ export interface Lieferant {
 export interface IOrderProductEntry {
   name: string
   ean: string
-  price: number
+  preis: number
   amount: number
   menge: number
 }
 export interface ProductEAN {
   ean: string
+  price: number
 }
 export interface LieferantID {
   id: number
@@ -63,6 +64,7 @@ export interface Ware {
   name: string
   product: ProductEAN
   menge:number
+  lagerproductname?:string
 }
 export interface Bestellung {
   waren: Ware[]

@@ -25,16 +25,16 @@ public class LagerController {
 
     @Transactional
     @PatchMapping("/updateSize/{lagerort}/{maxSize}")
-    public String updateSize(@PathVariable String lagerort, @PathVariable int maxSize){
+    public ResponseEntity<Object> updateSize(@PathVariable String lagerort, @PathVariable int maxSize){
         if(!lagerService.existsByName(lagerort)){
-            return "lager" + lagerort + "existiert nicht!";
+            return ResponseEntity.badRequest().body("Lager" + lagerort + " existiert nicht!");
         }
         Lager lager = lagerService.getLager(lagerort);
         if(lager.getSize() >= maxSize){
-            return "Max Size für "+lagerort+" ist kleiner als die Anzahl der Produkte im Lager";
+            return ResponseEntity.badRequest().body("Max Size für "+lagerort+" ist kleiner als die Anzahl der Produkte im Lager: " +lager.getSize());
         }
         lagerService.updateMaxSize(lagerort, maxSize);
-        return "Max Size für "+lagerort+" updated successfully";
+        return ResponseEntity.ok().body("Änderungen gespeichert");
 
 
     }

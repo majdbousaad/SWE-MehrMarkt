@@ -43,9 +43,7 @@ const DashboardTable = ({fetchStatistik}:{fetchStatistik: () => void}) => {
     })
   }
   
-return(
-  <Lieferungen lieferungen={anstehendeLiefererungen} arrived={false} orderArrived={orderArrived}/>
-)
+return <Lieferungen lieferungen={anstehendeLiefererungen} arrived={false} orderArrived={orderArrived} />
 }
 
 export default DashboardTable

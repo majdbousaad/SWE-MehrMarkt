@@ -22,15 +22,19 @@ import { useEffect, useState } from 'react'
 import { Ware } from 'src/lib/interfaces'
 import  OrderDetailsDialog  from './OrderDetailsDialog'
 import {useSnackbar} from 'notistack'
+import DoneOutlined from '@mui/icons-material/DoneOutlined';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function PlaceOrderDialog({
   isOpen,
   setIsDialogOpen,
-  id
+  id,
+  lieferzeit
 }: {
   isOpen: boolean
   setIsDialogOpen: (isOpen: boolean) => void
   id: number
+  lieferzeit:string
 }) {
   function handleClose() {
     setIsDialogOpen(false)
@@ -59,12 +63,14 @@ export default function PlaceOrderDialog({
     ean: string
     price: number
     amount: number
+    lagerproductname: string
   }
+  const [, setRefrecsh] = useState<any>({})
 
 
   const [waren, setWaren] = useState<Ware[]>([])
 
-  function addToWaren(ean: string, menge: number, name:string){
+  function addToWaren(ean: string, menge: number, name:string, price:number, lagerproductname:string){
     if(menge == 0){
       return
     }
@@ -76,7 +82,9 @@ export default function PlaceOrderDialog({
       }
     }
     if(!exists)
-      waren.push({product: {ean: ean}, menge: menge, name:name})
+      waren.push({product: {ean: ean, price:price}, menge: menge, name:name, lagerproductname:lagerproductname})
+
+      setRefrecsh({})
   }
 
   function deleteFromWaren(ean: string){
@@ -127,7 +135,7 @@ export default function PlaceOrderDialog({
           <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
             Bestellung aufgeben
           </Typography>
-          <OrderDetailsButton deleteAllWaren={deleteAllWaren} waren={waren}  deleteFromWaren={deleteFromWaren} lieferant_id={id} />
+          <OrderDetailsButton lieferzeit={lieferzeit} deleteAllWaren={deleteAllWaren} waren={waren}  deleteFromWaren={deleteFromWaren} lieferant_id={id} />
         </Toolbar>
       </AppBar>
       <DialogContent>
@@ -147,7 +155,7 @@ export default function PlaceOrderDialog({
                   {rows.map(row => (
                     <TableRow key={row.ean}>
                       <TableCell component='th' scope='row'>
-                        {row.name}
+                        {row.name} {row.lagerproductname !== row.name && <p>{'('+ row.lagerproductname +')'}</p>} {waren?.findIndex((ware) => row.ean == ware.product.ean) > -1 && (<span><IconButton><DoneOutlined /></IconButton></span>)} 
                       </TableCell>
                       <TableCell align='right'>{row.price}€</TableCell>
                       <TableCell align='right'>
@@ -162,15 +170,18 @@ export default function PlaceOrderDialog({
                       />
                       </TableCell>
                       <TableCell align='right'>
+                      <Tooltip title='Zum Warenkorb hinzufügen'>
+
                       <IconButton 
                       color="primary" 
                       aria-label="add to shopping cart"
-                      onClick={() => addToWaren(row.ean,row.amount, row.name)}
+                      onClick={() => addToWaren(row.ean,row.amount, row.name, row.price, row.lagerproductname)}
                       >
                       
                       <ShoppingCartCheckoutIcon />
                       </IconButton>
-
+                      </Tooltip>
+                      <Tooltip title='Menge auf 0 setzen und vom Warenkorb löschen'>
                       <IconButton 
                       color="primary" 
                       aria-label="add to shopping cart"
@@ -178,6 +189,7 @@ export default function PlaceOrderDialog({
                       >
                       <DeleteIcon />
                       </IconButton>
+                      </Tooltip>
                       </TableCell>
                         
                     </TableRow>
@@ -196,13 +208,15 @@ function OrderDetailsButton({
   waren, 
   lieferant_id,
   deleteFromWaren,
-  deleteAllWaren
+  deleteAllWaren,
+  lieferzeit
 }: 
 { 
   waren: Ware[], 
   deleteFromWaren: (ean: string) => void
   lieferant_id: number
   deleteAllWaren: () => void
+  lieferzeit:string
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -211,7 +225,7 @@ function OrderDetailsButton({
       <Button autoFocus color='success' variant='contained' onClick={() => setIsDialogOpen(true)}>
             Zur Bestellübersicht
           </Button>
-      <OrderDetailsDialog deleteAllWaren={deleteAllWaren} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren} lieferant_id={lieferant_id}/>
+      <OrderDetailsDialog lieferzeit={lieferzeit} deleteAllWaren={deleteAllWaren} isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} waren={waren} deleteFromWaren={deleteFromWaren} lieferant_id={lieferant_id}/>
     </>
   )
 }

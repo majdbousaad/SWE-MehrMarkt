@@ -4,6 +4,7 @@ import com.mehrmarkt.mehrmarktsystem.model.bestellung.Bestellung;
 import com.mehrmarkt.mehrmarktsystem.model.lager.Lager;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.Lieferant;
 import com.mehrmarkt.mehrmarktsystem.model.lieferant.LieferantenStatus;
+import com.mehrmarkt.mehrmarktsystem.model.priceDatePair;
 import com.mehrmarkt.mehrmarktsystem.model.produkt.Product;
 import com.mehrmarkt.mehrmarktsystem.model.verkauf.Verkauf;
 import com.mehrmarkt.mehrmarktsystem.model.ware.GekaufteWare;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +54,7 @@ public class ResponseHandler {
         return new ResponseEntity<Object>(listMap, HttpStatus.OK);
     }
 
-    public static ResponseEntity<Object> sendAllProdukteBeiLieferant(Object responseObj){
+    public static ResponseEntity<Object> sendAllProdukteBeiLieferant(Object responseObj, Map<String, String> lagerproduktnameMAP){
         List<Map<String, Object>> listMap = new ArrayList<>();
         List<Product> products = (List<Product>) responseObj;
 
@@ -64,21 +66,22 @@ public class ResponseHandler {
                     "name", product.getName(),
                     "ean", product.getEAN(),
                     "price", product.getPreis(),
-                    "amount", 0
+                    "amount", 0,
+                    "lagerproductname", lagerproduktnameMAP.get(product.getEAN())
             )));
         }
 
         return new ResponseEntity<Object>(listMap, HttpStatus.OK);
     }
 
-    public static ResponseEntity<Object> sendLieferant(Object responseObj){
+    public static ResponseEntity<Object> sendLieferant(Object responseObj, Map<String, String> lagerproduktnamenMAP){
 
         Lieferant lieferant = (Lieferant) responseObj;
         Map<String, Object> lieferantMap = parseLieferant(lieferant);
         List<Map<String, Object>> productMap = new ArrayList<>();
         for (Product product :
                lieferant.getProducts()) {
-            productMap.add(parseProdukt(product));
+            productMap.add(parseProdukt(product, lagerproduktnamenMAP));
         }
         lieferantMap.put("products", productMap);
 
@@ -98,6 +101,7 @@ public class ResponseHandler {
             mapWaren.add(parseWare(gekaufteWare));
         }
         bestellungMap.put("products", mapWaren);
+
 
         return new ResponseEntity<Object>(bestellungMap, HttpStatus.OK);
     }
@@ -134,11 +138,12 @@ public class ResponseHandler {
         return map;
     }
 
-    private static Map<String, Object> parseProdukt(Product product){
+    private static Map<String, Object> parseProdukt(Product product, Map<String, String> lagerproduktnamenMAP){
         Map<String, Object> map=new HashMap<>();
         map.put("ean", product.getEAN());
         map.put("name", product.getName());
         map.put("price", product.getPreis());
+        map.put("lagerproductname", lagerproduktnamenMAP.get(product.getEAN()));
 
         return map;
     }
@@ -169,6 +174,7 @@ public class ResponseHandler {
         map.put("lieferant", bestellung.getLieferant().getName());
         map.put("vsl", bestellung.getVslLieferdatum());
         map.put("tats", bestellung.getTatsLieferdatum());
+        map.put("status", bestellung.getBestellungsStatus());
         return map;
     }
 
@@ -186,7 +192,22 @@ public class ResponseHandler {
         Map<String, Object> map=new HashMap<>();
 
         map.put("name", verkaufteWare.getLagerProdukt().getName());
-        map.put("price", verkaufteWare.getLagerProdukt().getPreis());
+        double price = verkaufteWare.getLagerProdukt().getPreis();
+        LocalDateTime timeOfVerkauf = verkaufteWare.getVerkauf().getVerkaufsdatum();
+
+        int index = 0;
+        List<priceDatePair> pdpList = verkaufteWare.getLagerProdukt()
+                .getPriceHistory().getPricehistory();
+        while (index < pdpList.size() && timeOfVerkauf.isAfter(pdpList.get(index).getDate())){
+            index++;
+        }
+
+        if(index == 0){
+            map.put("price", verkaufteWare.getLagerProdukt().getPreis());
+        } else {
+            map.put("price", pdpList.get(index - 1).getPrice());
+
+        }
         map.put("menge", verkaufteWare.getMenge());
 
         return map;
@@ -248,7 +269,8 @@ public class ResponseHandler {
         Map<String, Object> map = new HashMap<>();
         map.put("name", lager.getName());
         map.put("standard", lager.isStandard());
-
+        map.put("size", lager.getSize());
+        map.put("max", lager.getMax());
         return map;
     }
 

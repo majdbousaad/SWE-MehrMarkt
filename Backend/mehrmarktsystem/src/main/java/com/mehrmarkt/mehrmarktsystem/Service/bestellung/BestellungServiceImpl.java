@@ -51,7 +51,7 @@ public class BestellungServiceImpl implements BestellungService{
     @Override
     public List<Bestellung> getAnstehendeBestellungen() {
 
-        return bestellungRepository.getAllByTatsLieferdatumIsNull();
+        return bestellungRepository.getAllByTatsLieferdatumIsNullOrderByVslLieferdatumDesc();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class BestellungServiceImpl implements BestellungService{
 
     @Override
     public List<Bestellung> getGelieferteBestellungen() {
-        return bestellungRepository.getAllByTatsLieferdatumIsNotNull();
+        return bestellungRepository.getAllByTatsLieferdatumIsNotNullOrderByTatsLieferdatumDesc();
     }
 
     @Override

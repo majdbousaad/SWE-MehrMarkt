@@ -14,8 +14,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { ICatalogProducts, ILieferantJsonResponseOne, ProductEntry } from '../../lib/interfaces'
 import  LieferantProfilSection from './LieferantProfilSection'
 import  PlaceOrderDialog from './PlaceOrderDialog'
-import {useSnackbar} from 'notistack'
-
+import { useSnackbar } from 'notistack'
 
 export default function LieferantenProfilDialog({
   lieferant,
@@ -34,8 +33,7 @@ export default function LieferantenProfilDialog({
 }) {
   const [isDirty, setIsDirty] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-
-  const {enqueueSnackbar} = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const catalogWithID = lieferant?.products?.map(row => {
     return {
       id: uuidv4(),
@@ -66,14 +64,16 @@ export default function LieferantenProfilDialog({
   }
   function handleSaveEditing() {
     setIsEditing(false)
-    const liefer = {...lieferant, products:products?.map(row => {
-      
-      return {
-        ean:row.ean,
-        price: row.preis,
-        name:row.name
-      }
-    })}
+    const liefer = {
+      ...lieferant,
+      products: products?.map(row => {
+        return {
+          ean: row.ean,
+          price: row.preis,
+          name: row.name
+        }
+      })
+    }
     setIsDirty(JSON.stringify(initialLieferant) !== JSON.stringify(liefer))
   }
 
@@ -94,14 +94,12 @@ export default function LieferantenProfilDialog({
       })
     }
 
-    await fetch('http://localhost:8080/lieferant/' + lieferant.id, requestOptions)
-      .catch(() =>{
-        enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', {variant: 'error'})
-      })
+    await fetch('http://localhost:8080/lieferant/' + lieferant.id, requestOptions).catch(() => {
+      enqueueSnackbar('Es gibt keine Verbindung zur Datenbank', { variant: 'error' })
+    })
   }
 
   async function handleSave() {
-
     setIsDirty(false)
     await updateLieferant()
 
@@ -132,20 +130,15 @@ export default function LieferantenProfilDialog({
             <IconButton edge='start' color='inherit' onClick={handleAbort} aria-label='close'>
               <CloseIcon />
             </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
-              Lieferanten Detailansicht
-            </Typography>
-            <Button
-              autoFocus
-              color='success'
-              variant='contained'
-              hidden={!isDirty}
-              disabled={!isDirty}
-              onClick={handleSave}
-            >
-              Änderungen speichern
-            </Button>
-            <PlaceOrderButton catalog={products} lieferant={lieferant} />
+            <div className='flex flex-row gap-2 w-full'>
+              <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
+                Lieferanten Detailansicht
+              </Typography>
+              <Button color='success' variant='contained' hidden={!isDirty} disabled={!isDirty} onClick={handleSave}>
+                Änderungen speichern
+              </Button>
+              <PlaceOrderButton catalog={products} lieferant={lieferant} />
+            </div>
           </Toolbar>
         </AppBar>
         <Box sx={{ p: 2 }}>
@@ -215,10 +208,28 @@ function PlaceOrderButton({ lieferant }: { catalog: ProductEntry[]; lieferant: I
 
   return (
     <>
-      <Button sx={{ marginLeft: 2 }} autoFocus color='info' variant='contained' onClick={() => setIsDialogOpen(true)}>
+      <Button
+        autoFocus
+        color='info'
+        variant='contained'
+        onClick={() => {
+          setIsDialogOpen(true)
+          console.log(lieferant)
+          console.log(lieferant.deliveryTime)
+        }}
+        disabled={!lieferant.status}
+      >
         Bestellung aufgeben
       </Button>
-      <PlaceOrderDialog isOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} id={lieferant.id} />
+      {lieferant && (
+        <PlaceOrderDialog
+          lieferzeit={lieferant.deliveryTime}
+          isOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
+          id={lieferant.id}
+        />
+      )}
     </>
   )
 }
+

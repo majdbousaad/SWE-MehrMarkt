@@ -5,22 +5,51 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Card from '@mui/material/Card'
 import { ILagerStatistik } from 'src/pages/Dashboard'
+import { useEffect, useState } from 'react'
 
+export default function LagerStatusAmount({ statistik }: { statistik: ILagerStatistik[] }) {
+  const [display, setDisplay] = useState(false)
 
+  useEffect(() => {
+    setTimeout(() => setDisplay(true), 300)
+  }, [])
 
-export default function LagerStatus({statistik}:{statistik:ILagerStatistik[]}) {
-  console.log('statistik')
-  console.log(statistik)
+  if (!display) {
+    return <></>
+  }
+
+  function totalLoad() {
+    let total = 0
+    statistik.forEach(row => {
+      total += row.load
+    })
+
+    return total.toFixed(2)
+  }
+
+  function maxLoad() {
+    let maxCapacity = 0
+    statistik
+      .filter(row => row.name != 'total')
+      .forEach(row => {
+        maxCapacity += row.capacity
+      })
+
+    return Math.round(maxCapacity) - 1
+  }
+
+  const maxLoadval = maxLoad()
+  const totalLoadval = totalLoad()
 
   const series = [
     {
-      name: 'Lagerauslastung',
+      name: 'Lagerauslastung Menge',
       data: statistik.map(row => {
         if (row.name == 'total') {
-          return { x: 'Alle Lager', y: row.loadPercent * 100 }
+          return { x: 'Alle Lager', y: totalLoadval }
         }
 
-        return { x: row.name, y: row.loadPercent * 100 }
+        return { x: row.name, y: row.load }
       })
     }
   ]
@@ -45,7 +74,7 @@ export default function LagerStatus({statistik}:{statistik:ILagerStatistik[]}) {
     dataLabels: {
       enabled: true,
       formatter: function (val: number) {
-        return val.toFixed(2) + '%'
+        return val.toString()
       },
       offsetY: -20,
       style: {
@@ -57,11 +86,11 @@ export default function LagerStatus({statistik}:{statistik:ILagerStatistik[]}) {
       show: true
     },
     yaxis: {
-      max: 100,
+      max: maxLoadval,
       labels: {
         show: true,
         formatter: function (val: number) {
-          return val.toFixed(2) + '%'
+          return val.toString()
         }
       }
     }
@@ -69,7 +98,7 @@ export default function LagerStatus({statistik}:{statistik:ILagerStatistik[]}) {
 
   return (
     <Card className='h-full w-full p-2 bg-red-600'>
-      <CardHeader title='Lagerstatus' />
+      <CardHeader title='Lagerstatus Menge' />
       <CardContent>
         <ReactApexcharts options={options} series={series} type='bar' height={350} />
       </CardContent>
